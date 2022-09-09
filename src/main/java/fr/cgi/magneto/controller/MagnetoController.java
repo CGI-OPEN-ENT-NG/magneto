@@ -1,6 +1,7 @@
 package fr.cgi.magneto.controller;
 
 import fr.cgi.magneto.Magneto;
+import fr.cgi.magneto.core.constants.*;
 import fr.cgi.magneto.service.ServiceFactory;
 import fr.wseduc.rs.ApiDoc;
 import fr.wseduc.rs.Get;
@@ -20,7 +21,7 @@ public class MagnetoController extends ControllerHelper {
 
     @Get("")
     @ApiDoc("Render view")
-    @SecuredAction("view")
+    @SecuredAction(Rights.VIEW)
     public void view(HttpServerRequest request) {
         renderView(request);
         eventStore.createAndStoreEvent("ACCESS", request);

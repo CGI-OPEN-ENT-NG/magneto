@@ -1,5 +1,7 @@
 package fr.cgi.magneto.service;
 
+import fr.cgi.magneto.core.constants.*;
+import fr.cgi.magneto.service.impl.DefaultBoardService;
 import fr.cgi.magneto.service.impl.DefaultMagnetoService;
 import fr.wseduc.mongodb.MongoDb;
 import io.vertx.core.Vertx;
@@ -27,6 +29,9 @@ public class ServiceFactory {
         return new DefaultMagnetoService();
     }
 
+    public BoardService boardService() {
+        return new DefaultBoardService(Collections.BOARD_COLLECTION, mongoDb);
+    }
     // Helpers
     public EventBus eventBus() {
         return this.vertx.eventBus();
