@@ -1,0 +1,21 @@
+.board-search-bar {
+
+  display: flex;
+  border: solid 1px $magneto-grey;
+  border-radius: 5px;
+  height: 30px;
+
+  i.magneto-magnify {
+    font-size: 20px;
+    align-self: center;
+    margin-left: 5px;
+    color: $magneto-grey;
+  }
+
+  input {
+    width: 100%;
+    border-bottom: none !important;
+    box-shadow: none !important;
+  }
+
+}

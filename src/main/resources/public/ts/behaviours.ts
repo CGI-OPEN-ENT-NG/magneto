@@ -1,4 +1,4 @@
 import { Behaviours } from 'entcore';
-import {magnetoBehaviours} from "./magnetoBehaviours";
+import {MAGNETO_APP, magnetoBehaviours} from "./magnetoBehaviours";
 
-Behaviours.register('magneto', magnetoBehaviours);
+Behaviours.register(MAGNETO_APP, magnetoBehaviours);

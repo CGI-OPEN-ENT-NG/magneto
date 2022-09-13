@@ -1,4 +1,70 @@
-<div ng-controller="BoardsController as vm" class="boards-container flex-row f-column">
-test
+<div ng-controller="BoardsController as vm" class="boards-container">
+    <div class="row boards-container-header">
+        <h1 class="cell paddingRight">
+            <i18n>magneto.title</i18n>
+        </h1>
+        <button class="right-magnet create-button" ng-click="vm.createBoard()">
+            <i18n>magneto.create.board</i18n>
+        </button>
+    </div>
+    <div class="row boards-container-header-search">
+        <h2 class="cell six">
+            <i18n>magneto.my.boards</i18n>
+        </h2>
+
+        <div class="cell six">
+            <board-search-bar
+                    search-text="vm.filter.searchText"
+                    on-search="vm.onSearchBoard">
+            </board-search-bar>
+        </div>
+
+    </div>
+    <div class="twelve cell boards-container-body">
+        <div class="three cell">
+            <board-categories-nav
+                    on-category-switch="vm.onCategorySwitch">
+            </board-categories-nav>
+        </div>
+
+
+
+
+        <div class="nine cell">
+
+            <div class="list-header row">
+                <!--Folder name-->
+                <div class="folder-name">
+                    <i class="magneto-folder"></i>
+                    <span ng-if="vm.selectedfolderId == null"><i18n>magneto.my.boards</i18n></span>
+                    <span ng-if="vm.selectedfolderId != null">[[vm.selectedFolderId]]</span>
+                </div>
+                <div class="board-list-filters right-magnet">
+<!--                    <i class="magneto-filter"></i>-->
+<!--                    <i class="magneto-sort-alphabetical"></i>-->
+<!--                    <div class="board-list-filters-display-mode">-->
+<!--                        <i class="magneto-view-module"></i>-->
+<!--                        <i class="magneto-view-list"></i>-->
+<!--                    </div>-->
+                </div>
+            </div>
+
+
+            <board-list
+                    boards="vm.boards">
+            </board-list>
+
+        </div>
+    </div>
+
+    <board-manage-lightbox
+            display="vm.displayBoardLightbox"
+            on-submit="vm.onFormSubmit">
+    </board-manage-lightbox>
+
+    <infinite-scroll scrolled="vm.onScroll()"
+                     loading-mode="true"
+                     scroll-eventer="vm.infiniteScrollService">
+    </infinite-scroll>
 
 </div>

@@ -1,0 +1,32 @@
+.boards-container {
+
+  &-header {
+
+  }
+
+  &-header-search {
+    display: flex;
+  }
+
+  &-body {
+    display: flex;
+
+    .list-header {
+      .folder-name {
+        font-size: 28px;
+      }
+
+      .board-list-filters {
+        display: flex;
+        font-size: 28px;
+
+        &-display-mode {
+          display: flex;
+          margin-left: 10px;
+        }
+      }
+    }
+  }
+
+
+}

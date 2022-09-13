@@ -1,0 +1,33 @@
+.board-manage-lightbox {
+
+  section.lightbox {
+    .content {
+      width: 850px;
+    }
+  }
+
+  &-head {
+
+  }
+  &-body {
+    display: flex;
+    &-image-select {
+      width: 240px;
+      image-select {
+        img {
+          max-height: 170px;
+          max-width: 170px;
+          object-fit: contain;
+        }
+      }
+    }
+
+    &-inputs {
+      margin: 25px;
+
+      textarea {
+        resize: none;
+      }
+    }
+  }
+}

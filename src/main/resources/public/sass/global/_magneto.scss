@@ -1,5 +1,23 @@
 body.magneto,.sniplet.magneto {
+  @import "mixins";
+  @import "generics/index";
+  @import "components/index";
 
+  background: $magneto-white;
+
+  h1 {
+    font-size: 28px;
+    line-height: 40px;
+    color: $magneto-blue;
+    font-weight: bold;
+  }
+
+  h2 {
+    font-size: 20px;
+    line-height: 40px;
+    color: $magneto-black;
+    font-weight: bold;
+  }
 }
 
 

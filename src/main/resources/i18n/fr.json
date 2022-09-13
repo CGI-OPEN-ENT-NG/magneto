@@ -1,3 +1,15 @@
 {
-  "magneto.title": "Magneto"
+  "magneto.title": "Magneto",
+  "magneto.my.boards": "Mes tableaux",
+  "magneto.create.board": "Créer un tableau",
+  "magneto.create.folder": "Créer un dossier",
+  "magneto.trash": "Corbeille",
+  "magneto.lycee.connecte.boards": "Tableaux Lycée Connecté",
+  "magneto.magnets": "aimants",
+  "magneto.magnet": "aimant",
+  "magneto.cancel": "Annuler",
+  "magneto.save": "Enregistrer",
+  "magneto.create.board.title": "Titre de mon tableau",
+  "magneto.create.board.description": "Description",
+  "magneto.search.boards": "Rechercher un tableau"
 }

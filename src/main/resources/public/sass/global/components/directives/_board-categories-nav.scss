@@ -1,0 +1,18 @@
+.board-categories-nav {
+  height: auto;
+
+  ul {
+    border-left: none !important;
+  }
+
+  &-folder-button {
+    width: 66%;
+    margin: auto;
+
+    a {
+      border: solid $magneto-blue 1px;
+      border-radius: 5px;
+      background: none !important;
+    }
+  }
+}

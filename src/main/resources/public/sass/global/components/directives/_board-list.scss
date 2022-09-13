@@ -1,0 +1,6 @@
+.board-list {
+  margin-top: 30px;
+  background: $magneto-white;
+  gap: 16px;
+  @include paddingY(15px);
+}

@@ -1,35 +1,38 @@
 import {ng} from "entcore";
 import {ILocationService, IScope, IWindowService} from "angular";
 import {RootsConst} from "../../core/constants/roots.const";
-import {Board} from "../../models/board.model";
+import {Board, IBoardItemResponse} from "../../models/board.model";
+import {DateUtils} from "../../utils/date.utils";
 
-interface IViewModel extends ng.IController, IBoardListProps {
+interface IViewModel extends ng.IController, IBoardListItemProps {
+    formatDate(date: string): string;
 }
 
-interface IBoardListProps {
-    boards: Array<Board>;
+interface IBoardListItemProps {
+    board: Board;
 }
 
-interface IBoardListScope extends IScope, IBoardListProps {
+interface IBoardListItemScope extends IScope, IBoardListItemProps {
     vm: IViewModel;
 }
 
 class Controller implements IViewModel {
 
-    boards: Array<Board>;
+    board: Board;
 
-    constructor(private $scope: IBoardListScope,
+    constructor(private $scope: IBoardListItemScope,
                 private $location: ILocationService,
                 private $window: IWindowService) {
     }
 
     $onInit() {
-
     }
 
-
-
     $onDestroy() {
+    }
+
+    formatDate = (date: string): string => {
+        return DateUtils.format(date, DateUtils.FORMAT["DAY-MONTH-YEAR-LETTER"])
     }
 
 }
@@ -38,15 +41,15 @@ function directive() {
     return {
         replace: true,
         restrict: 'E',
-        templateUrl: `${RootsConst.directive}board-list/board-list.html`,
+        templateUrl: `${RootsConst.directive}board-list/board-list-item.html`,
         scope: {
-            boards: '='
+            board: '='
         },
         controllerAs: 'vm',
         bindToController: true,
         controller: ['$scope', '$location', '$window', Controller],
         /* interaction DOM/element */
-        link: function ($scope: IBoardListScope,
+        link: function ($scope: IBoardListItemScope,
                         element: ng.IAugmentedJQuery,
                         attrs: ng.IAttributes,
                         vm: IViewModel) {
@@ -54,4 +57,4 @@ function directive() {
     }
 }
 
-export const boardList = ng.directive('boardList', directive)
+export const boardListItem = ng.directive('boardListItem', directive)

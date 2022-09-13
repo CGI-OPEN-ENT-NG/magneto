@@ -1,0 +1,35 @@
+<nav class="vertical side-nav board-categories-nav">
+    <ul>
+        <li ng-click="vm.switchToMyBoards()">
+            <board-categories-nav-item
+                title="'magneto.my.boards'"
+                icon-class="'magneto-check-decagram'"
+                has-folders="true"
+                is-selected="vm.isMyBoards">
+            </board-categories-nav-item>
+
+        </li>
+        <li ng-click="vm.switchToPublic()">
+            <board-categories-nav-item
+                    title="'magneto.lycee.connecte.boards'"
+                    icon-class="'magneto-book-variant-multiple'"
+                    has-folders="false"
+                    is-selected="vm.isPublic">
+            </board-categories-nav-item>
+        </li>
+        <li ng-click="vm.switchToTrash()">
+            <board-categories-nav-item
+                    title="'magneto.trash'"
+                    icon-class="'magneto-delete-forever'"
+                    has-folders="false"
+                    is-selected="vm.isTrash">
+            </board-categories-nav-item>
+        </li>
+    </ul>
+    <div class="board-categories-nav-folder-button">
+        <a class="classic-link">
+            <i class="magneto-folder-plus"></i>
+            <i18n>magneto.create.folder</i18n>
+        </a>
+    </div>
+</nav>

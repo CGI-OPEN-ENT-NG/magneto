@@ -1,0 +1,36 @@
+$magneto-yellow: #ffb600;
+$magneto-white: #ffffff;
+$magneto-lighter-grey: #ebebeb;
+$magneto-grey-blue :#f4fAfd;
+$magneto-black: #000000;
+$magneto-grey: #aaaaaa;
+$magneto-black-light: #555555;
+$magneto-blue: #67add1;
+$magneto-sky-blue : #2a9cc8;
+$magneto-lighter-blue: #bde4f9;
+
+@mixin mobile {
+  @media (max-width: 768px) {
+    @content;
+  }
+}
+
+@mixin paddingX($size) {
+  padding-left: $size;
+  padding-right: $size;
+}
+
+@mixin paddingY($size) {
+  padding-bottom: $size;
+  padding-top: $size;
+}
+
+@mixin marginX($size) {
+  margin-left: $size;
+  margin-right: $size;
+}
+
+@mixin marginY($size) {
+  margin-bottom: $size;
+  margin-top: $size;
+}

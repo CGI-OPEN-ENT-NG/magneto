@@ -1,3 +1,15 @@
 {
-  "magneto.title": "Magneto"
+  "magneto.title": "Magneto",
+  "magneto.my.boards": "My boards",
+  "magneto.create.board": "Create board",
+  "magneto.create.folder": "Create folder",
+  "magneto.trash": "Trash",
+  "magneto.lycee.connecte.boards": "Lycée Connecté boards",
+  "magneto.magnets": "magnets",
+  "magneto.magnet": "magnet",
+  "magneto.cancel": "Cancel",
+  "magneto.save": "Save",
+  "magneto.create.board.title": "My board title",
+  "magneto.create.board.description": "Description",
+  "magneto.search.boards": "Search a board"
 }

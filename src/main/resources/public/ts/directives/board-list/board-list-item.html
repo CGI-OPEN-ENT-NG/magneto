@@ -1,0 +1,23 @@
+<div class="card board-list-item flex-row f-column">
+    <!--Board image-->
+    <div class="board-list-item-image flex-row justify-center">
+        <img src="[[vm.board.imageUrl]]">
+    </div>
+    <!--Board infos-->
+    <div class="board-list-item-infos flex-row">
+        <!--Board title-->
+        <span class="board-list-item-infos-title">
+            [[vm.board.title]]
+        </span>
+        <!--Board nb of magnets-->
+        <div class="board-list-item-infos-nb-cards">
+            <i class="magneto-magnet"></i>
+            <span ng-if="vm.board.nbCards != 1"><b>[[vm.board.nbCards]]</b>&nbsp;<i18n>magneto.magnets</i18n></span>
+            <span ng-if="vm.board.nbCards == 1"><b>[[vm.board.nbCards]]</b>&nbsp;<i18n>magneto.magnet</i18n></span>
+        </div>
+        <span class="board-list-item-infos-date">
+            <i class="magneto-calendar"></i> [[vm.formatDate(vm.board.modificationDate)]]
+        </span>
+    </div>
+
+</div>

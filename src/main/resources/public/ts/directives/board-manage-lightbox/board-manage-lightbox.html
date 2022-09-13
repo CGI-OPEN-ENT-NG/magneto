@@ -1,0 +1,43 @@
+<lightbox class="board-manage-lightbox"
+          show="vm.display"
+          on-close="vm.display = false">
+    <section class="head board-manage-lightbox-head">
+        <h3>
+            <i18n>magneto.create.board</i18n>
+        </h3>
+    </section>
+    <section class="body board-manage-lightbox-body">
+        <div class="cell board-manage-lightbox-body-image-select">
+            <image-select ng-model="vm.form.imageUrl"
+                          default="/img/illustrations/collaborativeeditor-default.png">
+            </image-select>
+        </div>
+
+        <div class="row vertical-spacing board-manage-lightbox-body-inputs">
+            <div>
+                <i18n>magneto.create.board.title</i18n>&nbsp;:
+                <input type="text" data-ng-model="vm.form.title" class="twelve cell">
+            </div>
+            <div>
+                <i18n>magneto.create.board.description</i18n>&nbsp;:
+                <textarea ng-model="vm.form.description" class="twelve cell"></textarea>
+            </div>
+        </div>
+    </section>
+    <!-- Form submit/cancel buttons -->
+    <section>
+        <div class="row horizontal-spacing">
+            <div class="twelve cell">
+                <button class="right-magnet"
+                        data-ng-click="vm.submitCreateBoard()"
+                        data-ng-disabled="!vm.isFormValid()">
+                    <i18n>magneto.save</i18n>
+                </button>
+                <button class="right-magnet cancel"
+                        data-ng-click="vm.closeForm()">
+                    <i18n>magneto.cancel</i18n>
+                </button>
+            </div>
+        </div>
+    </section>
+</lightbox>
