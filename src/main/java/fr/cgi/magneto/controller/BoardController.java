@@ -8,9 +8,12 @@ import fr.wseduc.rs.*;
 import fr.wseduc.security.*;
 import fr.wseduc.webutils.request.RequestUtils;
 import io.vertx.core.http.*;
+import io.vertx.core.json.*;
 import org.entcore.common.controller.*;
 import org.entcore.common.http.filter.*;
 import org.entcore.common.user.UserUtils;
+
+import java.util.*;
 
 public class BoardController extends ControllerHelper {
 
@@ -31,9 +34,10 @@ public class BoardController extends ControllerHelper {
             String folderId = request.getParam(Field.FOLDERID);
             boolean isPublic = Boolean.parseBoolean(request.getParam(Field.ISPUBLIC));
             boolean isShared = Boolean.parseBoolean(request.getParam(Field.ISSHARED));
+            boolean isDeleted = Boolean.parseBoolean(request.getParam(Field.ISDELETED));
             String sortBy = request.getParam(Field.SORTBY);
             Integer page = request.getParam(Field.PAGE) != null ? Integer.parseInt(request.getParam(Field.PAGE)) : null;
-            boardService.getAllBoards(user, page, searchText, folderId, isPublic, isShared, sortBy)
+            boardService.getAllBoards(user, page, searchText, folderId, isPublic, isShared, isDeleted, sortBy)
                     .onSuccess(result -> renderJson(request, result))
                     .onFailure(fail -> {
                         String message = String.format("[Magneto@%s::getAllBoards] Failed to get all boards : %s",
@@ -54,4 +58,55 @@ public class BoardController extends ControllerHelper {
                         .onFailure(err -> renderError(request))
                         .onSuccess(result -> renderJson(request, result))));
     }
+
+
+
+    @Put("/boards/predelete")
+    @ApiDoc("Pre delete boards")
+    @ResourceFilter(ManageBoardRight.class)
+    @SecuredAction(value = "", type = ActionType.RESOURCE)
+    @SuppressWarnings("unchecked")
+    public void preDeleteBoards(HttpServerRequest request) {
+        RequestUtils.bodyToJson(request, pathPrefix + "deleteBoard", boards ->
+                UserUtils.getUserInfos(eb, request, user -> {
+                            List<String> boardIds = boards.getJsonArray(Field.BOARDIDS).getList();
+                            boardService.preDeleteBoards(user.getUserId(), boardIds, false)
+                                    .onFailure(err -> renderError(request))
+                                    .onSuccess(result -> renderJson(request, result));
+                        }
+                ));
+    }
+
+    @Put("/boards/restore")
+    @ApiDoc("Restore pre deleted boards")
+    @ResourceFilter(ManageBoardRight.class)
+    @SecuredAction(value = "", type = ActionType.RESOURCE)
+    @SuppressWarnings("unchecked")
+    public void restorePreDeletedBoards(HttpServerRequest request) {
+        RequestUtils.bodyToJson(request, pathPrefix + "deleteBoard", boards ->
+                UserUtils.getUserInfos(eb, request, user -> {
+                            List<String> boardIds = boards.getJsonArray(Field.BOARDIDS).getList();
+                            boardService.preDeleteBoards(user.getUserId(), boardIds, true)
+                                    .onFailure(err -> renderError(request))
+                                    .onSuccess(result -> renderJson(request, result));
+                        }
+                ));
+    }
+
+    @Delete("/boards")
+    @ApiDoc("Delete boards")
+    @ResourceFilter(ManageBoardRight.class)
+    @SecuredAction(value = "", type = ActionType.RESOURCE)
+    @SuppressWarnings("unchecked")
+    public void deleteBoards(HttpServerRequest request) {
+        RequestUtils.bodyToJson(request, pathPrefix + "deleteBoard", boards ->
+                UserUtils.getUserInfos(eb, request, user -> {
+                            List<String> boardIds = boards.getJsonArray(Field.BOARDIDS).getList();
+                            boardService.deleteBoards(user.getUserId(), boardIds)
+                                    .onFailure(err -> renderError(request))
+                                    .onSuccess(result -> renderJson(request, result));
+                        }
+                ));
+    }
+
 }

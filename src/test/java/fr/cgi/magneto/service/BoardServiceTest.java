@@ -72,13 +72,62 @@ public class BoardServiceTest {
                "  ]\n" +
                "}");
 
+        JsonObject expectedDeleted = new JsonObject("{\n" +
+                "  \"aggregate\": \"board\",\n" +
+                "  \"allowDiskUse\": true,\n" +
+                "  \"cursor\": {\n" +
+                "    \"batchSize\": 2147483647\n" +
+                "  },\n" +
+                "  \"pipeline\": [\n" +
+                "    {\n" +
+                "      \"$match\": {\n" +
+                "        \"deleted\": true,\n" +
+                "        \"folderId\": \"folderId\",\n" +
+                "        \"ownerId\": \"ownerId\",\n" +
+                "        \"public\": false\n" +
+                "      }\n" +
+                "    },\n" +
+                "    {\n" +
+                "      \"$match\": {\n" +
+                "        \"$or\": [\n" +
+                "          {\n" +
+                "            \"title\": {\n" +
+                "              \"$regex\": \"test\",\n" +
+                "              \"$options\": \"i\"\n" +
+                "            }\n" +
+                "          },\n" +
+                "          {\n" +
+                "            \"description\": {\n" +
+                "              \"$regex\": \"test\",\n" +
+                "              \"$options\": \"i\"\n" +
+                "            }\n" +
+                "          }\n" +
+                "        ]\n" +
+                "      }\n" +
+                "    },\n" +
+                "    {\n" +
+                "      \"$sort\": {\n" +
+                "        \"name\": -1\n" +
+                "      }\n" +
+                "    },\n" +
+                "    {\n" +
+                "      \"$count\": \"count\"\n" +
+                "    }\n" +
+                "  ]\n" +
+                "}");
+
         UserInfos testUser = new UserInfos();
         testUser.setUserId("ownerId");
 
         JsonObject query = Whitebox.invokeMethod(this.boardService, "getAllBoardsQuery", testUser, 0, "test", "folderId",
-                false, true, "name", true);
+                false, true, false, "name", true);
 
         ctx.assertEquals(expected, query);
+
+        JsonObject query2 = Whitebox.invokeMethod(this.boardService, "getAllBoardsQuery", testUser, 0, "test", "folderId",
+                false, true, true, "name", true);
+
+        ctx.assertEquals(expectedDeleted, query2);
     }
 
 

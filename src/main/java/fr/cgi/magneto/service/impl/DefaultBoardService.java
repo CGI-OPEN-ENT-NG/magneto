@@ -48,18 +48,57 @@ public class DefaultBoardService implements BoardService {
     }
 
     @Override
+    public Future<JsonObject> preDeleteBoards(String userId, List<String> boardIds, boolean restore) {
+        Promise<JsonObject> promise = Promise.promise();
+        JsonObject query = new JsonObject()
+                .put(Field._ID, new JsonObject().put("$in", new JsonArray(boardIds)))
+                .put(Field.OWNERID, userId);
+        JsonObject update = new JsonObject().put("$set", new JsonObject().put(Field.DELETED, !restore));
+        mongoDb.update(this.collection, query, update, false, true, MongoDbResult.validActionResultHandler(results -> {
+            if (results.isLeft()) {
+                String message = String.format("[Magneto@%s::preDeleteBoards] Failed to pre delete boards",
+                        this.getClass().getSimpleName());
+                log.error(String.format("%s : %s", message, results.left().getValue()));
+                promise.fail(message);
+                return;
+            }
+            promise.complete(results.right().getValue());
+        }));
+        return promise.future();
+    }
+
+    public Future<JsonObject> deleteBoards(String userId, List<String> boardIds) {
+        Promise<JsonObject> promise = Promise.promise();
+        JsonObject query = new JsonObject()
+                .put(Field._ID, new JsonObject().put("$in", new JsonArray(boardIds)))
+                .put(Field.OWNERID, userId);
+        mongoDb.delete(this.collection, query, MongoDbResult.validActionResultHandler(results -> {
+            if (results.isLeft()) {
+                String message = String.format("[Magneto@%s::deleteBoards] Failed to delete boards",
+                        this.getClass().getSimpleName());
+                log.error(String.format("%s : %s", message, results.left().getValue()));
+                promise.fail(message);
+                return;
+            }
+            promise.complete(results.right().getValue());
+        }));
+        return promise.future();
+    }
+
+
+    @Override
     public Future<JsonObject> getAllBoards(UserInfos user, Integer page,
                                            String searchText, String folderId,
                                            boolean isPublic,
-                                           boolean isShared, String sortBy) {
+                                           boolean isShared, boolean isDeleted, String sortBy) {
 
         Promise<JsonObject> promise = Promise.promise();
 
         Future<JsonArray> fetchAllBoardsFuture = fetchAllBoards(user, page, searchText, folderId, isPublic, isShared,
-                sortBy, false);
+                isDeleted, sortBy, false);
 
         Future<JsonArray> fetchAllBoardsCountFuture = fetchAllBoards(user, page, searchText, folderId,
-                isPublic, isShared, sortBy, true);
+                isPublic, isShared, isDeleted, sortBy, true);
 
         CompositeFuture.all(fetchAllBoardsFuture, fetchAllBoardsCountFuture)
                 .onFailure(fail -> {
@@ -82,12 +121,13 @@ public class DefaultBoardService implements BoardService {
 
     private Future<JsonArray> fetchAllBoards(UserInfos user, Integer page,
                                              String searchText, String folderId,
-                                             boolean isPublic,
-                                             boolean isShared, String sortBy, boolean getCount) {
+                                             boolean isPublic, boolean isShared, boolean isDeleted,
+                                             String sortBy, boolean getCount) {
 
         Promise<JsonArray> promise = Promise.promise();
 
-        JsonObject query = this.getAllBoardsQuery(user, page, searchText, folderId, isPublic, isShared, sortBy, getCount);
+        JsonObject query = this.getAllBoardsQuery(user, page, searchText, folderId, isPublic, isShared,
+                isDeleted, sortBy, getCount);
 
         mongoDb.command(query.toString(), MongoDbResult.validResultHandler(either -> {
             if (either.isLeft()) {
@@ -107,13 +147,13 @@ public class DefaultBoardService implements BoardService {
 
     private JsonObject getAllBoardsQuery(UserInfos user, Integer page,
                                            String searchText, String folderId,
-                                           boolean isPublic,
-                                           boolean isShared, String sortBy, boolean getCount) {
+                                           boolean isPublic, boolean isShared, boolean isDeleted,
+                                         String sortBy, boolean getCount) {
 
         //TODO: fetch shared boards (MAG-16)
         MongoQuery query = new MongoQuery(this.collection)
                 .match(new JsonObject()
-                        .put(Field.DELETED, false)
+                        .put(Field.DELETED, isDeleted)
                         .put(Field.FOLDERID, folderId)
                         .put(Field.OWNERID, user.getUserId())
                         .put(Field.PUBLIC, isPublic))

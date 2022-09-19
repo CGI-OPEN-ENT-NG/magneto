@@ -17,6 +17,7 @@ public class Field {
     public static final String PAGE = "page";
     
     public static final String DELETED = "deleted";
+    public static final String ISDELETED = "isDeleted";
     public static final String OWNERID = "ownerId";
     public static final String OWNERNAME = "ownerName";
     public static final String TITLE = "title";
@@ -26,6 +27,7 @@ public class Field {
     public static final String CREATIONDATE = "creationDate";
     public static final String DESCRIPTION = "description";
     public static final String CARDIDS = "cardIds";
+    public static final String BOARDIDS = "boardIds";
 
     public static final String COUNT = "count";
     public static final String PAGECOUNT = "pageCount";
