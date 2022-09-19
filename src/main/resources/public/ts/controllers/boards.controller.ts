@@ -12,22 +12,30 @@ import {InfiniteScrollService} from "../shared/services";
 
 interface IViewModel {
     selectedFolderId: string;
+    selectedBoardIds: Array<string>;
+
     displayBoardLightbox: boolean;
+    displayDeleteBoardLightbox: boolean;
+
     boards: Array<Board>;
     filter : {
         page: number,
         isTrash: boolean,
-        isPublic: boolean
-    },
-    infiniteScrollService: InfiniteScrollService,
+        isPublic: boolean,
+        searchText: string
+    };
+
+    infiniteScrollService: InfiniteScrollService;
 
     getBoards(): Promise<void>;
-    createBoard(): void;
+    openCreateForm(): void;
+    openDeleteForm(): void;
     onFormSubmit(): Promise<void>;
     onCategorySwitch(categories: IBoardCategoriesParam): Promise<void>;
     onSearchBoard(searchText: string): Promise<void>;
     onScroll(): void;
     resetBoards(): void;
+    restoreBoards(): Promise<void>;
 }
 
 interface IBoardsScope extends IScope {
@@ -37,8 +45,11 @@ interface IBoardsScope extends IScope {
 class Controller implements ng.IController, IViewModel {
 
     selectedFolderId: string;
+    selectedBoardIds: Array<string>;
+
     displayBoardLightbox: boolean;
     boards: Array<Board>;
+    displayDeleteBoardLightbox: boolean;
     filter : {
         page: number;
         isTrash: boolean;
@@ -51,12 +62,13 @@ class Controller implements ng.IController, IViewModel {
                 private boardsService: IBoardsService) {
         this.$scope.vm = this;
         this.infiniteScrollService = new InfiniteScrollService;
-
     }
 
     async $onInit(): Promise<void> {
         this.selectedFolderId = null;
         this.displayBoardLightbox = false;
+        this.displayDeleteBoardLightbox = false;
+
         this.filter = {
             page: 0,
             isTrash: false,
@@ -64,6 +76,8 @@ class Controller implements ng.IController, IViewModel {
             searchText: ''
         };
         this.boards = [];
+        this.selectedBoardIds = [];
+
         await this.getBoards();
     }
 
@@ -81,8 +95,12 @@ class Controller implements ng.IController, IViewModel {
         await this.getBoards();
     }
 
-    createBoard = (): void => {
+    openCreateForm = (): void => {
         this.displayBoardLightbox = true;
+    }
+
+    openDeleteForm = (): void => {
+        this.displayDeleteBoardLightbox = true;
     }
 
     getBoards = async (): Promise<void> => {
@@ -109,6 +127,12 @@ class Controller implements ng.IController, IViewModel {
             });
     }
 
+    restoreBoards = async (): Promise<void> => {
+        await this.boardsService.restorePreDeleteBoards(this.selectedBoardIds);
+        this.resetBoards();
+        await this.getBoards();
+    }
+
     onFormSubmit = async (): Promise<void> => {
         this.resetBoards();
         await this.getBoards();
@@ -123,6 +147,7 @@ class Controller implements ng.IController, IViewModel {
         this.filter.page = 0;
         this.filter.searchText = '';
         this.boards = [];
+        this.selectedBoardIds = [];
     }
 
     $onDestroy() {

@@ -1,0 +1,48 @@
+<lightbox class="board-delete-lightbox"
+          show="vm.display"
+          on-close="vm.display = false">
+    <section class="head board-delete-lightbox-head">
+        <h3 ng-if="vm.boardIds.length > 1">
+            <i18n>magneto.delete.boards</i18n>
+        </h3>
+        <h3 ng-if="vm.boardIds.length == 1">
+            <i18n>magneto.delete.board</i18n>
+        </h3>
+    </section>
+
+    <section class="body board-delete-lightbox-body">
+        <div class="row vertical-spacing board-delete-lightbox-body-inputs">
+            <div ng-if="vm.boardIds.length == 1">
+                <div ng-if="vm.isPredelete">
+                    <i18n>magneto.predelete.board.message</i18n>
+                </div>
+                <div ng-if="!vm.isPredelete">
+                    <i18n>magneto.delete.board.message</i18n>
+                </div>
+            </div>
+            <div ng-if="vm.boardIds.length > 1">
+                <div ng-if="vm.isPredelete">
+                    <i18n>magneto.predelete.boards.message</i18n>
+                </div>
+                <div ng-if="!vm.isPredelete">
+                    <i18n>magneto.delete.boards.message</i18n>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- Form submit/cancel buttons -->
+    <section>
+        <div class="row horizontal-spacing">
+            <div class="twelve cell">
+                <button class="right-magnet"
+                        data-ng-click="vm.submitDeleteBoard()">
+                    <i18n>magneto.save</i18n>
+                </button>
+                <button class="right-magnet cancel"
+                        data-ng-click="vm.closeForm()">
+                    <i18n>magneto.cancel</i18n>
+                </button>
+            </div>
+        </div>
+    </section>
+</lightbox>

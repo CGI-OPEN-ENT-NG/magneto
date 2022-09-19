@@ -10,6 +10,7 @@ interface IViewModel extends ng.IController, IBoardListItemProps {
 
 interface IBoardListItemProps {
     board: Board;
+    isSelected: boolean;
 }
 
 interface IBoardListItemScope extends IScope, IBoardListItemProps {
@@ -19,6 +20,7 @@ interface IBoardListItemScope extends IScope, IBoardListItemProps {
 class Controller implements IViewModel {
 
     board: Board;
+    isSelected: boolean;
 
     constructor(private $scope: IBoardListItemScope,
                 private $location: ILocationService,
@@ -43,7 +45,8 @@ function directive() {
         restrict: 'E',
         templateUrl: `${RootsConst.directive}board-list/board-list-item.html`,
         scope: {
-            board: '='
+            board: '=',
+            isSelected: '='
         },
         controllerAs: 'vm',
         bindToController: true,

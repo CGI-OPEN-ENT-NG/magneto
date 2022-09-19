@@ -5,4 +5,6 @@ export * from './create-folder/create-folder.directive';
 export * from './board-categories-nav/board-categories-nav.directive';
 export * from './board-categories-nav/board-categories-nav-item.directive';
 export * from './board-search-bar/board-search-bar.directive';
+export * from './toaster/toaster.directive';
 export * from './infinite-scroll.directive';
+export * from './board-delete-lightbox/board-delete-lightbox.directive';

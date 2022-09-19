@@ -3,7 +3,7 @@
         <h1 class="cell paddingRight">
             <i18n>magneto.title</i18n>
         </h1>
-        <button class="right-magnet create-button" ng-click="vm.createBoard()">
+        <button class="right-magnet create-button" ng-click="vm.openCreateForm()">
             <i18n>magneto.create.board</i18n>
         </button>
     </div>
@@ -27,9 +27,6 @@
             </board-categories-nav>
         </div>
 
-
-
-
         <div class="nine cell">
 
             <div class="list-header row">
@@ -49,14 +46,23 @@
                 </div>
             </div>
 
-
             <board-list
-                    boards="vm.boards">
+                    boards="vm.boards"
+                    categories-eventer="vm.boardCategoriesService"
+                    selected-board-ids="vm.selectedBoardIds">
             </board-list>
-
         </div>
     </div>
 
+    <!-- Board deletion modal -->
+    <board-delete-lightbox
+            display="vm.displayDeleteBoardLightbox"
+            on-submit="vm.onFormSubmit"
+            is-predelete="!vm.filter.isTrash"
+            board-ids="vm.selectedBoardIds">
+    </board-delete-lightbox>
+
+    <!-- Board creation modal -->
     <board-manage-lightbox
             display="vm.displayBoardLightbox"
             on-submit="vm.onFormSubmit">
@@ -67,4 +73,14 @@
                      scroll-eventer="vm.infiniteScrollService">
     </infinite-scroll>
 
+    <toaster
+            display="vm.selectedBoardIds.length > 0"
+            has-open="false"
+            has-properties="false"
+            has-delete="true"
+            on-delete="vm.openDeleteForm"
+            has-share="false"
+            has-restore="vm.filter.isTrash"
+            on-restore="vm.restoreBoards">
+    </toaster>
 </div>

@@ -70,4 +70,18 @@ describe('BoardsController', () => {
 
         done();
     });
+
+    it('test openCreateForm', (done) => {
+        boardsControllerTest.displayBoardLightbox = false;
+        boardsControllerTest.openCreateForm();
+        expect(boardsControllerTest.displayBoardLightbox).toBe(true);
+        done();
+    });
+
+    it('test openDeleteForm', (done) => {
+        boardsControllerTest.displayDeleteBoardLightbox = false;
+        boardsControllerTest.openDeleteForm();
+        expect(boardsControllerTest.displayDeleteBoardLightbox).toBe(true);
+        done();
+    });
 });

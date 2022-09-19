@@ -1,4 +1,5 @@
-<div class="card board-list-item flex-row f-column">
+<div class="card board-list-item flex-row f-column"
+    ng-class="{'active': vm.isSelected}">
     <!--Board image-->
     <div class="board-list-item-image flex-row justify-center">
         <img src="[[vm.board.imageUrl]]">

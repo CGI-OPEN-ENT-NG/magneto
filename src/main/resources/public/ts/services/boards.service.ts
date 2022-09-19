@@ -7,6 +7,12 @@ export interface IBoardsService {
     getAllBoards(params: IBoardsParamsRequest): Promise<Boards>;
 
     createBoard(params: IBoardPayload): Promise<AxiosResponse>;
+
+    preDeleteBoards(boardIds: Array<string>): Promise<AxiosResponse>;
+
+    restorePreDeleteBoards(boardIds: Array<string>): Promise<AxiosResponse>;
+
+    deleteBoards(boardIds: Array<string>): Promise<AxiosResponse>;
 }
 
 export const boardsService: IBoardsService = {
@@ -27,6 +33,18 @@ export const boardsService: IBoardsService = {
 
     createBoard: async (params: IBoardPayload): Promise<AxiosResponse> => {
         return http.post(`/magneto/board`, params);
+    },
+
+    preDeleteBoards: async (boardIds: Array<string>): Promise<AxiosResponse> => {
+        return http.put(`/magneto/boards/predelete`, {boardIds: boardIds});
+    },
+
+    restorePreDeleteBoards: async (boardIds: Array<string>): Promise<AxiosResponse> => {
+        return http.put(`/magneto/boards/restore`, {boardIds: boardIds});
+    },
+
+    deleteBoards: async (boardIds: Array<string>): Promise<AxiosResponse> => {
+        return http.delete(`/magneto/boards`, {data: {boardIds: boardIds}});
     }
 };
 

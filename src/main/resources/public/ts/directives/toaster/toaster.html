@@ -1,0 +1,26 @@
+<section class="magneto-toaster toggle-buttons" data-ng-class="{ 'hide': !vm.display }">
+    <div class="toggle">
+        <div class="row magneto-toaster-buttons">
+            <!-- Open button -->
+            <button ng-if="vm.hasOpen" ng-click="vm.open()">
+                <i18n>magneto.open</i18n>
+            </button>
+            <!-- Properties button -->
+            <button ng-if="vm.hasProperties" ng-click="vm.openProperties()">
+                <i18n>magneto.properties</i18n>
+            </button>
+            <!-- Restore button -->
+            <button ng-if="vm.hasRestore" ng-click="vm.openRestore()">
+                <i18n>magneto.restore</i18n>
+            </button>
+            <!-- Delete button -->
+            <button ng-if="vm.hasDelete" ng-click="vm.openDelete()">
+                <i18n>magneto.delete</i18n>
+            </button>
+            <!-- Share button -->
+            <button ng-if="vm.hasShare" ng-click="vm.openShare()">
+                <i18n>magneto.share</i18n>
+            </button>
+        </div>
+    </div>
+</section>

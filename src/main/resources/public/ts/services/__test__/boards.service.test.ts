@@ -44,8 +44,54 @@ describe('BoardsService', () => {
             description: 'description',
             imageUrl: 'imageUrl'
         }
+        let spy = jest.spyOn(axios, "post");
         mock.onPost(`/magneto/board`).reply(200, data);
         boardsService.createBoard(params).then(res => {
+            expect(res.data).toEqual(data);
+            done();
+        });
+    });
+
+    it('returns date when preDeleteBoards is correctly called', done => {
+        const mock = new MockAdapter(axios);
+        const data = {
+            response: true
+        }
+
+        mock.onPut(`/magneto/boards/predelete`, {boardIds: ['boardId']})
+            .reply(200, data);
+
+        boardsService.preDeleteBoards(['boardId']).then(res => {
+            expect(res.data).toEqual(data);
+            done();
+        });
+    });
+
+    it('returns date when restorePreDeleteBoards is correctly called', done => {
+        const mock = new MockAdapter(axios);
+        const data = {
+            response: true
+        }
+
+        mock.onPut(`/magneto/boards/restore`, {boardIds: ['boardId']})
+            .reply(200, data);
+
+        boardsService.restorePreDeleteBoards(['boardId']).then(res => {
+            expect(res.data).toEqual(data);
+            done();
+        });
+    });
+
+    it('returns date when deleteBoards is correctly called', done => {
+        const mock = new MockAdapter(axios);
+        const data = {
+            response: true
+        }
+
+        mock.onDelete(`/magneto/boards`, {data: {boardIds: ['boardId']}})
+            .reply(200, data);
+
+        boardsService.deleteBoards(['boardId']).then(res => {
             expect(res.data).toEqual(data);
             done();
         });
