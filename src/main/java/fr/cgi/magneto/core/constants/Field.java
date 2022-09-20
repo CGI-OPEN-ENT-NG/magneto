@@ -28,6 +28,7 @@ public class Field {
     public static final String DESCRIPTION = "description";
     public static final String CARDIDS = "cardIds";
     public static final String BOARDIDS = "boardIds";
+    public static final String PARENTID = "parentId";
 
     public static final String COUNT = "count";
     public static final String PAGECOUNT = "pageCount";

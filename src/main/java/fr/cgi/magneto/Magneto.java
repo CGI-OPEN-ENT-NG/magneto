@@ -1,7 +1,6 @@
 package fr.cgi.magneto;
 
-import fr.cgi.magneto.controller.BoardController;
-import fr.cgi.magneto.controller.MagnetoController;
+import fr.cgi.magneto.controller.*;
 import fr.cgi.magneto.service.ServiceFactory;
 import fr.wseduc.mongodb.MongoDb;
 import org.entcore.common.http.BaseServer;
@@ -23,6 +22,7 @@ public class Magneto extends BaseServer {
 
 		addController(new MagnetoController(serviceFactory));
 		addController(new BoardController(serviceFactory));
+		addController(new FolderController(serviceFactory));
 
 	}
 
