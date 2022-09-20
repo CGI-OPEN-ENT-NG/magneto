@@ -2,9 +2,10 @@ import {ng} from "entcore";
 import {ILocationService, IScope, IWindowService, IParseService} from "angular";
 import {RootsConst} from "../../core/constants/roots.const";
 import {boardsService, IBoardsService} from "../../services";
+import {Board, BoardForm} from "../../models/board.model";
 
 interface IViewModel extends ng.IController, IBoardManageProps {
-    submitCreateBoard?(): Promise<void>;
+    submitBoard?(): Promise<void>;
 
     isFormValid(): boolean;
 
@@ -13,11 +14,9 @@ interface IViewModel extends ng.IController, IBoardManageProps {
 
 interface IBoardManageProps {
     display: boolean;
-    form: {
-        title: string,
-        description: string,
-        imageUrl: string
-    };
+    isUpdate: boolean;
+    boardToUpdate: Board;
+    form: BoardForm;
     onSubmit?;
 }
 
@@ -28,11 +27,10 @@ interface IBoardManageScope extends IScope, IBoardManageProps {
 class Controller implements IViewModel {
 
     display: boolean;
-    form: {
-        title: string,
-        description: string,
-        imageUrl: string
-    }
+    isUpdate: boolean;
+    boardToUpdate: Board;
+    form: BoardForm;
+    onSubmit: () => void;
 
 
     constructor(private $scope: IBoardManageScope,
@@ -42,27 +40,15 @@ class Controller implements IViewModel {
     }
 
     $onInit() {
-        this.display = false;
-        this.form = {
-            title: '',
-            description: '',
-            imageUrl: ''
-        }
     }
 
     isFormValid = (): boolean => {
-        return this.form.title && this.form.title !== '' &&
-            this.form.description && this.form.description !== '' &&
-            this.form.imageUrl && this.form.imageUrl !== '';
+        return this.form.isValid();
     }
 
     closeForm = (): void => {
-        this.form = {
-            title: '',
-            description: '',
-            imageUrl: ''
-        }
         this.display = false;
+        this.isUpdate = false;
     }
 
     $onDestroy() {
@@ -76,7 +62,9 @@ function directive($parse: IParseService) {
         templateUrl: `${RootsConst.directive}board-manage-lightbox/board-manage-lightbox.html`,
         scope: {
             display: '=',
-            onSubmit: '&'
+            isUpdate: '=',
+            onSubmit: '&',
+            form: '='
         },
         controllerAs: 'vm',
         bindToController: true,
@@ -87,10 +75,18 @@ function directive($parse: IParseService) {
                         attrs: ng.IAttributes,
                         vm: IViewModel) {
 
-            vm.submitCreateBoard = async (): Promise<void> => {
+            vm.submitBoard = async (): Promise<void> => {
                 try {
-                    await boardsService.createBoard({
-                        title: vm.form.title, description: vm.form.description, imageUrl: vm.form.imageUrl});
+                    let form : BoardForm = new BoardForm();
+                    form.title = vm.form.title;
+                    form.description = vm.form.description;
+                    form.imageUrl = vm.form.imageUrl;
+
+                    if (vm.isUpdate) {
+                        await boardsService.updateBoard(vm.form.id, form);
+                    } else {
+                        await boardsService.createBoard(form);
+                    }
 
                 } catch (e) {
                     throw e;
@@ -99,7 +95,7 @@ function directive($parse: IParseService) {
                 $parse($scope.vm.onSubmit())({});
 
                 vm.closeForm();
-            }
+            };
         }
     }
 }

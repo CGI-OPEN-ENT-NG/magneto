@@ -1,7 +1,7 @@
 import {ng} from "entcore";
 import {ILocationService, IScope, IWindowService} from "angular";
 import {RootsConst} from "../../core/constants/roots.const";
-import {Board} from "../../models/board.model";
+import {Board, BoardForm} from "../../models/board.model";
 
 interface IViewModel extends ng.IController, IBoardListProps {
     selectBoard(boardId: string): void;
@@ -11,6 +11,7 @@ interface IViewModel extends ng.IController, IBoardListProps {
 interface IBoardListProps {
     boards: Array<Board>;
     selectedBoardIds: Array<string>;
+    selectedUpdateBoardForm: BoardForm;
 }
 
 interface IBoardListScope extends IScope, IBoardListProps {
@@ -21,6 +22,7 @@ class Controller implements IViewModel {
 
     boards: Array<Board>;
     selectedBoardIds: Array<string>;
+    selectedUpdateBoardForm: BoardForm;
 
     constructor(private $scope: IBoardListScope,
                 private $location: ILocationService,
@@ -32,11 +34,19 @@ class Controller implements IViewModel {
     }
 
     selectBoard = (boardId: string): void => {
+        // select board
         if (!this.isBoardSelected(boardId)) {
             this.selectedBoardIds.push(boardId);
         } else {
+            // deselect board
             this.selectedBoardIds = this.selectedBoardIds.filter((id: string) => id !== boardId);
         }
+
+        let selectedUpdateBoard: Board = this.boards.find((board: Board) => board.id === this.selectedBoardIds[0]);
+        this.selectedUpdateBoardForm.id = selectedUpdateBoard.id;
+        this.selectedUpdateBoardForm.title = selectedUpdateBoard.title;
+        this.selectedUpdateBoardForm.description = selectedUpdateBoard.description;
+        this.selectedUpdateBoardForm.imageUrl = selectedUpdateBoard.imageUrl;
     }
 
     isBoardSelected = (boardId: string): boolean => {
@@ -54,7 +64,8 @@ function directive() {
         templateUrl: `${RootsConst.directive}board-list/board-list.html`,
         scope: {
             boards: '=',
-            selectedBoardIds: '='
+            selectedBoardIds: '=',
+            selectedUpdateBoardForm: '='
         },
         controllerAs: 'vm',
         bindToController: true,

@@ -29,6 +29,7 @@
   "magneto.open": "Open",
   "magneto.delete": "Delete",
   "magneto.properties": "Properties",
+  "magneto.board.properties": "Board properties",
   "magneto.share": "Share",
   "magneto.restore": "Restore"
 }

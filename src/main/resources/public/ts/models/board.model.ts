@@ -25,9 +25,75 @@ export interface IBoardsParamsRequest {
 }
 
 export interface IBoardPayload {
+    id?: string;
     title: string;
     description: string;
     imageUrl: string;
+}
+
+export class BoardForm {
+    private _id: string;
+    private _title: string;
+    private _description: string;
+    private _imageUrl: string;
+
+    constructor() {
+        this._id = '';
+        this._title = '';
+        this._description = '';
+        this._imageUrl = '';
+    }
+
+    get id(): string {
+        return this._id;
+    }
+
+    set id(value: string) {
+        this._id = value;
+    }
+
+    get title(): string {
+        return this._title;
+    }
+
+    set title(value: string) {
+        this._title = value;
+    }
+
+    get description(): string {
+        return this._description;
+    }
+
+    set description(value: string) {
+        this._description = value;
+    }
+
+    get imageUrl(): string {
+        return this._imageUrl;
+    }
+
+    set imageUrl(value: string) {
+        this._imageUrl = value;
+    }
+
+    isValid(): boolean {
+        return this.title !== null && this.title !== '' &&
+            this.description != null && this.description !== '' &&
+            this.imageUrl != null && this.imageUrl !== ''
+    }
+
+    toJSON(): IBoardPayload {
+
+        let payload : IBoardPayload = {
+            title: this.title,
+            description: this.description,
+            imageUrl: this.imageUrl
+        } ;
+
+        if (this.id && this.id != '') payload.id = this.id;
+
+        return payload;
+    }
 }
 
 export interface IBoardCategoriesParam {

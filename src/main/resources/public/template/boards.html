@@ -49,7 +49,8 @@
             <board-list
                     boards="vm.boards"
                     categories-eventer="vm.boardCategoriesService"
-                    selected-board-ids="vm.selectedBoardIds">
+                    selected-board-ids="vm.selectedBoardIds"
+                    selected-update-board-form="vm.selectedUpdateBoardForm">
             </board-list>
         </div>
     </div>
@@ -65,7 +66,9 @@
     <!-- Board creation modal -->
     <board-manage-lightbox
             display="vm.displayBoardLightbox"
-            on-submit="vm.onFormSubmit">
+            on-submit="vm.onFormSubmit"
+            is-update="vm.displayUpdateBoardLightbox"
+            form="vm.selectedUpdateBoardForm">
     </board-manage-lightbox>
 
     <infinite-scroll scrolled="vm.onScroll()"
@@ -76,8 +79,9 @@
     <toaster
             display="vm.selectedBoardIds.length > 0"
             has-open="false"
-            has-properties="false"
-            has-delete="true"
+            has-properties="!vm.filter.isPublic && !vm.filter.isTrash && vm.selectedBoardIds.length == 1"
+            on-properties="vm.openPropertiesForm"
+            has-delete="!vm.filter.isPublic"
             on-delete="vm.openDeleteForm"
             has-share="false"
             has-restore="vm.filter.isTrash"

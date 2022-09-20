@@ -1,12 +1,13 @@
 import {ng} from 'entcore'
 import http, {AxiosResponse} from 'axios';
-import {IBoardsParamsRequest, IBoardPayload, Boards} from "../models/board.model";
-
+import {IBoardsParamsRequest, IBoardPayload, Boards, BoardForm} from "../models/board.model";
 
 export interface IBoardsService {
     getAllBoards(params: IBoardsParamsRequest): Promise<Boards>;
 
-    createBoard(params: IBoardPayload): Promise<AxiosResponse>;
+    createBoard(params: BoardForm): Promise<AxiosResponse>;
+
+    updateBoard(boardId: string, params: BoardForm): Promise<AxiosResponse>;
 
     preDeleteBoards(boardIds: Array<string>): Promise<AxiosResponse>;
 
@@ -31,8 +32,12 @@ export const boardsService: IBoardsService = {
             .then((res: AxiosResponse) => new Boards(res.data));
     },
 
-    createBoard: async (params: IBoardPayload): Promise<AxiosResponse> => {
-        return http.post(`/magneto/board`, params);
+    createBoard: async (params: BoardForm): Promise<AxiosResponse> => {
+        return http.post(`/magneto/board`, params.toJSON());
+    },
+
+    updateBoard: async (boardId: string, params: BoardForm): Promise<AxiosResponse> => {
+        return http.put(`/magneto/board/${boardId}`, params.toJSON());
     },
 
     preDeleteBoards: async (boardIds: Array<string>): Promise<AxiosResponse> => {

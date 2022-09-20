@@ -2,8 +2,11 @@
           show="vm.display"
           on-close="vm.display = false">
     <section class="head board-manage-lightbox-head">
-        <h3>
+        <h3 ng-if="!vm.isUpdate">
             <i18n>magneto.create.board</i18n>
+        </h3>
+        <h3 ng-if="vm.isUpdate">
+            <i18n>magneto.board.properties</i18n>
         </h3>
     </section>
     <section class="body board-manage-lightbox-body">
@@ -29,7 +32,7 @@
         <div class="row horizontal-spacing">
             <div class="twelve cell">
                 <button class="right-magnet"
-                        data-ng-click="vm.submitCreateBoard()"
+                        data-ng-click="vm.submitBoard()"
                         data-ng-disabled="!vm.isFormValid()">
                     <i18n>magneto.save</i18n>
                 </button>

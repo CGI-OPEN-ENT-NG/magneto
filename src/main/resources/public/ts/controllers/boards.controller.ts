@@ -4,7 +4,7 @@ import {IBoardsService} from "../services";
 import {
     IBoardCategoriesParam,
     IBoardsParamsRequest,
-    Boards, Board
+    Boards, Board, BoardForm
 } from "../models/board.model";
 import {safeApply} from "../utils/safe-apply.utils";
 import {AxiosError} from "axios";
@@ -13,9 +13,11 @@ import {InfiniteScrollService} from "../shared/services";
 interface IViewModel {
     selectedFolderId: string;
     selectedBoardIds: Array<string>;
+    selectedUpdateBoardForm: BoardForm;
 
     displayBoardLightbox: boolean;
     displayDeleteBoardLightbox: boolean;
+    displayUpdateBoardLightbox: boolean;
 
     boards: Array<Board>;
     filter : {
@@ -30,6 +32,7 @@ interface IViewModel {
     getBoards(): Promise<void>;
     openCreateForm(): void;
     openDeleteForm(): void;
+    openPropertiesForm(): void;
     onFormSubmit(): Promise<void>;
     onCategorySwitch(categories: IBoardCategoriesParam): Promise<void>;
     onSearchBoard(searchText: string): Promise<void>;
@@ -46,10 +49,12 @@ class Controller implements ng.IController, IViewModel {
 
     selectedFolderId: string;
     selectedBoardIds: Array<string>;
+    selectedUpdateBoardForm: BoardForm;
 
     displayBoardLightbox: boolean;
     boards: Array<Board>;
     displayDeleteBoardLightbox: boolean;
+    displayUpdateBoardLightbox: boolean;
     filter : {
         page: number;
         isTrash: boolean;
@@ -77,6 +82,7 @@ class Controller implements ng.IController, IViewModel {
         };
         this.boards = [];
         this.selectedBoardIds = [];
+        this.selectedUpdateBoardForm = new BoardForm();
 
         await this.getBoards();
     }
@@ -101,6 +107,11 @@ class Controller implements ng.IController, IViewModel {
 
     openDeleteForm = (): void => {
         this.displayDeleteBoardLightbox = true;
+    }
+
+    openPropertiesForm = (): void => {
+        this.displayUpdateBoardLightbox = true;
+        this.displayBoardLightbox = true;
     }
 
     getBoards = async (): Promise<void> => {
@@ -148,6 +159,7 @@ class Controller implements ng.IController, IViewModel {
         this.filter.searchText = '';
         this.boards = [];
         this.selectedBoardIds = [];
+        this.selectedUpdateBoardForm = new BoardForm();
     }
 
     $onDestroy() {

@@ -29,6 +29,7 @@
   "magneto.open": "Ouvrir",
   "magneto.delete": "Supprimer",
   "magneto.properties": "Propriétés",
+  "magneto.board.properties": "Propriétés du tableau",
   "magneto.share": "Partager",
   "magneto.restore": "Restaurer"
 }

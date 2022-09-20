@@ -1,7 +1,7 @@
 import axios from 'axios';
 import MockAdapter from 'axios-mock-adapter';
 import {boardsService} from "../boards.service";
-import { IBoardsParamsRequest } from "../../models/board.model";
+import {BoardForm, IBoardsParamsRequest} from "../../models/board.model";
 
 describe('BoardsService', () => {
     it('returns data when getAllboards is correctly called', done => {
@@ -39,20 +39,21 @@ describe('BoardsService', () => {
         const data = {
             response: true
         }
-        const params = {
-            title: 'title',
-            description: 'description',
-            imageUrl: 'imageUrl'
-        }
+
+        let form = new BoardForm();
+        form.title = 'title';
+        form.description = 'description';
+        form.imageUrl = 'imageUrl';
+
         let spy = jest.spyOn(axios, "post");
         mock.onPost(`/magneto/board`).reply(200, data);
-        boardsService.createBoard(params).then(res => {
+        boardsService.createBoard(form).then(res => {
             expect(res.data).toEqual(data);
             done();
         });
     });
 
-    it('returns date when preDeleteBoards is correctly called', done => {
+    it('returns data when preDeleteBoards is correctly called', done => {
         const mock = new MockAdapter(axios);
         const data = {
             response: true
@@ -67,7 +68,7 @@ describe('BoardsService', () => {
         });
     });
 
-    it('returns date when restorePreDeleteBoards is correctly called', done => {
+    it('returns data when restorePreDeleteBoards is correctly called', done => {
         const mock = new MockAdapter(axios);
         const data = {
             response: true
@@ -82,7 +83,7 @@ describe('BoardsService', () => {
         });
     });
 
-    it('returns date when deleteBoards is correctly called', done => {
+    it('returns data when deleteBoards is correctly called', done => {
         const mock = new MockAdapter(axios);
         const data = {
             response: true
@@ -95,6 +96,27 @@ describe('BoardsService', () => {
             expect(res.data).toEqual(data);
             done();
         });
+    });
+
+    it('returns data when updateBoard is correctly called', done => {
+        const mock = new MockAdapter(axios);
+        const data = {
+            response: true
+        }
+
+        const form = new BoardForm();
+        form.title = 'title';
+        form.description = 'description';
+        form.imageUrl = 'imageUrl';
+
+        mock.onPut(`/magneto/board/boardId`, form.toJSON())
+            .reply(200, data);
+
+        boardsService.updateBoard('boardId', form).then(res => {
+            expect(res.data).toEqual(data);
+            done();
+        });
+
     });
 
 });
