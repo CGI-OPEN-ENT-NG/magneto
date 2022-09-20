@@ -1,5 +1,6 @@
 package fr.cgi.magneto.service;
 
+import fr.cgi.magneto.model.*;
 import io.vertx.core.*;
 import io.vertx.core.json.*;
 import org.entcore.common.user.UserInfos;
@@ -17,6 +18,14 @@ public interface BoardService {
      * @return Future {@link Future <JsonObject>} containing newly created board
      */
    Future<JsonObject> create(UserInfos user, JsonObject board);
+
+    /**
+     * Update a board
+     * @param user      User Object containing user id and displayed name
+     * @param board     Board to update
+     * @return Future {@link Future <JsonObject>} containing updated board
+     */
+    Future<JsonObject> update(UserInfos user, BoardPayload board);
 
     /**
      * Get all boards

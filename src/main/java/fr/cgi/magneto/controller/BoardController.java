@@ -1,6 +1,7 @@
 package fr.cgi.magneto.controller;
 
 import fr.cgi.magneto.core.constants.*;
+import fr.cgi.magneto.model.*;
 import fr.cgi.magneto.security.*;
 import fr.cgi.magneto.service.BoardService;
 import fr.cgi.magneto.service.ServiceFactory;
@@ -8,7 +9,6 @@ import fr.wseduc.rs.*;
 import fr.wseduc.security.*;
 import fr.wseduc.webutils.request.RequestUtils;
 import io.vertx.core.http.*;
-import io.vertx.core.json.*;
 import org.entcore.common.controller.*;
 import org.entcore.common.http.filter.*;
 import org.entcore.common.user.UserUtils;
@@ -56,7 +56,22 @@ public class BoardController extends ControllerHelper {
                 UserUtils.getUserInfos(eb, request, user ->
                     boardService.create(user, board)
                         .onFailure(err -> renderError(request))
-                        .onSuccess(result -> renderJson(request, result))));
+                            .onSuccess(result -> renderJson(request, result))));
+    }
+
+    @Put("/board/:id")
+    @ApiDoc("Update a board")
+    @ResourceFilter(ManageBoardRight.class)
+    @SecuredAction(value = "", type = ActionType.RESOURCE)
+    public void update(HttpServerRequest request) {
+        RequestUtils.bodyToJson(request, pathPrefix + "board", board -> {
+            String boardId = request.getParam(Field.ID);
+            BoardPayload updateBoard = new BoardPayload(board).setId(boardId);
+            UserUtils.getUserInfos(eb, request, user ->
+                    boardService.update(user, updateBoard)
+                            .onFailure(err -> renderError(request))
+                            .onSuccess(result -> renderJson(request, result)));
+        });
     }
 
 

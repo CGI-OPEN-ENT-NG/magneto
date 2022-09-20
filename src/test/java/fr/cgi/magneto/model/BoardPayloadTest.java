@@ -6,48 +6,52 @@ import io.vertx.ext.unit.junit.*;
 import org.junit.*;
 import org.junit.runner.*;
 
-import java.util.*;
-
 @RunWith(VertxUnitRunner.class)
-public class BoardTest {
+public class BoardPayloadTest {
 
-    JsonObject boardJsonObject_1 = new JsonObject()
-            .put("_id", "id")
+    JsonObject boardCreateJsonObject_1 = new JsonObject()
             .put("title", "title")
             .put("imageUrl", "imageUrl")
             .put("description", "description")
             .put("ownerId", "ownerId")
             .put("ownerName", "ownerName")
-            .put("cardIds", new JsonArray(Arrays.asList("cardId1", "cardId2")))
             .put("creationDate", "creationDate")
             .put("modificationDate", "modificationDate")
-            .put("deleted", true)
-            .put("public", true)
-            .put("folderId", "folderId");
+            .put("deleted", false)
+            .put("public", false)
+            .put("folderId", "folderId")
+            .put("cardIds", new JsonArray());
 
+    JsonObject boardUpdateJsonObject_1 = new JsonObject()
+            .put("title", "title")
+            .put("imageUrl", "imageUrl")
+            .put("description", "description")
+            .put("modificationDate", "modificationDate");
 
     @Test
-    public void testBoardHasBeenInstantiated(TestContext ctx) {
-        Board board = new Board(boardJsonObject_1);
+    public void testBoardPayloadHasBeenInstantiated(TestContext ctx) {
+        BoardPayload board = new BoardPayload(boardCreateJsonObject_1);
         board.setModificationDate("modificationDate");
         board.setCreationDate("creationDate");
-        ctx.assertEquals(boardJsonObject_1, board.toJson());
+        ctx.assertEquals(boardCreateJsonObject_1, board.toJson());
+
+        BoardPayload board2 = new BoardPayload(boardUpdateJsonObject_1);
+        board2.setId("id").setModificationDate("modificationDate");
+        ctx.assertEquals(boardUpdateJsonObject_1, board2.toJson());
+
     }
 
     @Test
-    public void testBoardHasContentWithObject(TestContext ctx) {
-        Board board = new Board(boardJsonObject_1);
-        boolean isNotEmpty = !board.getId().isEmpty() &&
+    public void testBoardPayloadHasContentWithObject(TestContext ctx) {
+        BoardPayload board = new BoardPayload(boardCreateJsonObject_1);
+        boolean isNotEmpty =
                 !board.getTitle().isEmpty() &&
                 !board.getImageUrl().isEmpty() &&
                 !board.getDescription().isEmpty() &&
                 !board.getOwnerId().isEmpty() &&
                 !board.getOwnerName().isEmpty() &&
-                !board.getCardIds().isEmpty() &&
                 !board.getCreationDate().isEmpty() &&
                 !board.getModificationDate().isEmpty() &&
-                board.isDeleted() &&
-                board.isPublic() &&
                 !board.getFolderId().isEmpty();
         ctx.assertTrue(isNotEmpty);
     }

@@ -3,7 +3,6 @@ package fr.cgi.magneto.service.impl;
 import fr.cgi.magneto.*;
 import fr.cgi.magneto.core.constants.*;
 import fr.cgi.magneto.model.*;
-import fr.cgi.magneto.model.Board;
 import fr.cgi.magneto.service.BoardService;
 import io.vertx.core.*;
 import io.vertx.core.json.*;
@@ -32,17 +31,36 @@ public class DefaultBoardService implements BoardService {
     @Override
     public Future<JsonObject> create(UserInfos user, JsonObject board) {
         Promise<JsonObject> promise = Promise.promise();
-        Board createBoard = new Board(board);
+        BoardPayload createBoard = new BoardPayload(board);
         createBoard.setOwnerId(user.getUserId());
         createBoard.setOwnerName(user.getFirstName() + " " + user.getLastName());
-        mongoDb.insert(this.collection, JsonObject.mapFrom(createBoard), MongoDbResult.validResultHandler(results -> {
+        mongoDb.insert(this.collection, createBoard.toJson(), MongoDbResult.validResultHandler(results -> {
             if (results.isLeft()) {
                 String message = String.format("[Magneto@%s::create] Failed to create board", this.getClass().getSimpleName());
                 log.error(String.format("%s. %s", message, results.left().getValue()));
                 promise.fail(message);
                 return;
             }
-            promise.complete();
+            promise.complete(results.right().getValue());
+        }));
+        return promise.future();
+    }
+
+    @Override
+    public Future<JsonObject> update(UserInfos user, BoardPayload board) {
+        Promise<JsonObject> promise = Promise.promise();
+        JsonObject query = new JsonObject()
+                .put(Field._ID, board.getId())
+                .put(Field.OWNERID, user.getUserId());
+        JsonObject update = new JsonObject().put(Mongo.SET, board.toJson());
+        mongoDb.update(this.collection, query, update, MongoDbResult.validActionResultHandler(results -> {
+            if (results.isLeft()) {
+                String message = String.format("[Magneto@%s::update] Failed to update board", this.getClass().getSimpleName());
+                log.error(String.format("%s : %s", message, results.left().getValue()));
+                promise.fail(message);
+                return;
+            }
+            promise.complete(results.right().getValue());
         }));
         return promise.future();
     }
@@ -51,9 +69,9 @@ public class DefaultBoardService implements BoardService {
     public Future<JsonObject> preDeleteBoards(String userId, List<String> boardIds, boolean restore) {
         Promise<JsonObject> promise = Promise.promise();
         JsonObject query = new JsonObject()
-                .put(Field._ID, new JsonObject().put("$in", new JsonArray(boardIds)))
+                .put(Field._ID, new JsonObject().put(Mongo.IN, new JsonArray(boardIds)))
                 .put(Field.OWNERID, userId);
-        JsonObject update = new JsonObject().put("$set", new JsonObject().put(Field.DELETED, !restore));
+        JsonObject update = new JsonObject().put(Mongo.SET, new JsonObject().put(Field.DELETED, !restore));
         mongoDb.update(this.collection, query, update, false, true, MongoDbResult.validActionResultHandler(results -> {
             if (results.isLeft()) {
                 String message = String.format("[Magneto@%s::preDeleteBoards] Failed to pre delete boards",
@@ -70,7 +88,7 @@ public class DefaultBoardService implements BoardService {
     public Future<JsonObject> deleteBoards(String userId, List<String> boardIds) {
         Promise<JsonObject> promise = Promise.promise();
         JsonObject query = new JsonObject()
-                .put(Field._ID, new JsonObject().put("$in", new JsonArray(boardIds)))
+                .put(Field._ID, new JsonObject().put(Mongo.IN, new JsonArray(boardIds)))
                 .put(Field.OWNERID, userId);
         mongoDb.delete(this.collection, query, MongoDbResult.validActionResultHandler(results -> {
             if (results.isLeft()) {
@@ -167,9 +185,10 @@ public class DefaultBoardService implements BoardService {
                         .put(Field._ID, 1)
                         .put(Field.TITLE, 1)
                         .put(Field.IMAGEURL, 1)
-                        .put(Field.NBCARDS, new JsonObject().put("$size", "$cardIds"))
+                        .put(Field.NBCARDS, new JsonObject().put(Mongo.SIZE, "$cardIds"))
                         .put(Field.MODIFICATIONDATE, 1)
-                        .put(Field.FOLDERID, 1));
+                        .put(Field.FOLDERID, 1)
+                        .put(Field.DESCRIPTION, 1));
                 if (getCount) {
                     query = query.count();
                 }

@@ -1,6 +1,6 @@
 package fr.cgi.magneto.model;
 
-import fr.wseduc.mongodb.*;
+import fr.cgi.magneto.core.constants.*;
 import io.vertx.core.json.*;
 
 import java.util.*;
@@ -29,7 +29,7 @@ public class MongoQuery {
 
     public MongoQuery match(JsonObject parameters) {
         this.pipeline.add(new JsonObject()
-                .put("$match", parameters));
+                .put(Mongo.MATCH, parameters));
         return this;
     }
 
@@ -37,42 +37,42 @@ public class MongoQuery {
         JsonArray or = new JsonArray();
         parameters.forEach(param -> or.add(new JsonObject().put(param,
                 new JsonObject()
-                        .put("$regex", regex)
-                        .put("$options", "i"))));
+                        .put(Mongo.REGEX, regex)
+                        .put(Mongo.OPTIONS, "i"))));
         this.pipeline.add(new JsonObject()
-                .put("$match", new JsonObject().put("$or", or)));
+                .put(Mongo.MATCH, new JsonObject().put(Mongo.OR, or)));
         return this;
     }
 
     public MongoQuery matchOr(JsonArray parameters) {
         this.pipeline.add(new JsonObject()
-                .put("$match", new JsonObject().put("$or", parameters)));
+                .put(Mongo.MATCH, new JsonObject().put(Mongo.OR, parameters)));
         return this;
     }
 
     public MongoQuery sort(String field, Integer sortOrder) {
         this.pipeline.add(new JsonObject()
-                .put("$sort", new JsonObject().put(field, sortOrder)));
+                .put(Mongo.SORT, new JsonObject().put(field, sortOrder)));
         return this;
     }
 
     public MongoQuery project(JsonObject parameters) {
         this.pipeline.add(new JsonObject()
-                .put("$project",parameters));
+                .put(Mongo.PROJECT,parameters));
         return this;
     }
 
     public MongoQuery count() {
         this.pipeline.add(new JsonObject()
-                .put("$count", "count"));
+                .put(Mongo.COUNT, "count"));
         return this;
     }
 
     public MongoQuery page(Integer pageNumber) {
         if (pageNumber > 0) {
-            this.pipeline.add(new JsonObject().put("$skip", pageNumber * PAGE_SIZE));
+            this.pipeline.add(new JsonObject().put(Mongo.SKIP, pageNumber * PAGE_SIZE));
         }
-        this.pipeline.add(new JsonObject().put("$limit", PAGE_SIZE));
+        this.pipeline.add(new JsonObject().put(Mongo.LIMIT, PAGE_SIZE));
         return this;
     }
 
