@@ -1,0 +1,31 @@
+<lightbox class="folder-manage-lightbox"
+          show="vm.display"
+          on-close="vm.display = false">
+    <section class="head folder-manage-lightbox-head">
+        <h3>
+            <i18n>magneto.create.folder</i18n>
+        </h3>
+    </section>
+    <section class="body folder-manage-lightbox-body">
+        <div class="row vertical-spacing folder-manage-lightbox-title">
+            <i18n>magneto.create.folder.name</i18n>&nbsp;:
+            <input type="text" data-ng-model="vm.title" class="twelve cell">
+        </div>
+    </section>
+    <!-- Form submit/cancel buttons -->
+    <section>
+        <div class="row horizontal-spacing">
+            <div class="twelve cell">
+                <button class="right-magnet"
+                        data-ng-click="vm.submitFolder()"
+                        data-ng-disabled="!vm.isFormValid()">
+                    <i18n>magneto.save</i18n>
+                </button>
+                <button class="right-magnet cancel"
+                        data-ng-click="vm.closeForm()">
+                    <i18n>magneto.cancel</i18n>
+                </button>
+            </div>
+        </div>
+    </section>
+</lightbox>

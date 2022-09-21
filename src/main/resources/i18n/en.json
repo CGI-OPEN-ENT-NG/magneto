@@ -31,5 +31,7 @@
   "magneto.properties": "Properties",
   "magneto.board.properties": "Board properties",
   "magneto.share": "Share",
-  "magneto.restore": "Restore"
+  "magneto.restore": "Restore",
+  "magneto.create.folder:": "Create folder",
+  "magneto.create.folder.name": "Folder name"
 }

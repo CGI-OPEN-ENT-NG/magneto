@@ -59,6 +59,11 @@ i {
     content: '\F142';
   }
 
+  &.magneto-chevron-down::before {
+    font-family: 'material-icons';
+    content: '\F140'
+  }
+
   &.magneto-book-variant-multiple::before {
     font-family: 'material-icons';
     content: '\F0BC';
@@ -67,6 +72,11 @@ i {
   &.magneto-magnify::before {
     font-family: 'material-icons';
     content: '\F349';
+  }
+
+  &.magneto-folder-open::before {
+    font-family: 'material-icons';
+    content: '\F76F';
   }
 
 

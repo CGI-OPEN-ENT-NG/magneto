@@ -1,0 +1,31 @@
+<div class="folder-tree-nav-item">
+
+    <!-- Folder name and open button -->
+    <div class="folder-tree-nav-item-name"
+         ng-class="{selected: vm.isSelected()}"
+         data-ng-click="vm.selectFolder(vm.folderTree)">
+
+        <!-- Folder open button -->
+        <i ng-if="vm.folderTree.children.length > 0"
+           ng-class="{'magneto-chevron-right': !vm.folderTree.isOpened, 'magneto-chevron-down': vm.folderTree.isOpened}"
+           data-ng-click="vm.toggleOpenFolder($event)"></i>
+
+        <!-- Folder icon -->
+        <i class="[[vm.folderTree.iconClass]]"></i>
+
+        <!-- Folder name -->
+        <a>[[vm.folderTree.name]]</a>
+    </div>
+
+    <!-- List of children folders -->
+    <ul ng-if="vm.folderTree.isOpened">
+        <li ng-repeat="folder in vm.folderTree.children">
+            <folder-tree-nav-item
+                    folder-tree="folder"
+                    selected-folder="vm.selectedFolder"
+                    on-select-folder="vm.selectFolder">
+            </folder-tree-nav-item>
+        </li>
+    </ul>
+
+</div>

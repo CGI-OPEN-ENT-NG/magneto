@@ -1,9 +1,8 @@
 import {ng, toasts} from "entcore";
 import {ILocationService, IParseService, IScope, IWindowService} from "angular";
 import {RootsConst} from "../../core/constants/roots.const";
-import {boardsService, IBoardsService} from "../../services";
+import {boardsService} from "../../services";
 import {AxiosResponse} from "axios";
-import {safeApply} from "../../utils/safe-apply.utils";
 
 interface IViewModel extends ng.IController, IBoardDeleteProps {
     submitDeleteBoard?(): Promise<void>;
@@ -30,8 +29,7 @@ class Controller implements IViewModel {
 
     constructor(private $scope: IBoardDeleteScope,
                 private $location: ILocationService,
-                private $window: IWindowService,
-                private boardsService: IBoardsService) {
+                private $window: IWindowService) {
     }
 
     $onInit() {
@@ -59,7 +57,7 @@ function directive($parse: IParseService) {
         },
         controllerAs: 'vm',
         bindToController: true,
-        controller: ['$scope', '$location', '$window', '$parse', 'BoardsService', Controller],
+        controller: ['$scope', '$location', '$window', '$parse', Controller],
         /* interaction DOM/element */
         link: function ($scope: IBoardDeleteScope,
                         element: ng.IAugmentedJQuery,

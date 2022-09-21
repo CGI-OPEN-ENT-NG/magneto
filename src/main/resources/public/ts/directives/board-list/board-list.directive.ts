@@ -1,17 +1,24 @@
 import {ng} from "entcore";
-import {ILocationService, IScope, IWindowService} from "angular";
+import {ILocationService, IParseService, IScope, IWindowService} from "angular";
 import {RootsConst} from "../../core/constants/roots.const";
-import {Board, BoardForm} from "../../models/board.model";
+import {Board, BoardForm} from "../../models";
+import {Folder} from "../../models";
 
 interface IViewModel extends ng.IController, IBoardListProps {
     selectBoard(boardId: string): void;
+    selectFolder(folderId: string): void;
+    openFolder?(folderId: string): void;
     isBoardSelected(boardId: string): boolean;
+    isFolderSelected(folderId: string);
 }
 
 interface IBoardListProps {
     boards: Array<Board>;
+    folders: Array<Folder>;
     selectedBoardIds: Array<string>;
+    selectedFolderIds: Array<string>;
     selectedUpdateBoardForm: BoardForm;
+    onOpen?;
 }
 
 interface IBoardListScope extends IScope, IBoardListProps {
@@ -21,7 +28,9 @@ interface IBoardListScope extends IScope, IBoardListProps {
 class Controller implements IViewModel {
 
     boards: Array<Board>;
+    folders: Array<Folder>;
     selectedBoardIds: Array<string>;
+    selectedFolderIds: Array<string>;
     selectedUpdateBoardForm: BoardForm;
 
     constructor(private $scope: IBoardListScope,
@@ -29,8 +38,7 @@ class Controller implements IViewModel {
                 private $window: IWindowService) {
     }
 
-    $onInit = async (): Promise<void> => {
-        this.selectedBoardIds = [];
+    $onInit = (): void => {
     }
 
     selectBoard = (boardId: string): void => {
@@ -43,14 +51,28 @@ class Controller implements IViewModel {
         }
 
         let selectedUpdateBoard: Board = this.boards.find((board: Board) => board.id === this.selectedBoardIds[0]);
-        this.selectedUpdateBoardForm.id = selectedUpdateBoard.id;
-        this.selectedUpdateBoardForm.title = selectedUpdateBoard.title;
-        this.selectedUpdateBoardForm.description = selectedUpdateBoard.description;
-        this.selectedUpdateBoardForm.imageUrl = selectedUpdateBoard.imageUrl;
+        this.selectedUpdateBoardForm.id = selectedUpdateBoard ? selectedUpdateBoard.id : null;
+        this.selectedUpdateBoardForm.title = selectedUpdateBoard ? selectedUpdateBoard.title : '';
+        this.selectedUpdateBoardForm.description = selectedUpdateBoard ? selectedUpdateBoard.description : '';
+        this.selectedUpdateBoardForm.imageUrl = selectedUpdateBoard ?  selectedUpdateBoard.imageUrl : '';
+    }
+
+    selectFolder = (folderId: string): void => {
+        // select folder
+        if (!this.isFolderSelected(folderId)) {
+            this.selectedFolderIds.push(folderId);
+        } else {
+            // deselect folder
+            this.selectedFolderIds = this.selectedFolderIds.filter((id: string) => id !== folderId);
+        }
     }
 
     isBoardSelected = (boardId: string): boolean => {
         return this.selectedBoardIds.find((id: string) => id === boardId) !== undefined;
+    }
+
+    isFolderSelected = (folderId: string): boolean => {
+        return this.selectedFolderIds.find((id: string) => id === folderId) !== undefined;
     }
 
     $onDestroy() {
@@ -58,23 +80,31 @@ class Controller implements IViewModel {
 
 }
 
-function directive() {
+function directive($parse: IParseService) {
     return {
         restrict: 'E',
         templateUrl: `${RootsConst.directive}board-list/board-list.html`,
         scope: {
             boards: '=',
+            folders: '=',
             selectedBoardIds: '=',
-            selectedUpdateBoardForm: '='
+            selectedFolderIds: '=',
+            selectedUpdateBoardForm: '=',
+            onOpen: '&'
         },
         controllerAs: 'vm',
         bindToController: true,
-        controller: ['$scope', '$location', '$window', Controller],
+        controller: ['$scope', '$location', '$window', '$parse', Controller],
         /* interaction DOM/element */
         link: function ($scope: IBoardListScope,
                         element: ng.IAugmentedJQuery,
                         attrs: ng.IAttributes,
                         vm: IViewModel) {
+
+            vm.openFolder = (folderId: string): void => {
+                $scope.vm.selectFolder(folderId);
+                $parse($scope.vm.onOpen())({});
+            }
         }
     }
 }

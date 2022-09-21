@@ -26,6 +26,19 @@
         }
       }
     }
+
+    &-folder-button {
+      width: 66%;
+      margin: 14px auto auto;
+
+      a {
+        border: solid $magneto-blue 1px;
+        border-radius: 5px;
+        background: none !important;
+        padding: 8px 24px;
+      }
+    }
+
   }
 
 

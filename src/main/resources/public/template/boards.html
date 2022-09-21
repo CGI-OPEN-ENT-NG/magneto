@@ -22,9 +22,18 @@
     </div>
     <div class="twelve cell boards-container-body">
         <div class="three cell">
-            <board-categories-nav
-                    on-category-switch="vm.onCategorySwitch">
-            </board-categories-nav>
+            <folder-tree-nav
+                    folder-trees="vm.folderNavTrees"
+                    folder-tree-eventer="vm.folderNavTreeSubject"
+                    on-select-folder="vm.switchFolder">
+            </folder-tree-nav>
+            <div class="boards-container-body-folder-button"
+                 ng-click="vm.displayFolderLightbox = true">
+                <a class="classic-link">
+                    <i class="magneto-folder-plus"></i>
+                    <i18n>magneto.create.folder</i18n>
+                </a>
+            </div>
         </div>
 
         <div class="nine cell">
@@ -33,8 +42,16 @@
                 <!--Folder name-->
                 <div class="folder-name">
                     <i class="magneto-folder"></i>
-                    <span ng-if="vm.selectedfolderId == null"><i18n>magneto.my.boards</i18n></span>
-                    <span ng-if="vm.selectedfolderId != null">[[vm.selectedFolderId]]</span>
+                    <span ng-if="vm.openedFolder == null && !vm.filter.isPublic && !vm.filter.isTrash">
+                        <i18n>magneto.my.boards</i18n>
+                    </span>
+                    <span ng-if="vm.openedFolder == null && vm.filter.isPublic">
+                        <i18n>magneto.lycee.connecte.boards</i18n>
+                    </span>
+                    <span ng-if="vm.openedFolder == null && vm.filter.isTrash">
+                        <i18n>magneto.trash</i18n>
+                    </span>
+                    <span ng-if="vm.openedFolder != null">[[vm.openedFolder.title]]</span>
                 </div>
                 <div class="board-list-filters right-magnet">
 <!--                    <i class="magneto-filter"></i>-->
@@ -48,9 +65,12 @@
 
             <board-list
                     boards="vm.boards"
+                    folders="vm.currentFolderChildren"
                     categories-eventer="vm.boardCategoriesService"
                     selected-board-ids="vm.selectedBoardIds"
-                    selected-update-board-form="vm.selectedUpdateBoardForm">
+                    selected-folder-ids="vm.selectedFolderIds"
+                    selected-update-board-form="vm.selectedUpdateBoardForm"
+                    on-open="vm.openBoardOrFolder">
             </board-list>
         </div>
     </div>
@@ -71,17 +91,25 @@
             form="vm.selectedUpdateBoardForm">
     </board-manage-lightbox>
 
+    <folder-manage-lightbox
+            display="vm.displayFolderLightbox"
+            parent-id="vm.openedFolder.id"
+            on-submit="vm.submitFolderForm"
+            on-folder-form-submit="vm.getFolders">
+    </folder-manage-lightbox>
+
     <infinite-scroll scrolled="vm.onScroll()"
                      loading-mode="true"
                      scroll-eventer="vm.infiniteScrollService">
     </infinite-scroll>
 
     <toaster
-            display="vm.selectedBoardIds.length > 0"
-            has-open="false"
-            has-properties="!vm.filter.isPublic && !vm.filter.isTrash && vm.selectedBoardIds.length == 1"
+            display="vm.selectedBoardIds.length > 0 || vm.selectedFolderIds.length > 0"
+            has-open="vm.selectedFolderIds.length == 1 && vm.selectedBoardIds.length == 0"
+            on-open="vm.openBoardOrFolder"
+            has-properties="!vm.filter.isPublic && !vm.filter.isTrash && vm.selectedBoardIds.length == 1 && vm.selectedFolderIds.length == 0"
             on-properties="vm.openPropertiesForm"
-            has-delete="!vm.filter.isPublic"
+            has-delete="!vm.filter.isPublic && vm.selectedFolderIds.length == 0 && vm.selectedBoardIds.length > 0"
             on-delete="vm.openDeleteForm"
             has-share="false"
             has-restore="vm.filter.isTrash"

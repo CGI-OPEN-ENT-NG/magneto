@@ -1,0 +1,12 @@
+<nav class="vertical side-nav folder-tree-nav">
+    <ul>
+        <li ng-repeat="tree in vm.folderTrees">
+            <folder-tree-nav-item
+                    folder-tree="tree"
+                    selected-folder="vm.selectedFolder"
+                    on-select-folder="vm.selectFolder">
+            </folder-tree-nav-item>
+        </li>
+
+    </ul>
+</nav>

@@ -1,6 +1,6 @@
 import {ng} from 'entcore'
 import http, {AxiosResponse} from 'axios';
-import {IBoardsParamsRequest, IBoardPayload, Boards, BoardForm} from "../models/board.model";
+import {IBoardsParamsRequest, Boards, BoardForm} from "../models";
 
 export interface IBoardsService {
     getAllBoards(params: IBoardsParamsRequest): Promise<Boards>;

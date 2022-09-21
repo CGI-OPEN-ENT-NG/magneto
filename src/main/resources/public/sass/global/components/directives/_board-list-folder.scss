@@ -1,0 +1,42 @@
+.board-list-folder {
+
+  height: 280px;
+  width: 256px;
+  border-radius: 10px;
+  border: solid $magneto-lighter-grey 1px;
+
+  &.active {
+    border: solid $magneto-sky-blue 4px !important;
+    margin: -4px;
+  }
+
+  @include mobile {
+    width: 170px;
+    height: 183px;
+  }
+
+  &-icon {
+    display: flex;
+    align-items: center;
+    background: $magneto-grey-blue;
+    border-radius: 10px 10px 0 0;
+    flex: 1;
+
+    i.magneto-folder-open {
+      font-size: 100px;
+      color: $magneto-sky-blue;
+    }
+  }
+
+  &-infos {
+    height: 90px;
+    margin: 15px;
+    flex-direction: column;
+
+    &-title {
+      font-size: 16px;
+      font-weight: bold;
+    }
+  }
+
+}

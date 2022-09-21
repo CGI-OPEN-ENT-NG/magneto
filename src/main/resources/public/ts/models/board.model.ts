@@ -96,11 +96,6 @@ export class BoardForm {
     }
 }
 
-export interface IBoardCategoriesParam {
-    isPublic: boolean;
-    isTrash: boolean;
-}
-
 export class Board {
     private _id: string;
     private _title: string;
@@ -110,14 +105,14 @@ export class Board {
     private _modificationDate: string;
     private _creationDate: string;
 
-    build(date: IBoardItemResponse): Board {
-        this._id = date._id;
-        this._title = date.title;
-        this._imageUrl = date.imageUrl;
-        this._description = date.description;
-        this._nbCards = date.nbCards;
-        this._modificationDate = date.modificationDate;
-        this._creationDate = date.creationDate;
+    build(data: IBoardItemResponse): Board {
+        this._id = data._id;
+        this._title = data.title;
+        this._imageUrl = data.imageUrl;
+        this._description = data.description;
+        this._nbCards = data.nbCards;
+        this._modificationDate = data.modificationDate;
+        this._creationDate = data.creationDate;
         return this;
     }
 

@@ -1,7 +1,7 @@
 import axios from 'axios';
 import MockAdapter from 'axios-mock-adapter';
 import {boardsService} from "../boards.service";
-import {BoardForm, IBoardsParamsRequest} from "../../models/board.model";
+import {BoardForm, IBoardsParamsRequest} from "../../models";
 
 describe('BoardsService', () => {
     it('returns data when getAllboards is correctly called', done => {

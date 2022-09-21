@@ -1,0 +1,53 @@
+.folder-tree-nav {
+  height: auto;
+
+  ul {
+    border-left: none !important;
+  }
+
+
+  &-item {
+    &-name {
+
+      display: flex;
+
+
+      &.selected {
+        background-color: $magneto-lighter-blue;
+        color: $magneto-sky-blue;
+
+        a {
+          color: $magneto-sky-blue;
+        }
+      }
+
+      i {
+        align-self: center;
+        margin-left: 24px;
+      }
+
+      i.magneto-chevron-down + i {
+        margin-left: 0 !important;
+      }
+
+      i.magneto-chevron-right + i {
+        margin-left: 0 !important;
+      }
+
+      i.magneto-chevron-right, i.magneto-chevron-down {
+        font-size: 24px;
+        margin-left: 0 !important;
+      }
+
+      a {
+        color: $magneto-black;
+        font-weight: bold;
+        font-size: 14px;
+        padding-left: 12px !important;
+      }
+
+
+    }
+  }
+
+}

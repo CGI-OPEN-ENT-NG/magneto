@@ -1,28 +1,26 @@
 import {ng} from "entcore";
 import {ILocationService, IScope, IWindowService} from "angular";
-import {RootsConst} from "../../core/constants/roots.const";
-import {Board} from "../../models";
-import {DateUtils} from "../../utils/date.utils";
+import {Folder} from "../../../models";
+import {RootsConst} from "../../../core/constants/roots.const";
 
-interface IViewModel extends ng.IController, IBoardListItemProps {
-    formatDate(date: string): string;
+interface IViewModel extends ng.IController, IBoardListFolderProps {
 }
 
-interface IBoardListItemProps {
-    board: Board;
+interface IBoardListFolderProps {
+    folder: Folder;
     isSelected: boolean;
 }
 
-interface IBoardListItemScope extends IScope, IBoardListItemProps {
+interface IBoardListFolderScope extends IScope, IBoardListFolderProps {
     vm: IViewModel;
 }
 
 class Controller implements IViewModel {
 
-    board: Board;
+    folder: Folder;
     isSelected: boolean;
 
-    constructor(private $scope: IBoardListItemScope,
+    constructor(private $scope: IBoardListFolderScope,
                 private $location: ILocationService,
                 private $window: IWindowService) {
     }
@@ -33,26 +31,22 @@ class Controller implements IViewModel {
     $onDestroy() {
     }
 
-    formatDate = (date: string): string => {
-        return DateUtils.format(date, DateUtils.FORMAT["DAY-MONTH-YEAR-LETTER"])
-    }
-
 }
 
 function directive() {
     return {
         replace: true,
         restrict: 'E',
-        templateUrl: `${RootsConst.directive}board-list/board-list-item.html`,
+        templateUrl: `${RootsConst.directive}board-list/board-list-folder/board-list-folder.html`,
         scope: {
-            board: '=',
+            folder: '=',
             isSelected: '='
         },
         controllerAs: 'vm',
         bindToController: true,
         controller: ['$scope', '$location', '$window', Controller],
         /* interaction DOM/element */
-        link: function ($scope: IBoardListItemScope,
+        link: function ($scope: IBoardListFolderScope,
                         element: ng.IAugmentedJQuery,
                         attrs: ng.IAttributes,
                         vm: IViewModel) {
@@ -60,4 +54,4 @@ function directive() {
     }
 }
 
-export const boardListItem = ng.directive('boardListItem', directive)
+export const boardListFolder = ng.directive('boardListFolder', directive)

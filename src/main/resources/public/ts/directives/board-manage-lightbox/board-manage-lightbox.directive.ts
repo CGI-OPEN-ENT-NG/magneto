@@ -35,8 +35,7 @@ class Controller implements IViewModel {
 
     constructor(private $scope: IBoardManageScope,
                 private $location: ILocationService,
-                private $window: IWindowService,
-                private boardsService: IBoardsService) {
+                private $window: IWindowService) {
     }
 
     $onInit() {
@@ -68,7 +67,7 @@ function directive($parse: IParseService) {
         },
         controllerAs: 'vm',
         bindToController: true,
-        controller: ['$scope', '$location', '$window', '$parse', 'BoardsService', Controller],
+        controller: ['$scope', '$location', '$window', '$parse', Controller],
         /* interaction DOM/element */
         link: function ($scope: IBoardManageScope,
                         element: ng.IAugmentedJQuery,
