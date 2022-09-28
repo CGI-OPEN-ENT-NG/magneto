@@ -41,11 +41,9 @@ public class DefaultFolderService implements FolderService {
     }
 
     @Override
-    public Future<JsonObject> createFolder(UserInfos user, JsonObject folder) {
+    public Future<JsonObject> createFolder(FolderPayload folder) {
         Promise<JsonObject> promise = Promise.promise();
-        FolderPayload folderCreate = new FolderPayload(folder);
-        folderCreate.setOwnerId(user.getUserId());
-        mongoDb.insert(this.collection, folderCreate.toJson(), MongoDbResult.validResultHandler(results -> {
+        mongoDb.insert(this.collection, folder.toJson(), MongoDbResult.validResultHandler(results -> {
             if (results.isLeft()) {
                 String message = String.format("[Magneto@%s::createFolder] Failed to create folder", this.getClass().getSimpleName());
                 log.error(String.format("%s : %s", message, results.left().getValue()));

@@ -1,6 +1,6 @@
 import {ng} from 'entcore'
 import http, {AxiosResponse} from 'axios';
-import {Folder} from "../models";
+import {Folder, IFolderResponse} from "../models";
 
 
 export interface IFoldersService {
@@ -12,7 +12,7 @@ export interface IFoldersService {
 export const foldersService: IFoldersService = {
     getFolders: async (): Promise<Array<Folder>> => {
         return http.get(`/magneto/folders`)
-            .then((res: AxiosResponse) => res.data.map((folder: any) => new Folder().build(folder)));
+            .then((res: AxiosResponse) => res.data.map((folder: IFolderResponse) => new Folder().build(folder)));
     },
 
     createFolder: async (title: string, parentId: string): Promise<AxiosResponse> => {

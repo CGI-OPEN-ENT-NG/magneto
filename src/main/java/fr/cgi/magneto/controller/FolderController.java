@@ -1,6 +1,6 @@
 package fr.cgi.magneto.controller;
 
-import fr.cgi.magneto.core.constants.*;
+import fr.cgi.magneto.model.*;
 import fr.cgi.magneto.security.*;
 import fr.cgi.magneto.service.*;
 import fr.wseduc.rs.*;
@@ -41,10 +41,13 @@ public class FolderController extends ControllerHelper {
     @SecuredAction(value = "", type = ActionType.RESOURCE)
     public void createFolder(HttpServerRequest request) {
         RequestUtils.bodyToJson(request, pathPrefix + "folder", folder ->
-                UserUtils.getUserInfos(eb, request, user ->
-                        folderService.createFolder(user, folder)
+                UserUtils.getUserInfos(eb, request, user -> {
+                    FolderPayload folderCreate = new FolderPayload(folder);
+                    folderCreate.setOwnerId(user.getUserId());
+                        folderService.createFolder(folderCreate)
                                 .onFailure(err -> renderError(request))
-                                .onSuccess(result -> renderJson(request, result))));
+                                .onSuccess(result -> renderJson(request, result));
+                }));
     }
 
 }

@@ -1,5 +1,6 @@
 package fr.cgi.magneto.service;
 
+import fr.cgi.magneto.model.*;
 import io.vertx.core.*;
 import io.vertx.core.json.*;
 import org.entcore.common.user.*;
@@ -15,9 +16,8 @@ public interface FolderService {
 
         /**
         * Create a folder
-        * @param user          User Object containing user id and displayed name
         * @param folder        Folder to create
         * @return              Future {@link Future <JsonObject>} containing newly created folder
         */
-        Future<JsonObject> createFolder(UserInfos user, JsonObject folder);
+        Future<JsonObject> createFolder(FolderPayload folder);
 }
