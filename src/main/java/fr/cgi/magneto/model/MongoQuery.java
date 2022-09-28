@@ -33,6 +33,12 @@ public class MongoQuery {
         return this;
     }
 
+    public MongoQuery graphLookup(JsonObject parameters) {
+        this.pipeline.add(new JsonObject()
+                .put(Mongo.GRAPHLOOKUP, parameters));
+        return this;
+    }
+
     public MongoQuery matchRegex(String regex, List<String> parameters) {
         JsonArray or = new JsonArray();
         parameters.forEach(param -> or.add(new JsonObject().put(param,

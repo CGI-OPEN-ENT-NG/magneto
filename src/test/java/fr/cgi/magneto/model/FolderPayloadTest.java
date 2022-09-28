@@ -12,7 +12,8 @@ public class FolderPayloadTest {
     JsonObject folderJsonObject_1 = new JsonObject()
             .put("title", "title")
             .put("parentId", "parentId")
-            .put("ownerId", "ownerId");
+            .put("ownerId", "ownerId")
+            .put("deleted", false);
 
     @Test
     public void testFolderPayloadHasBeenInstantiated(TestContext ctx) {

@@ -14,11 +14,18 @@ public class Mongo {
     public static final String SKIP = "$skip";
     public static final String SORT = "$sort";
     public static final String LOOKUP = "$lookup";
+    public static final String GRAPHLOOKUP = "$graphLookup";
     public static final String UNWIND = "$unwind";
+
     public static final String FROM = "from";
     public static final String LOCALFIELD = "localField";
     public static final String FOREIGNFIELD = "foreignField";
     public static final String AS = "as";
     public static final String PATH = "path";
     public static final String NULLOREMPTY = "preserveNullAndEmptyArrays";
+    public static final String STARTWITH = "startWith";
+    public static final String CONNECTFROMFIELD = "connectFromField";
+    public static final String CONNECTTOFIELD = "connectToField";
+    public static final String CURSOR = "cursor";
+    public static final String FIRSTBATCH = "firstBatch";
 }
