@@ -1,19 +1,19 @@
-<lightbox class="board-delete-lightbox"
+<lightbox class="folder-delete-lightbox"
           show="vm.display"
           on-close="vm.display = false">
-    <section class="head board-delete-lightbox-head">
+    <section class="head folder-delete-lightbox-head">
         <h3>
-            <i18n>magneto.delete.elements</i18n>
+            <i18n>magneto.delete.folders</i18n>
         </h3>
     </section>
 
-    <section class="body board-delete-lightbox-body">
-        <div class="row vertical-spacing board-delete-lightbox-body-inputs">
+    <section class="body folder-delete-lightbox-body">
+        <div class="row vertical-spacing folder-delete-lightbox-body-inputs">
             <div ng-if="vm.isPredelete">
-                <i18n>magneto.predelete.elements.message</i18n>
+                <i18n>magneto.predelete.folders.message</i18n>
             </div>
             <div ng-if="!vm.isPredelete">
-                <i18n>magneto.delete.elements.message</i18n>
+                <i18n>magneto.delete.folders.message</i18n>
             </div>
         </div>
     </section>
@@ -22,7 +22,7 @@
         <div class="row horizontal-spacing">
             <div class="twelve cell">
                 <button class="right-magnet"
-                        data-ng-click="vm.submitDelete()">
+                        data-ng-click="vm.submitDeleteFolder()">
                     <i18n>magneto.save</i18n>
                 </button>
                 <button class="right-magnet cancel"

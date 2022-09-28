@@ -1,3 +1,5 @@
+import {FOLDER_TYPE} from "../core/enums/folder-type.enum";
+
 export interface IBoardItemResponse {
     _id: string;
     title: string;
@@ -29,6 +31,7 @@ export interface IBoardPayload {
     title: string;
     description: string;
     imageUrl: string;
+    folderId?: string;
 }
 
 export class BoardForm {
@@ -36,12 +39,14 @@ export class BoardForm {
     private _title: string;
     private _description: string;
     private _imageUrl: string;
+    private _folderId: string;
 
     constructor() {
         this._id = '';
         this._title = '';
         this._description = '';
         this._imageUrl = '';
+        this._folderId = null;
     }
 
     get id(): string {
@@ -76,9 +81,17 @@ export class BoardForm {
         this._imageUrl = value;
     }
 
+    get folderId(): string {
+        return this._folderId;
+    }
+
+    set folderId(value: string) {
+        this._folderId = (value === FOLDER_TYPE.MY_BOARDS
+            || value === FOLDER_TYPE.DELETED_BOARDS) ? null : value;
+    }
+
     isValid(): boolean {
         return this.title !== null && this.title !== '' &&
-            this.description != null && this.description !== '' &&
             this.imageUrl != null && this.imageUrl !== ''
     }
 
@@ -87,7 +100,8 @@ export class BoardForm {
         let payload : IBoardPayload = {
             title: this.title,
             description: this.description,
-            imageUrl: this.imageUrl
+            imageUrl: this.imageUrl,
+            folderId: this.folderId
         } ;
 
         if (this.id && this.id != '') payload.id = this.id;

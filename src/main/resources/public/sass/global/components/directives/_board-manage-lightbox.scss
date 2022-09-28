@@ -20,10 +20,14 @@
           object-fit: contain;
         }
       }
+      &-choose {
+        font-size: 15px;
+        color: $magneto-red;
+      }
     }
 
     &-inputs {
-      margin: 25px;
+      margin: 0 25px 25px !important;
 
       textarea {
         resize: none;

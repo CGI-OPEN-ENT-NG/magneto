@@ -52,3 +52,7 @@ export const model = {
         hasRight: jest.fn(() => true)
     },
 };
+
+export const idiom = {
+    translate: jest.fn((key: string) => key)
+};

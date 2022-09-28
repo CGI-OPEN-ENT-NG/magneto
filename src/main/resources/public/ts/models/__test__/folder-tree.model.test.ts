@@ -26,7 +26,7 @@ describe('FolderTreeModel', () => {
         }));
 
 
-        const folderTree = new FolderTreeNavItem(folderResponse, 'iconClass')
+        const folderTree = new FolderTreeNavItem(folderResponse, true, 'iconClass')
             .buildFolders(folderChildren);
 
 
@@ -34,6 +34,7 @@ describe('FolderTreeModel', () => {
         expect(folderTree.name).toEqual(folderResponse.title);
         expect(folderTree.parentId).toEqual(folderResponse.parentId);
         expect(folderTree.iconClass).toEqual('iconClass');
+        expect(folderTree.isOpened).toEqual(true);
         expect(folderTree.children.length).toEqual(1);
         expect(folderTree.children[0].id).toEqual(folderChildren[0].id);
         expect(folderTree.children[0].name).toEqual(folderChildren[0].title);

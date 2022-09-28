@@ -1,15 +1,18 @@
 <lightbox class="folder-manage-lightbox"
           show="vm.display"
-          on-close="vm.display = false">
+          on-close="vm.closeForm()">
     <section class="head folder-manage-lightbox-head">
-        <h3>
+        <h3 ng-if="!vm.isUpdate">
             <i18n>magneto.create.folder</i18n>
+        </h3>
+        <h3 ng-if="vm.isUpdate">
+            <i18n>magneto.folder.rename</i18n>
         </h3>
     </section>
     <section class="body folder-manage-lightbox-body">
         <div class="row vertical-spacing folder-manage-lightbox-title">
             <i18n>magneto.create.folder.name</i18n>&nbsp;:
-            <input type="text" data-ng-model="vm.title" class="twelve cell">
+            <input type="text" data-ng-model="vm.form.title" class="twelve cell">
         </div>
     </section>
     <!-- Form submit/cancel buttons -->

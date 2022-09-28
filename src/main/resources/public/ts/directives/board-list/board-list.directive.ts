@@ -17,7 +17,6 @@ interface IBoardListProps {
     folders: Array<Folder>;
     selectedBoardIds: Array<string>;
     selectedFolderIds: Array<string>;
-    selectedUpdateBoardForm: BoardForm;
     onOpen?;
 }
 
@@ -31,7 +30,6 @@ class Controller implements IViewModel {
     folders: Array<Folder>;
     selectedBoardIds: Array<string>;
     selectedFolderIds: Array<string>;
-    selectedUpdateBoardForm: BoardForm;
 
     constructor(private $scope: IBoardListScope,
                 private $location: ILocationService,
@@ -49,12 +47,6 @@ class Controller implements IViewModel {
             // deselect board
             this.selectedBoardIds = this.selectedBoardIds.filter((id: string) => id !== boardId);
         }
-
-        let selectedUpdateBoard: Board = this.boards.find((board: Board) => board.id === this.selectedBoardIds[0]);
-        this.selectedUpdateBoardForm.id = selectedUpdateBoard ? selectedUpdateBoard.id : null;
-        this.selectedUpdateBoardForm.title = selectedUpdateBoard ? selectedUpdateBoard.title : '';
-        this.selectedUpdateBoardForm.description = selectedUpdateBoard ? selectedUpdateBoard.description : '';
-        this.selectedUpdateBoardForm.imageUrl = selectedUpdateBoard ?  selectedUpdateBoard.imageUrl : '';
     }
 
     selectFolder = (folderId: string): void => {
@@ -89,7 +81,6 @@ function directive($parse: IParseService) {
             folders: '=',
             selectedBoardIds: '=',
             selectedFolderIds: '=',
-            selectedUpdateBoardForm: '=',
             onOpen: '&'
         },
         controllerAs: 'vm',

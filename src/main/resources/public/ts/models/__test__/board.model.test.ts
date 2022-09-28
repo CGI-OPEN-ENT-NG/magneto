@@ -72,14 +72,16 @@ describe('BoardModel', () => {
         const formJSON1 = {
             title: 'title',
             description: 'description',
-            imageUrl: 'imageUrl'
+            imageUrl: 'imageUrl',
+            folderId: null
         }
 
         const formJSON2 = {
             id: 'id',
             title: 'title',
             description: 'description',
-            imageUrl: 'imageUrl'
+            imageUrl: 'imageUrl',
+            folderId: null
         }
 
         let form = new BoardForm();

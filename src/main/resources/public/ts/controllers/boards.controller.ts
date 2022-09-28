@@ -3,28 +3,35 @@ import {IScope} from "angular";
 import {IBoardsService, IFoldersService} from "../services";
 import {
     IBoardsParamsRequest,
-    Boards, Board, BoardForm, Folder, FolderTreeNavItem
+    Boards, Board, BoardForm, Folder, FolderTreeNavItem, IFolderTreeNavItem, IFolderForm
 } from "../models";
 import {safeApply} from "../utils/safe-apply.utils";
 import {AxiosError} from "axios";
 import {InfiniteScrollService} from "../shared/services";
 import {Subject} from "rxjs";
 import {FOLDER_TYPE} from "../core/enums/folder-type.enum";
+import {BoardsFilter} from "../models/boards-filter.model";
 
 interface IViewModel {
     openedFolder: Folder;
     selectedBoardIds: Array<string>;
     selectedFolderIds: Array<string>;
     selectedUpdateBoardForm: BoardForm;
+    selectedUpdateFolderForm: IFolderForm;
+
+    isLoading: boolean;
 
     displayBoardLightbox: boolean;
     displayDeleteBoardLightbox: boolean;
     displayUpdateBoardLightbox: boolean;
+    displayUpdateFolderLightbox: boolean;
     displayFolderLightbox: boolean;
     displayMoveBoardLightbox: boolean;
 
     boards: Array<Board>;
     folders: Array<Folder>;
+
+    deletedFolders: Array<Folder>;
     folderNavTrees: Array<FolderTreeNavItem>;
     folderMoveNavTrees: Array<FolderTreeNavItem>;
     folderNavTreeSubject: Subject<FolderTreeNavItem>;
@@ -40,19 +47,23 @@ interface IViewModel {
 
     getBoards(): Promise<void>;
     getFolders(): void;
+    getDeletedFolders(): Promise<Array<Folder>>;
     getCurrentFolderChildren(): void;
     openCreateForm(): void;
     openDeleteForm(): void;
     openPropertiesForm(): void;
     openBoardOrFolder(): Promise<void>;
+    openRenameFolderForm(): void;
     onFormSubmit(): Promise<void>;
     initTrees(): void;
+    updateTrees(): void;
+    setFolderParentIds(): void;
     switchFolder(folder: FolderTreeNavItem): Promise<void>;
     submitFolderForm(): Promise<void>;
     onSearchBoard(searchText: string): Promise<void>;
     onScroll(): void;
     resetBoards(): void;
-    restoreBoards(): Promise<void>;
+    restoreBoardsOrFolders(): Promise<void>;
     moveBoards(): Promise<void>;
 }
 
@@ -62,31 +73,30 @@ interface IBoardsScope extends IScope {
 
 class Controller implements ng.IController, IViewModel {
 
-
     openedFolder: Folder;
     selectedBoardIds: Array<string>;
     selectedFolderIds: Array<string>;
     selectedUpdateBoardForm: BoardForm;
+    selectedUpdateFolderForm: IFolderForm;
+
+    isLoading: boolean;
 
     displayBoardLightbox: boolean;
     boards: Array<Board>;
     folders: Array<Folder>;
+    deletedFolders: Array<Folder>;
     currentFolderChildren: Array<Folder>;
     folderNavTrees: Array<FolderTreeNavItem>;
     folderMoveNavTrees: Array<FolderTreeNavItem>;
     displayDeleteBoardLightbox: boolean;
     displayUpdateBoardLightbox: boolean;
+    displayUpdateFolderLightbox: boolean;
     displayFolderLightbox: boolean;
     displayMoveBoardLightbox: boolean;
 
     folderNavTreeSubject: Subject<FolderTreeNavItem>;
 
-    filter : {
-        page: number;
-        isTrash: boolean;
-        isPublic: boolean;
-        searchText: string;
-    };
+    filter : BoardsFilter;
     infiniteScrollService: InfiniteScrollService;
 
     constructor(private $scope: IBoardsScope,
@@ -98,27 +108,32 @@ class Controller implements ng.IController, IViewModel {
     }
 
     async $onInit(): Promise<void> {
+        this.isLoading = true;
         this.openedFolder = null;
         this.displayBoardLightbox = false;
         this.displayDeleteBoardLightbox = false;
         this.displayFolderLightbox = false;
         this.displayMoveBoardLightbox = false;
 
-        this.filter = {
-            page: 0,
-            isTrash: false,
-            isPublic: false,
-            searchText: ''
-        };
+        this.filter = new BoardsFilter();
         this.boards = [];
         this.folders = [];
         this.currentFolderChildren = [];
         this.selectedBoardIds = [];
         this.selectedFolderIds = [];
+        this.folderNavTrees = [];
+        this.folderMoveNavTrees = [];
         this.selectedUpdateBoardForm = new BoardForm();
-        await Promise.all([this.getBoards(), this.getFolders()]);
+        this.selectedUpdateFolderForm = {id: null, title: ''};
+        this.deletedFolders = await this.getDeletedFolders();
+        this.getFolders();
+        await this.getBoards();
     }
 
+    /**
+     * Callback on board search.
+     * @param searchText search text input
+     */
     onSearchBoard = async (searchText: string): Promise<void> => {
         this.filter.searchText = searchText;
         this.filter.page = 0;
@@ -126,42 +141,79 @@ class Controller implements ng.IController, IViewModel {
         await this.getBoards();
     }
 
+    /**
+     * Switch current folder on select from folder tree.
+     * @param folder folder to select
+     */
     switchFolder = async (folder: FolderTreeNavItem): Promise<void> => {
         this.resetBoards();
         this.openedFolder = new Folder().build({_id: folder.id, title: folder.name,
             parentId: folder.parentId, ownerId: ''});
-        this.filter.isTrash = folder.id == FOLDER_TYPE.DELETED_BOARDS;
-        this.filter.isPublic = folder.id == FOLDER_TYPE.PUBLIC_BOARDS;
+
+        // Update filter category
+        this.filter.isMyBoards = folder.id === FOLDER_TYPE.MY_BOARDS
+            || this.folders.some((f: Folder) => f.id === folder.id);
+        this.filter.isPublic = folder.id === FOLDER_TYPE.PUBLIC_BOARDS;
+        this.filter.isTrash = folder.id === FOLDER_TYPE.DELETED_BOARDS
+            || this.deletedFolders.some((f: Folder) => f.id === folder.id);
 
         this.getCurrentFolderChildren();
         await this.getBoards();
     }
 
+    /**
+     * Callback on submit folder manage form:
+     * - refresh folders
+     */
     submitFolderForm = async (): Promise<void> => {
         await this.getFolders();
     }
 
+    /**
+     * Open create board form.
+     */
     openCreateForm = (): void => {
+        this.selectedUpdateBoardForm = new BoardForm();
         this.displayBoardLightbox = true;
     }
 
+    /**
+     * Open delete board form.
+     */
     openDeleteForm = (): void => {
         this.displayDeleteBoardLightbox = true;
     }
 
+    /**
+     * Open board properties form.
+     */
     openPropertiesForm = (): void => {
+        let selectedUpdateBoard: Board = this.boards.find((board: Board) => board.id === this.selectedBoardIds[0]);
+        this.selectedUpdateBoardForm.id = selectedUpdateBoard ? selectedUpdateBoard.id : null;
+        this.selectedUpdateBoardForm.title = selectedUpdateBoard ? selectedUpdateBoard.title : '';
+        this.selectedUpdateBoardForm.description = selectedUpdateBoard ? selectedUpdateBoard.description : '';
+        this.selectedUpdateBoardForm.imageUrl = selectedUpdateBoard ?  selectedUpdateBoard.imageUrl : '';
         this.displayUpdateBoardLightbox = true;
         this.displayBoardLightbox = true;
     }
 
+    /**
+     * Open board or folder.
+     */
     openBoardOrFolder = async (): Promise<void> => {
         if ((this.selectedBoardIds.length + this.selectedFolderIds.length) !== 1) {
             return;
         }
 
         if (this.selectedFolderIds.length > 0) {
-            this.openedFolder = this.folders.find((folder: Folder) =>
-                folder.id == this.selectedFolderIds[0]);
+            if (this.filter.isMyBoards) {
+                this.openedFolder = this.folders.find((folder: Folder) =>
+                    folder.id == this.selectedFolderIds[0]);
+            } else {
+                this.openedFolder = this.deletedFolders.find((folder: Folder) =>
+                    folder.id == this.selectedFolderIds[0]);
+            }
+
             this.getCurrentFolderChildren();
             this.resetBoards();
             await this.getBoards();
@@ -172,7 +224,22 @@ class Controller implements ng.IController, IViewModel {
         }
     }
 
+    /**
+     * Open rename folder form.
+     */
+    openRenameFolderForm = (): void => {
+        let selectedUpdateFolder: Folder = this.folders.find((folder: Folder) => folder.id === this.selectedFolderIds[0]);
+        this.selectedUpdateFolderForm.id = selectedUpdateFolder ? selectedUpdateFolder.id : null;
+        this.selectedUpdateFolderForm.title = selectedUpdateFolder ? selectedUpdateFolder.title : '';
+        this.displayUpdateFolderLightbox = true;
+        this.displayFolderLightbox = true;
+    }
+
+    /**
+     * Get all boards in current opened folder.
+     */
     getBoards = async (): Promise<void> => {
+        this.isLoading = true;
         const params: IBoardsParamsRequest = {
             folderId: this.openedFolder ? this.openedFolder.id : null,
             isPublic: this.filter.isPublic,
@@ -194,7 +261,7 @@ class Controller implements ng.IController, IViewModel {
                     this.boards.push(...res.all);
                     this.infiniteScrollService.updateScroll();
                 }
-
+                this.isLoading = false;
                 safeApply(this.$scope);
             })
             .catch((err: AxiosError) => {
@@ -202,12 +269,20 @@ class Controller implements ng.IController, IViewModel {
             });
     }
 
+    /**
+     * Get all user folders.
+     */
     getFolders = (): void => {
-        this.foldersService.getFolders()
+        this.foldersService.getFolders(false)
             .then((res: Array<Folder>) => {
                 this.folders = res;
+                this.setFolderParentIds();
                 this.getCurrentFolderChildren();
-                this.initTrees();
+                if (this.folderNavTrees.length == 0) {
+                    this.initTrees();
+                } else {
+                    this.updateTrees();
+                }
                 safeApply(this.$scope);
             })
             .catch((err: AxiosError) => {
@@ -215,63 +290,146 @@ class Controller implements ng.IController, IViewModel {
             });
     }
 
+    /**
+     * Get all pre-deleted folders.
+     */
+    getDeletedFolders = (): Promise<Array<Folder>> => {
+        return this.foldersService.getFolders(true);
+    }
+
+    /**
+     * Get all folders in current opened folder.
+     */
     getCurrentFolderChildren = (): void => {
-        this.currentFolderChildren = this.folders.filter((folder: Folder) =>
-            folder.parentId == (this.openedFolder ? this.openedFolder.id : null));
+        if (this.filter.isTrash) {
+            this.currentFolderChildren = this.deletedFolders.filter((folder: Folder) =>
+                folder.parentId == (this.openedFolder ? this.openedFolder.id : FOLDER_TYPE.DELETED_BOARDS));
+        } else {
+            this.currentFolderChildren = this.folders.filter((folder: Folder) =>
+                folder.parentId == (this.openedFolder ? this.openedFolder.id : FOLDER_TYPE.MY_BOARDS));
+        }
     }
 
-    restoreBoards = async (): Promise<void> => {
-        await this.boardsService.restorePreDeleteBoards(this.selectedBoardIds);
+    /**
+     * Restore selected boards and/or folders from trash.
+     */
+    restoreBoardsOrFolders = async (): Promise<void> => {
+        if (this.selectedBoardIds.length > 0) {
+            await this.boardsService.restorePreDeleteBoards(this.selectedBoardIds);
+
+        }
+        if (this.selectedFolderIds.length > 0) {
+            await this.foldersService.restorePreDeleteFolders(this.selectedFolderIds);
+        }
         this.resetBoards();
+        this.deletedFolders = await this.getDeletedFolders();
+        this.getFolders();
+        this.getCurrentFolderChildren();
         await this.getBoards();
+
     }
 
+    /**
+     * Open move board form.
+     */
     moveBoards = async (): Promise<void> => {
         this.displayMoveBoardLightbox = true;
     }
 
+    /**
+     * Callback on form submit:
+     * - refresh boards
+     * - refresh folders / deleted folders
+     */
     onFormSubmit = async (): Promise<void> => {
         this.resetBoards();
+        this.deletedFolders = await this.getDeletedFolders();
+        this.getFolders();
         await this.getBoards();
     }
 
+    /**
+     * Initialize folder navigation trees.
+     */
     initTrees = (): void => {
-
-        this.folders.forEach((folder: Folder) => {
-            if (folder.parentId == null) {
-                folder.parentId = FOLDER_TYPE.MY_BOARDS;
-            }
-        });
 
         this.folderNavTrees = [];
         this.folderMoveNavTrees = [];
 
         this.folderNavTrees.push(new FolderTreeNavItem(
             {id: FOLDER_TYPE.MY_BOARDS, title: lang.translate('magneto.my.boards'),
-                    parentId: null}, "magneto-check-decagram")
+                    parentId: null}, null, "magneto-check-decagram")
             .buildFolders(this.folders));
         this.folderNavTrees.push(new FolderTreeNavItem(
                 {id: FOLDER_TYPE.PUBLIC_BOARDS, title: lang.translate('magneto.lycee.connecte.boards'),
-                    parentId: null}, "magneto-book-variant-multiple"));
+                    parentId: null}, null, "magneto-book-variant-multiple"));
         this.folderNavTrees.push(new FolderTreeNavItem(
             {id: FOLDER_TYPE.DELETED_BOARDS, title: lang.translate('magneto.trash'),
-                    parentId: null}, "magneto-delete-forever"));
+                    parentId: null}, null, "magneto-delete-forever")
+            .buildFolders(this.deletedFolders));
 
         // Folder tree for board move lightbox
         this.folderMoveNavTrees.push(new FolderTreeNavItem(
             {id: FOLDER_TYPE.MY_BOARDS, title: lang.translate('magneto.my.boards'),
-                parentId: null}, "magneto-check-decagram")
+                parentId: null}, true, "magneto-check-decagram")
             .buildFolders(this.folders));
-        this.folderMoveNavTrees[0].isOpened = true;
 
         this.folderNavTreeSubject.next(this.folderNavTrees[0]);
     }
 
-    onScroll = async (): Promise<void> => {
-        this.filter.page++;
-        await this.getBoards();
+    /**
+     * Update folder navigation trees (add new folders and delete removed folders from tree).
+     */
+    updateTrees = (): void => {
+
+        this.setFolderParentIds();
+
+        this.folderNavTrees[0].buildFolders(this.folders);
+        this.folderNavTrees[2].buildFolders(this.deletedFolders);
+
+        // Folder tree for board move lightbox
+        this.folderMoveNavTrees = [];
+        this.folderMoveNavTrees.push(new FolderTreeNavItem(
+            {id: FOLDER_TYPE.MY_BOARDS, title: lang.translate('magneto.my.boards'),
+                parentId: null}, true, "magneto-check-decagram")
+            .buildFolders(this.folders));
     }
 
+    /**
+     * Set parent ids for all folders.
+     * If parentId is null, folder is a root folder in "My boards".
+     * If parentId is null and folder is in trash, folder is a root folder in "Trash".
+     */
+    setFolderParentIds = (): void => {
+        this.folders.forEach((folder: IFolderTreeNavItem) => {
+            if (folder.parentId == null || (this.folders.find((f: Folder) => (f.id !== folder.id)
+                && (folder.parentId === f.id)) === undefined)) {
+                folder.parentId = FOLDER_TYPE.MY_BOARDS;
+            }
+        });
+
+        this.deletedFolders.forEach((folder: IFolderTreeNavItem) => {
+            if (folder.parentId == null || (this.deletedFolders.find((f: Folder) => (f.id !== folder.id)
+                && (folder.parentId === f.id)) === undefined)) {
+                folder.parentId = FOLDER_TYPE.DELETED_BOARDS;
+            }
+        });
+    }
+
+    /**
+     * On scroll callback:
+     * - load more boards if scroll is at the bottom of the page
+     */
+    onScroll = async (): Promise<void> => {
+        if (this.boards.length > 0) {
+            this.filter.nextPage();
+            await this.getBoards();
+        }
+    }
+
+    /**
+     * Reset boards, page and search filters.
+     */
     resetBoards = (): void => {
         this.filter.page = 0;
         this.filter.searchText = '';
@@ -279,6 +437,7 @@ class Controller implements ng.IController, IViewModel {
         this.selectedBoardIds = [];
         this.selectedFolderIds = [];
         this.selectedUpdateBoardForm = new BoardForm();
+        this.selectedUpdateFolderForm = {id: null, title: ''};
     }
 
     $onDestroy() {

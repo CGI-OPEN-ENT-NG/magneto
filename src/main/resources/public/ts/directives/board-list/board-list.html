@@ -1,14 +1,18 @@
-<div class="board-list flex-row f-wrap justify-center">
-    <board-list-folder ng-repeat="folder in vm.folders"
-                       ng-click="vm.selectFolder(folder._id)"
-                       ng-dblclick="vm.openFolder(folder._id)"
-                       folder="folder"
-                       is-selected="vm.isFolderSelected(folder._id)">
+<div class="board-list">
+    <div class="board-list-folders flex-row f-wrap justify-center">
+        <board-list-folder ng-repeat="folder in vm.folders"
+                           ng-click="vm.selectFolder(folder._id)"
+                           ng-dblclick="vm.openFolder(folder._id)"
+                           folder="folder"
+                           is-selected="vm.isFolderSelected(folder._id)">
 
-    </board-list-folder>
-    <board-list-item ng-repeat="board in vm.boards"
-                     ng-click="vm.selectBoard(board._id)"
-                     board="board"
-                     is-selected="vm.isBoardSelected(board._id)">
-    </board-list-item>
+        </board-list-folder>
+    </div>
+    <div class="board-list-boards flex-row f-wrap justify-center">
+        <board-list-item ng-repeat="board in vm.boards"
+                         ng-click="vm.selectBoard(board._id)"
+                         board="board"
+                         is-selected="vm.isBoardSelected(board._id)">
+        </board-list-item>
+    </div>
 </div>

@@ -2,6 +2,7 @@ export interface IFolderTreeNavItem {
     id: string;
     title: string;
     parentId: string;
+    isOpened?: boolean;
 }
 
 export class FolderTreeNavItem {
@@ -35,13 +36,13 @@ export class FolderTreeNavItem {
      */
     private _isOpened: boolean;
 
-    constructor(folder: IFolderTreeNavItem, iconClass?: string) {
+    constructor(folder: IFolderTreeNavItem, isOpened?: boolean, iconClass?: string) {
         this._id = folder.id;
         this._name = folder.title;
         this._parentId = folder.parentId;
         this._children = [];
         this._iconClass = iconClass;
-        this._isOpened = false;
+        this._isOpened = (isOpened !== null) ? isOpened : false;
     }
 
     get id(): string {
@@ -118,16 +119,27 @@ export class FolderTreeNavItem {
     }
 
     /**
-     * Populate the children list from the given folder list
+     * Populate/Update the children list from the given folder list
      * @param folders Folder list
      */
     buildFolders(folders: Array<IFolderTreeNavItem>): FolderTreeNavItem {
-        this._children = [];
-        let rootFolders = folders.filter((folder: IFolderTreeNavItem) => folder.parentId === this._id);
+        let childrenFolders: Array<IFolderTreeNavItem> =
+            folders.filter((folder: IFolderTreeNavItem) => folder.parentId === this._id);
 
-        rootFolders.forEach((folder: IFolderTreeNavItem) => {
-            this._children.push(new FolderTreeNavItem(folder).buildFolders(folders));
+        let newChildren: Array<FolderTreeNavItem> = [];
+
+        childrenFolders.forEach((folder: IFolderTreeNavItem) => {
+            let childMatch: FolderTreeNavItem =
+                this.children.find((f: FolderTreeNavItem) => f.id === folder.id);
+
+            if (childMatch === undefined) {
+                newChildren.push(new FolderTreeNavItem(folder).buildFolders(folders));
+            } else {
+                newChildren.push(childMatch.buildFolders(folders));
+            }
         });
+
+        this.children = newChildren;
 
         return this;
     }

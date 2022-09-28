@@ -7,7 +7,7 @@
       "type": "string"
     },
     "parentId": {
-      "type": "string"
+      "type": ["string", "null"]
     }
   },
   "required": [

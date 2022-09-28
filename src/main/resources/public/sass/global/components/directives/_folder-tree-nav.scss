@@ -1,10 +1,11 @@
 .folder-tree-nav {
   height: auto;
+  padding: 0;
+  margin-right: 0;
 
   ul {
     border-left: none !important;
   }
-
 
   &-item {
     &-name {
@@ -40,7 +41,7 @@
       }
 
       a {
-        color: $magneto-black;
+        color: $dark-grey;
         font-weight: bold;
         font-size: 14px;
         padding-left: 12px !important;

@@ -3,7 +3,9 @@ import 'angular-mocks';
 import {boardsController} from "../boards.controller";
 import {ng} from "../../models/__mocks__/entcore";
 import {BoardsService} from "../../services";
-
+import {BoardsFilter} from "../../models/boards-filter.model";
+import {FOLDER_TYPE} from "../../core/enums/folder-type.enum";
+import {Folder} from "../../models";
 
 describe('BoardsController', () => {
 
@@ -45,10 +47,9 @@ describe('BoardsController', () => {
 
 
     it('test resetBoards', (done) => {
-        boardsControllerTest.filter = {
-            page: 1,
-            searchText: 'test',
-        }
+        boardsControllerTest.filter = new BoardsFilter();
+        boardsControllerTest.filter.page = 1;
+        boardsControllerTest.filter.searchText = 'searchText';
 
         boardsControllerTest.boards = [{
             _id: 'id',
@@ -61,11 +62,8 @@ describe('BoardsController', () => {
 
         boardsControllerTest.resetBoards();
 
-        expect(boardsControllerTest.filter).toEqual({
-            page: 0,
-            searchText: ''
-        });
-
+        expect(boardsControllerTest.filter.page).toEqual(0);
+        expect(boardsControllerTest.filter.searchText).toEqual('');
         expect(boardsControllerTest.boards).toEqual([]);
 
         done();
@@ -89,6 +87,61 @@ describe('BoardsController', () => {
         boardsControllerTest.displayMoveBoardLightbox = false;
         boardsControllerTest.moveBoards();
         expect(boardsControllerTest.displayMoveBoardLightbox).toBe(true);
+        done();
+    });
+
+    it('test openRenameLightbox', (done) => {
+        boardsControllerTest.displayUpdateFolderLightbox = false;
+        boardsControllerTest.displayFolderLightbox = false;
+        boardsControllerTest.openRenameFolderForm();
+        expect(boardsControllerTest.displayUpdateFolderLightbox).toBe(true);
+        expect(boardsControllerTest.displayFolderLightbox).toBe(true);
+        done();
+    });
+
+    it('test initTrees', (done) => {
+
+        const folder1 = new Folder().build({
+            _id: 'id1',
+            title: 'title1',
+            parentId: FOLDER_TYPE.MY_BOARDS,
+            ownerId: 'ownerId'
+        });
+
+        const folder2 = new Folder().build({
+            _id: 'id2',
+            title: 'title2',
+            parentId: 'id1',
+            ownerId: 'ownerId'
+        });
+
+        const deletedFolder1 = new Folder().build({
+            _id: FOLDER_TYPE.DELETED_BOARDS,
+            title: 'title1',
+            parentId: 'id1',
+            ownerId: 'ownerId'
+        });
+
+
+        boardsControllerTest.folderNavTrees = [];
+        boardsControllerTest.folderMoveNavTrees = [];
+
+        boardsControllerTest.folders = [];
+        boardsControllerTest.folders.push(folder1);
+        boardsControllerTest.folders.push(folder2);
+
+        boardsControllerTest.deletedFolders = [];
+        boardsControllerTest.deletedFolders.push(deletedFolder1);
+
+        boardsControllerTest.initTrees();
+        expect(boardsControllerTest.folderNavTrees.length).toBe(3);
+        expect(boardsControllerTest.folderNavTrees[0].id).toBe(FOLDER_TYPE.MY_BOARDS);
+        expect(boardsControllerTest.folderNavTrees[0].children.length).toBe(1);
+        expect(boardsControllerTest.folderNavTrees[1].id).toBe(FOLDER_TYPE.PUBLIC_BOARDS);
+        expect(boardsControllerTest.folderNavTrees[2].id).toBe(FOLDER_TYPE.DELETED_BOARDS);
+        expect(boardsControllerTest.folderMoveNavTrees.length).toBe(1);
+        expect(boardsControllerTest.folderMoveNavTrees[0].id).toBe(FOLDER_TYPE.MY_BOARDS);
+        expect(boardsControllerTest.folderMoveNavTrees[0].children.length).toBe(1);
         done();
     });
 });

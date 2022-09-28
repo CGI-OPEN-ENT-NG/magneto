@@ -1,6 +1,14 @@
 .board-list {
-  margin-top: 30px;
   background: $magneto-white;
-  gap: 16px;
-  @include paddingY(15px);
+  padding: 0 20px 20px;
+
+  &-folders {
+    gap: 16px;
+    @include paddingY(15px);
+  }
+
+  &-boards {
+    gap: 16px;
+    @include paddingY(15px);
+  }
 }

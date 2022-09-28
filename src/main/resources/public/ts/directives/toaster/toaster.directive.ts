@@ -9,6 +9,7 @@ interface IViewModel extends ng.IController, IToasterProps {
     openShare?(): void;
     openRestore?(): void;
     openMove?(): void;
+    openRename?(): void;
 }
 
 interface IToasterProps {
@@ -25,6 +26,8 @@ interface IToasterProps {
     onRestore?;
     hasMove: boolean;
     onMove?;
+    hasRename?: boolean;
+    onRename?;
 }
 
 interface IToasterScope extends IScope, IToasterProps {
@@ -40,6 +43,7 @@ class Controller implements IViewModel {
     hasShare: boolean;
     hasRestore: boolean;
     hasMove: boolean;
+    hasRename: boolean;
 
     constructor(private $scope: IToasterScope,
                 private $location: ILocationService,
@@ -72,7 +76,9 @@ function directive($parse: IParseService) {
             hasRestore: '=',
             onRestore: '&',
             hasMove: '=',
-            onMove: '&'
+            onMove: '&',
+            hasRename: '=',
+            onRename: '&'
         },
         controllerAs: 'vm',
         bindToController: true,
@@ -105,6 +111,10 @@ function directive($parse: IParseService) {
 
             vm.openMove = (): void => {
                 $parse($scope.vm.onMove())({});
+            }
+
+            vm.openRename = (): void => {
+                $parse($scope.vm.onRename())({});
             }
         }
     }

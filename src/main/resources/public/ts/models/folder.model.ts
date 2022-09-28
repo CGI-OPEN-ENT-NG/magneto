@@ -5,6 +5,11 @@ export interface IFolderResponse {
     ownerId: string;
 }
 
+export interface IFolderForm {
+    id: string;
+    title: string;
+}
+
 export class Folder {
     private _id: string;
     private _title: string;

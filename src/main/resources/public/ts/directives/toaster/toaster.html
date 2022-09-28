@@ -5,6 +5,10 @@
             <button ng-if="vm.hasOpen" ng-click="vm.open()">
                 <i18n>magneto.open</i18n>
             </button>
+            <!-- Rename button -->
+            <button ng-if="vm.hasRename" ng-click="vm.openRename()">
+                <i18n>magneto.rename</i18n>
+            </button>
             <!-- Move button -->
             <button ng-if="vm.hasMove" ng-click="vm.openMove()">
                 <i18n>magneto.move</i18n>

@@ -5,7 +5,7 @@
         "port" : 8205,
         "app-name" : "Magneto",
     	"app-address" : "/magneto",
-    	"app-icon" : "Magneto-large",
+    	"app-icon" : "${host}/magneto/public/img/uni-magneto.png",
         "host": "${host}",
         "ssl" : $ssl,
         "auto-redeploy": false,

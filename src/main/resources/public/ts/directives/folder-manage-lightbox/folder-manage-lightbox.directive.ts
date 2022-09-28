@@ -2,10 +2,10 @@ import {ng} from "entcore";
 import {ILocationService, IScope, IWindowService, IParseService} from "angular";
 import {RootsConst} from "../../core/constants/roots.const";
 import {foldersService} from "../../services";
+import {Folder} from "../../models";
+import {FOLDER_TYPE} from "../../core/enums/folder-type.enum";
 
 interface IViewModel extends ng.IController, IFolderManageProps {
-    title: string;
-
     submitFolder?(): Promise<void>;
 
     isFormValid(): boolean;
@@ -15,6 +15,8 @@ interface IViewModel extends ng.IController, IFolderManageProps {
 
 interface IFolderManageProps {
     display: boolean;
+    isUpdate: boolean;
+    form: Folder;
     parentId: string;
     onSubmit?;
 }
@@ -26,9 +28,9 @@ interface IFolderManageScope extends IScope, IFolderManageProps {
 class Controller implements IViewModel {
 
     display: boolean;
+    isUpdate: boolean;
+    form: Folder;
     parentId: string;
-    title: string;
-    onSubmit: () => void;
 
 
     constructor(private $scope: IFolderManageScope,
@@ -37,16 +39,16 @@ class Controller implements IViewModel {
     }
 
     $onInit() {
-        this.title = '';
     }
 
     isFormValid = (): boolean => {
-        return this.title && this.title.length > 0;
+        return this.form.title && this.form.title.length > 0;
     }
 
     closeForm = (): void => {
         this.display = false;
-        this.title = '';
+        this.form.title = '';
+        this.isUpdate = false;
     }
 
     $onDestroy() {
@@ -60,8 +62,10 @@ function directive($parse: IParseService) {
         templateUrl: `${RootsConst.directive}folder-manage-lightbox/folder-manage-lightbox.html`,
         scope: {
             display: '=',
+            isUpdate: '=',
             parentId: '=',
             onSubmit: '&',
+            form: '='
         },
         controllerAs: 'vm',
         bindToController: true,
@@ -74,7 +78,13 @@ function directive($parse: IParseService) {
 
             vm.submitFolder = async (): Promise<void> => {
                 try {
-                    await foldersService.createFolder(vm.title, vm.parentId);
+                    if (vm.isUpdate) {
+                        await foldersService.updateFolder(vm.form.id, vm.form.title);
+                    } else {
+                        await foldersService.createFolder(vm.form.title,
+                            (vm.parentId === FOLDER_TYPE.MY_BOARDS
+                                || vm.parentId === FOLDER_TYPE.DELETED_BOARDS) ? null : vm.parentId);
+                    }
                 } catch (e) {
                     throw e;
                 }

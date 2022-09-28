@@ -1,6 +1,6 @@
 <lightbox class="board-manage-lightbox"
           show="vm.display"
-          on-close="vm.display = false">
+          on-close="vm.closeForm()">
     <section class="head board-manage-lightbox-head">
         <h3 ng-if="!vm.isUpdate">
             <i18n>magneto.create.board</i18n>
@@ -14,11 +14,15 @@
             <image-select ng-model="vm.form.imageUrl"
                           default="/img/illustrations/collaborativeeditor-default.png">
             </image-select>
+            <span ng-if="vm.form.imageUrl === ''"
+                  class="board-manage-lightbox-body-image-select-choose">
+                <i18n>magneto.board.manage.ask.image</i18n>
+            </span>
         </div>
 
         <div class="row vertical-spacing board-manage-lightbox-body-inputs">
             <div>
-                <i18n>magneto.create.board.title</i18n>&nbsp;:
+                <i18n>magneto.create.board.title</i18n>*&nbsp;:
                 <input type="text" data-ng-model="vm.form.title" class="twelve cell">
             </div>
             <div>

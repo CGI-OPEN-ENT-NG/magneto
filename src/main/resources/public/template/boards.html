@@ -1,34 +1,25 @@
 <div ng-controller="BoardsController as vm" class="boards-container">
     <div class="row boards-container-header">
         <h1 class="cell paddingRight">
-            <i18n>magneto.title</i18n>
+            <img class="application-logo" ng-src="/magneto/public/img/uni-magneto.png"
+                 alt="" src="/magneto/public/img/uni-magneto.png">
+            <i18n>magneto.title</i18n> / <i18n>magneto.my.boards</i18n>
         </h1>
-        <button class="right-magnet create-button" ng-click="vm.openCreateForm()">
+        <button ng-if="vm.filter.isMyBoards"
+                class="right-magnet create-button" ng-click="vm.openCreateForm()">
             <i18n>magneto.create.board</i18n>
         </button>
     </div>
-    <div class="row boards-container-header-search">
-        <h2 class="cell six">
-            <i18n>magneto.my.boards</i18n>
-        </h2>
-
-        <div class="cell six">
-            <board-search-bar
-                    search-text="vm.filter.searchText"
-                    on-search="vm.onSearchBoard">
-            </board-search-bar>
-        </div>
-
-    </div>
     <div class="twelve cell boards-container-body">
-        <div class="three cell">
+        <div class="three cell boards-container-body-nav">
             <folder-tree-nav
                     folder-trees="vm.folderNavTrees"
                     folder-tree-eventer="vm.folderNavTreeSubject"
                     on-select-folder="vm.switchFolder">
             </folder-tree-nav>
             <div class="boards-container-body-folder-button"
-                 ng-click="vm.displayFolderLightbox = true">
+                 ng-click="vm.displayFolderLightbox = true"
+                ng-if="vm.filter.isMyBoards">
                 <a class="classic-link">
                     <i class="magneto-folder-plus"></i>
                     <i18n>magneto.create.folder</i18n>
@@ -37,12 +28,19 @@
         </div>
 
         <div class="nine cell">
+            <div class="row boards-container-body-search">
+                    <board-search-bar
+                            search-text="vm.filter.searchText"
+                            on-search="vm.onSearchBoard">
+                    </board-search-bar>
+            </div>
+
 
             <div class="list-header row">
                 <!--Folder name-->
                 <div class="folder-name">
                     <i class="magneto-folder"></i>
-                    <span ng-if="vm.openedFolder == null && !vm.filter.isPublic && !vm.filter.isTrash">
+                    <span ng-if="vm.openedFolder == null && vm.filter.isMyBoards">
                         <i18n>magneto.my.boards</i18n>
                     </span>
                     <span ng-if="vm.openedFolder == null && vm.filter.isPublic">
@@ -53,14 +51,6 @@
                     </span>
                     <span ng-if="vm.openedFolder != null">[[vm.openedFolder.title]]</span>
                 </div>
-                <div class="board-list-filters right-magnet">
-<!--                    <i class="magneto-filter"></i>-->
-<!--                    <i class="magneto-sort-alphabetical"></i>-->
-<!--                    <div class="board-list-filters-display-mode">-->
-<!--                        <i class="magneto-view-module"></i>-->
-<!--                        <i class="magneto-view-list"></i>-->
-<!--                    </div>-->
-                </div>
             </div>
 
             <board-list
@@ -69,9 +59,15 @@
                     categories-eventer="vm.boardCategoriesService"
                     selected-board-ids="vm.selectedBoardIds"
                     selected-folder-ids="vm.selectedFolderIds"
-                    selected-update-board-form="vm.selectedUpdateBoardForm"
                     on-open="vm.openBoardOrFolder">
             </board-list>
+
+            <div class="empty-state"
+                 data-ng-show="!vm.isLoading"
+                 ng-if="vm.boards.length === 0 && vm.currentFolderChildren.length === 0">
+                <img data-ng-src="/magneto/public/img/empty-state-magneto.svg" alt="empty boards">
+                <i18n>magneto.boards.empty.text</i18n>
+            </div>
         </div>
     </div>
 
@@ -80,7 +76,8 @@
             display="vm.displayDeleteBoardLightbox"
             on-submit="vm.onFormSubmit"
             is-predelete="!vm.filter.isTrash"
-            board-ids="vm.selectedBoardIds">
+            board-ids="vm.selectedBoardIds"
+            folder-ids="vm.selectedFolderIds">
     </board-delete-lightbox>
 
     <!-- Board creation modal -->
@@ -88,7 +85,8 @@
             display="vm.displayBoardLightbox"
             on-submit="vm.onFormSubmit"
             is-update="vm.displayUpdateBoardLightbox"
-            form="vm.selectedUpdateBoardForm">
+            form="vm.selectedUpdateBoardForm"
+            folder-id="vm.openedFolder.id">
     </board-manage-lightbox>
 
     <!-- Board move model -->
@@ -99,11 +97,14 @@
             board-ids="vm.selectedBoardIds">
     </board-move-lightbox>
 
+    <!-- Folder creation/rename modal -->
     <folder-manage-lightbox
             display="vm.displayFolderLightbox"
+            is-update="vm.displayUpdateFolderLightbox"
             parent-id="vm.openedFolder.id"
             on-submit="vm.submitFolderForm"
-            on-folder-form-submit="vm.getFolders">
+            on-folder-form-submit="vm.getFolders"
+            form="vm.selectedUpdateFolderForm">
     </folder-manage-lightbox>
 
     <infinite-scroll scrolled="vm.onScroll()"
@@ -115,14 +116,16 @@
             display="vm.selectedBoardIds.length > 0 || vm.selectedFolderIds.length > 0"
             has-open="(vm.selectedFolderIds.length == 1 || vm.selectedBoardIds.length == 1) && vm.selectedFolderIds.length + vm.selectedBoardIds.length == 1"
             on-open="vm.openBoardOrFolder"
-            has-properties="!vm.filter.isPublic && !vm.filter.isTrash && vm.selectedBoardIds.length == 1 && vm.selectedFolderIds.length == 0"
+            has-properties="vm.filter.isMyBoards && vm.selectedBoardIds.length == 1 && vm.selectedFolderIds.length == 0"
             on-properties="vm.openPropertiesForm"
-            has-delete="!vm.filter.isPublic && vm.selectedFolderIds.length == 0 && vm.selectedBoardIds.length > 0"
+            has-delete="!vm.filter.isPublic && (vm.selectedFolderIds.length > 0 || vm.selectedBoardIds.length > 0)"
             on-delete="vm.openDeleteForm"
             has-share="false"
             has-restore="vm.filter.isTrash"
-            on-restore="vm.restoreBoards"
-            has-move="!vm.filter.isPublic && !vm.filter.isTrash && vm.selectedFolderIds.length == 0 && vm.selectedBoardIds.length > 0"
-            on-move="vm.moveBoards">
+            on-restore="vm.restoreBoardsOrFolders"
+            has-move="vm.filter.isMyBoards && vm.selectedFolderIds.length == 0 && vm.selectedBoardIds.length > 0"
+            on-move="vm.moveBoards"
+            has-rename="vm.filter.isMyBoards && vm.selectedFolderIds.length == 1 && vm.selectedBoardIds.length == 0"
+            on-rename="vm.openRenameFolderForm">
     </toaster>
 </div>

@@ -1,4 +1,4 @@
-import {ng, idiom as lang} from "entcore";
+import {ng} from "entcore";
 import {ILocationService, IScope, IWindowService, IParseService} from "angular";
 import {RootsConst} from "../../core/constants/roots.const";
 import {Folder, FolderTreeNavItem} from "../../models";

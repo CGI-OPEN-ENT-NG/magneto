@@ -1,11 +1,11 @@
 import {ng, toasts} from "entcore";
 import {ILocationService, IParseService, IScope, IWindowService} from "angular";
 import {RootsConst} from "../../core/constants/roots.const";
-import {boardsService} from "../../services";
+import {boardsService, foldersService} from "../../services";
 import {AxiosResponse} from "axios";
 
 interface IViewModel extends ng.IController, IBoardDeleteProps {
-    submitDeleteBoard?(): Promise<void>;
+    submitDelete?(): Promise<void>;
 
     closeForm(): void;
 }
@@ -15,6 +15,7 @@ interface IBoardDeleteProps {
     display: boolean;
     isPredelete: boolean;
     boardIds: Array<string>;
+    folderIds: Array<string>;
 }
 
 interface IBoardDeleteScope extends IScope, IBoardDeleteProps {
@@ -26,6 +27,7 @@ class Controller implements IViewModel {
     display: boolean;
     isPredelete: boolean;
     boardIds: Array<string>;
+    folderIds: Array<string>;
 
     constructor(private $scope: IBoardDeleteScope,
                 private $location: ILocationService,
@@ -53,7 +55,8 @@ function directive($parse: IParseService) {
             display: '=',
             onSubmit: '&',
             isPredelete: '=',
-            boardIds: '='
+            boardIds: '=',
+            folderIds: '='
         },
         controllerAs: 'vm',
         bindToController: true,
@@ -64,33 +67,42 @@ function directive($parse: IParseService) {
                         attrs: ng.IAttributes,
                         vm: IViewModel) {
 
-            vm.submitDeleteBoard = async (): Promise<void> => {
+            vm.submitDelete = async (): Promise<void> => {
                 try {
                     if (vm.isPredelete) {
-                        boardsService.preDeleteBoards(vm.boardIds)
-                            .then((response: AxiosResponse) => {
-                                    if (response.status === 200 || response.status === 201) {
-                                        toasts.confirm((vm.boardIds.length > 1) ?
-                                            'magneto.predelete.boards.confirm' : 'magneto.predelete.board.confirm');
-                                        $parse($scope.vm.onSubmit())({});
-                                        vm.closeForm();
-                                    } else {
-                                        toasts.warning((vm.boardIds.length > 1) ?
-                                            'magneto.predelete.boards.error' : 'magneto.predelete.board.error');
-                                    }
-                                }
-                            );
-                    } else {
-                        boardsService.deleteBoards(vm.boardIds)
-                            .then((response: AxiosResponse) => {
-                                if (response.status === 200 || response.status === 201) {
-                                    toasts.confirm((vm.boardIds.length > 1) ?
-                                        'magneto.delete.boards.confirm' : 'magneto.delete.board.confirm');
+                        let requests: Array<Promise<AxiosResponse>> = [];
+                        if (vm.boardIds.length > 0)
+                            requests.push(boardsService.preDeleteBoards(vm.boardIds));
+                        if (vm.folderIds.length > 0)
+                            requests.push(foldersService.preDeleteFolders(vm.folderIds));
+                        Promise.all(requests)
+                            .then((response: Array<AxiosResponse>) => {
+                                if ((response[0].status === 200 || response[0].status === 201)
+                                    && ((response.length > 1) ? (response[1].status === 200 || response[1].status === 201) : true)) {
+                                    toasts.confirm('magneto.predelete.elements.confirm');
                                     $parse($scope.vm.onSubmit())({});
                                     vm.closeForm();
                                 } else {
-                                    toasts.warning((vm.boardIds.length > 1) ?
-                                        'magneto.delete.boards.error' : 'magneto.delete.board.error');
+                                    toasts.warning('magneto.predelete.elements.error');
+                                }
+                            });
+                    } else {
+
+                        let requests: Array<Promise<AxiosResponse>> = [];
+                        if (vm.boardIds.length > 0)
+                            requests.push(boardsService.deleteBoards(vm.boardIds));
+                        if (vm.folderIds.length > 0)
+                            requests.push(foldersService.deleteFolders(vm.folderIds));
+
+                        Promise.all(requests)
+                            .then((response: Array<AxiosResponse>) => {
+                                if ((response[0].status === 200 || response[0].status === 201)
+                                    && ((response.length > 1) ? (response[1].status === 200 || response[1].status === 201) : true)) {
+                                    toasts.confirm('magneto.delete.elements.confirm');
+                                    $parse($scope.vm.onSubmit())({});
+                                    vm.closeForm();
+                                } else {
+                                    toasts.warning('magneto.delete.elements.error');
                                 }
                             });
                     }

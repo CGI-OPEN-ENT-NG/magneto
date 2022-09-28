@@ -1,8 +1,8 @@
 import {ng} from "entcore";
 import {ILocationService, IScope, IWindowService, IParseService} from "angular";
 import {RootsConst} from "../../core/constants/roots.const";
-import {boardsService, IBoardsService} from "../../services";
-import {Board, BoardForm} from "../../models/board.model";
+import {boardsService} from "../../services";
+import {BoardForm} from "../../models";
 
 interface IViewModel extends ng.IController, IBoardManageProps {
     submitBoard?(): Promise<void>;
@@ -15,8 +15,8 @@ interface IViewModel extends ng.IController, IBoardManageProps {
 interface IBoardManageProps {
     display: boolean;
     isUpdate: boolean;
-    boardToUpdate: Board;
     form: BoardForm;
+    folderId: string;
     onSubmit?;
 }
 
@@ -28,8 +28,8 @@ class Controller implements IViewModel {
 
     display: boolean;
     isUpdate: boolean;
-    boardToUpdate: Board;
     form: BoardForm;
+    folderId: string;
     onSubmit: () => void;
 
 
@@ -63,7 +63,8 @@ function directive($parse: IParseService) {
             display: '=',
             isUpdate: '=',
             onSubmit: '&',
-            form: '='
+            form: '=',
+            folderId: '='
         },
         controllerAs: 'vm',
         bindToController: true,
@@ -80,6 +81,7 @@ function directive($parse: IParseService) {
                     form.title = vm.form.title;
                     form.description = vm.form.description;
                     form.imageUrl = vm.form.imageUrl;
+                    form.folderId = vm.folderId;
 
                     if (vm.isUpdate) {
                         await boardsService.updateBoard(vm.form.id, form);
