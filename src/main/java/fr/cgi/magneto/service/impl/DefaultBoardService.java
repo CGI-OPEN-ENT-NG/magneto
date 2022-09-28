@@ -196,4 +196,24 @@ public class DefaultBoardService implements BoardService {
         return query.getAggregate();
     }
 
+    @Override
+    public Future<JsonObject> moveBoardsToFolder(String userId, List<String> boardIds, String folderId) {
+        Promise<JsonObject> promise = Promise.promise();
+        JsonObject query = new JsonObject()
+                .put(Field._ID, new JsonObject().put(Mongo.IN, new JsonArray(boardIds)))
+                .put(Field.OWNERID, userId);
+        JsonObject update = new JsonObject().put(Mongo.SET, new JsonObject().put(Field.FOLDERID, folderId));
+        mongoDb.update(this.collection, query, update, false, true, MongoDbResult.validActionResultHandler(results -> {
+            if (results.isLeft()) {
+                String message = String.format("[Magneto@%s::moveBoardsToFolder] Failed to move boards to folder",
+                        this.getClass().getSimpleName());
+                log.error(String.format("%s : %s", message, results.left().getValue()));
+                promise.fail(message);
+                return;
+            }
+            promise.complete(results.right().getValue());
+        }));
+        return promise.future();
+    }
+
 }

@@ -124,4 +124,20 @@ public class BoardController extends ControllerHelper {
                 ));
     }
 
+    @Put("/boards/folder/:folderId")
+    @ApiDoc("Move boards to a folder")
+    @ResourceFilter(ManageBoardRight.class)
+    @SecuredAction(value = "", type = ActionType.RESOURCE)
+    @SuppressWarnings("unchecked")
+    public void moveBoardsToFolder(HttpServerRequest request) {
+        RequestUtils.bodyToJson(request, pathPrefix + "moveBoards", boards ->
+                UserUtils.getUserInfos(eb, request, user -> {
+                    String folderId = request.getParam(Field.FOLDERID);
+                    List<String> boardIds = boards.getJsonArray(Field.BOARDIDS).getList();
+                    boardService.moveBoardsToFolder(user.getUserId(), boardIds, folderId)
+                            .onFailure(err -> renderError(request))
+                            .onSuccess(result -> renderJson(request, result));
+                }));
+    }
+
 }
