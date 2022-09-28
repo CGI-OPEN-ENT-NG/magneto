@@ -91,6 +91,14 @@
             form="vm.selectedUpdateBoardForm">
     </board-manage-lightbox>
 
+    <!-- Board move model -->
+    <board-move-lightbox
+            folder-trees="vm.folderMoveNavTrees"
+            display="vm.displayMoveBoardLightbox"
+            on-submit="vm.onFormSubmit"
+            board-ids="vm.selectedBoardIds">
+    </board-move-lightbox>
+
     <folder-manage-lightbox
             display="vm.displayFolderLightbox"
             parent-id="vm.openedFolder.id"
@@ -113,6 +121,8 @@
             on-delete="vm.openDeleteForm"
             has-share="false"
             has-restore="vm.filter.isTrash"
-            on-restore="vm.restoreBoards">
+            on-restore="vm.restoreBoards"
+            has-move="!vm.filter.isPublic && !vm.filter.isTrash && vm.selectedFolderIds.length == 0 && vm.selectedBoardIds.length > 0"
+            on-move="vm.moveBoards">
     </toaster>
 </div>

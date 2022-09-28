@@ -5,6 +5,10 @@
             <button ng-if="vm.hasOpen" ng-click="vm.open()">
                 <i18n>magneto.open</i18n>
             </button>
+            <!-- Move button -->
+            <button ng-if="vm.hasMove" ng-click="vm.openMove()">
+                <i18n>magneto.move</i18n>
+            </button>
             <!-- Properties button -->
             <button ng-if="vm.hasProperties" ng-click="vm.openProperties()">
                 <i18n>magneto.properties</i18n>

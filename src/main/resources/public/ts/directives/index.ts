@@ -9,3 +9,4 @@ export * from './board-delete-lightbox/board-delete-lightbox.directive';
 export * from './folder-tree-nav/folder-tree-nav.directive';
 export * from './folder-tree-nav/folder-tree-nav-item/folder-tree-nav-item.directive';
 export * from './board-list/board-list-folder/board-list-folder.directive';
+export * from './board-move-lightbox/board-move-lightbox.directive';

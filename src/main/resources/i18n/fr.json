@@ -30,8 +30,10 @@
   "magneto.delete": "Supprimer",
   "magneto.properties": "Propriétés",
   "magneto.board.properties": "Propriétés du tableau",
+  "magneto.board.move": "Déplacer le tableau",
   "magneto.share": "Partager",
   "magneto.restore": "Restaurer",
+  "magneto.move": "Déplacer",
   "magneto.create.folder:": "Créer un dossier",
   "magneto.create.folder.name": "Nom du dossier"
 }

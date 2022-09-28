@@ -1,0 +1,33 @@
+<lightbox class="board-move-lightbox"
+          show="vm.display"
+          on-close="vm.display = false">
+    <section class="head board-move-lightbox-head">
+        <h3>
+            <i18n>magneto.board.move</i18n>
+        </h3>
+    </section>
+    <section class="body board-move-lightbox-body">
+
+        <folder-tree-nav
+                folder-trees="vm.folderTrees"
+                on-select-folder="vm.selectFolder">
+        </folder-tree-nav>
+
+    </section>
+    <!-- Form submit/cancel buttons -->
+    <section>
+        <div class="row horizontal-spacing">
+            <div class="twelve cell">
+                <button class="right-magnet"
+                        data-ng-click="vm.submit()"
+                        data-ng-disabled="!vm.isFormValid()">
+                    <i18n>magneto.save</i18n>
+                </button>
+                <button class="right-magnet cancel"
+                        data-ng-click="vm.closeForm()">
+                    <i18n>magneto.cancel</i18n>
+                </button>
+            </div>
+        </div>
+    </section>
+</lightbox>

@@ -119,4 +119,20 @@ describe('BoardsService', () => {
 
     });
 
+    it('returns date when moveBoardsToFolder is correctly called', done => {
+        const mock = new MockAdapter(axios);
+        const data = {
+            response: true
+        }
+
+        mock.onPut(`/magneto/boards/folder/folderId1`, {boardIds: ['boardId']})
+            .reply(200, data);
+
+        boardsService.moveBoardsToFolder(['boardId'], 'folderId1').then(res => {
+            expect(res.data).toEqual(data);
+            done();
+        });
+
+    });
+
 });

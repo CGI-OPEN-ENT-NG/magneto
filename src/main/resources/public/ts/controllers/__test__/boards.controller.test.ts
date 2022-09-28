@@ -84,4 +84,11 @@ describe('BoardsController', () => {
         expect(boardsControllerTest.displayDeleteBoardLightbox).toBe(true);
         done();
     });
+
+    it('test moveBoards', (done) => {
+        boardsControllerTest.displayMoveBoardLightbox = false;
+        boardsControllerTest.moveBoards();
+        expect(boardsControllerTest.displayMoveBoardLightbox).toBe(true);
+        done();
+    });
 });

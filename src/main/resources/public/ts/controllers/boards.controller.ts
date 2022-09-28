@@ -21,10 +21,12 @@ interface IViewModel {
     displayDeleteBoardLightbox: boolean;
     displayUpdateBoardLightbox: boolean;
     displayFolderLightbox: boolean;
+    displayMoveBoardLightbox: boolean;
 
     boards: Array<Board>;
     folders: Array<Folder>;
     folderNavTrees: Array<FolderTreeNavItem>;
+    folderMoveNavTrees: Array<FolderTreeNavItem>;
     folderNavTreeSubject: Subject<FolderTreeNavItem>;
 
     filter : {
@@ -51,6 +53,7 @@ interface IViewModel {
     onScroll(): void;
     resetBoards(): void;
     restoreBoards(): Promise<void>;
+    moveBoards(): Promise<void>;
 }
 
 interface IBoardsScope extends IScope {
@@ -70,9 +73,11 @@ class Controller implements ng.IController, IViewModel {
     folders: Array<Folder>;
     currentFolderChildren: Array<Folder>;
     folderNavTrees: Array<FolderTreeNavItem>;
+    folderMoveNavTrees: Array<FolderTreeNavItem>;
     displayDeleteBoardLightbox: boolean;
     displayUpdateBoardLightbox: boolean;
     displayFolderLightbox: boolean;
+    displayMoveBoardLightbox: boolean;
 
     folderNavTreeSubject: Subject<FolderTreeNavItem>;
 
@@ -97,6 +102,7 @@ class Controller implements ng.IController, IViewModel {
         this.displayBoardLightbox = false;
         this.displayDeleteBoardLightbox = false;
         this.displayFolderLightbox = false;
+        this.displayMoveBoardLightbox = false;
 
         this.filter = {
             page: 0,
@@ -220,6 +226,10 @@ class Controller implements ng.IController, IViewModel {
         await this.getBoards();
     }
 
+    moveBoards = async (): Promise<void> => {
+        this.displayMoveBoardLightbox = true;
+    }
+
     onFormSubmit = async (): Promise<void> => {
         this.resetBoards();
         await this.getBoards();
@@ -234,6 +244,7 @@ class Controller implements ng.IController, IViewModel {
         });
 
         this.folderNavTrees = [];
+        this.folderMoveNavTrees = [];
 
         this.folderNavTrees.push(new FolderTreeNavItem(
             {id: FOLDER_TYPE.MY_BOARDS, title: lang.translate('magneto.my.boards'),
@@ -245,6 +256,13 @@ class Controller implements ng.IController, IViewModel {
         this.folderNavTrees.push(new FolderTreeNavItem(
             {id: FOLDER_TYPE.DELETED_BOARDS, title: lang.translate('magneto.trash'),
                     parentId: null}, "magneto-delete-forever"));
+
+        // Folder tree for board move lightbox
+        this.folderMoveNavTrees.push(new FolderTreeNavItem(
+            {id: FOLDER_TYPE.MY_BOARDS, title: lang.translate('magneto.my.boards'),
+                parentId: null}, "magneto-check-decagram")
+            .buildFolders(this.folders));
+        this.folderMoveNavTrees[0].isOpened = true;
 
         this.folderNavTreeSubject.next(this.folderNavTrees[0]);
     }

@@ -30,8 +30,10 @@
   "magneto.delete": "Delete",
   "magneto.properties": "Properties",
   "magneto.board.properties": "Board properties",
+  "magneto.board.move": "Move board",
   "magneto.share": "Share",
   "magneto.restore": "Restore",
+  "magneto.move": "Move",
   "magneto.create.folder:": "Create folder",
   "magneto.create.folder.name": "Folder name"
 }
