@@ -1,26 +1,36 @@
 package fr.cgi.magneto.controller;
 
-import fr.cgi.magneto.core.constants.*;
-import fr.cgi.magneto.model.*;
-import fr.cgi.magneto.security.*;
+import fr.cgi.magneto.core.constants.Field;
+import fr.cgi.magneto.core.constants.Rights;
+import fr.cgi.magneto.model.boards.BoardPayload;
+import fr.cgi.magneto.security.ManageBoardRight;
+import fr.cgi.magneto.security.ViewRight;
 import fr.cgi.magneto.service.BoardService;
+import fr.cgi.magneto.service.CardService;
 import fr.cgi.magneto.service.ServiceFactory;
 import fr.wseduc.rs.*;
-import fr.wseduc.security.*;
+import fr.wseduc.security.ActionType;
+import fr.wseduc.security.SecuredAction;
 import fr.wseduc.webutils.request.RequestUtils;
-import io.vertx.core.http.*;
-import org.entcore.common.controller.*;
-import org.entcore.common.http.filter.*;
+import io.vertx.core.CompositeFuture;
+import io.vertx.core.Future;
+import io.vertx.core.http.HttpServerRequest;
+import io.vertx.core.json.JsonObject;
+import org.entcore.common.controller.ControllerHelper;
+import org.entcore.common.http.filter.ResourceFilter;
 import org.entcore.common.user.UserUtils;
 
-import java.util.*;
+import java.util.List;
 
 public class BoardController extends ControllerHelper {
 
     private final BoardService boardService;
+    private final CardService cardService;
+
 
     public BoardController(ServiceFactory serviceFactory) {
         this.boardService = serviceFactory.boardService();
+        this.cardService = serviceFactory.cardService();
     }
 
     @Get("/boards")
@@ -48,15 +58,34 @@ public class BoardController extends ControllerHelper {
         });
     }
 
+    @Post("/boards")
+    @ApiDoc("Get all boards by ids")
+    @ResourceFilter(ViewRight.class)
+    @SecuredAction(value = "", type = ActionType.RESOURCE)
+    @SuppressWarnings("unchecked")
+    public void getAllBoardsByIds(HttpServerRequest request) {
+        RequestUtils.bodyToJson(request, pathPrefix + "boardList", boards -> {
+            List<String> boardIds = boards.getJsonArray(Field.BOARDIDS).getList();
+            boardService.getBoards(boardIds)
+                    .onSuccess(result -> renderJson(request, result))
+                    .onFailure(fail -> {
+                        String message = String.format("[Magneto@%s::getAllBoardsByIds] Failed to get all boards by ids : %s",
+                                this.getClass().getSimpleName(), fail.getMessage());
+                        log.error(message);
+                        renderError(request);
+                    });
+        });
+    }
+
     @Post("/board")
     @ApiDoc("Create a board")
     @SecuredAction(Rights.MANAGE_BOARD)
     public void create(HttpServerRequest request) {
         RequestUtils.bodyToJson(request, pathPrefix + "board", board ->
                 UserUtils.getUserInfos(eb, request, user ->
-                    boardService.create(user, board)
-                        .onFailure(err -> renderError(request))
-                            .onSuccess(result -> renderJson(request, result))));
+                        boardService.create(user, board)
+                                .onFailure(err -> renderError(request))
+                                .onSuccess(result -> renderJson(request, result))));
     }
 
     @Put("/board/:id")
@@ -64,7 +93,7 @@ public class BoardController extends ControllerHelper {
     @ResourceFilter(ManageBoardRight.class)
     @SecuredAction(value = "", type = ActionType.RESOURCE)
     public void update(HttpServerRequest request) {
-        RequestUtils.bodyToJson(request, pathPrefix + "board", board -> {
+        RequestUtils.bodyToJson(request, pathPrefix + "boardUpdate", board -> {
             String boardId = request.getParam(Field.ID);
             BoardPayload updateBoard = new BoardPayload(board).setId(boardId);
             UserUtils.getUserInfos(eb, request, user ->
@@ -75,14 +104,13 @@ public class BoardController extends ControllerHelper {
     }
 
 
-
     @Put("/boards/predelete")
     @ApiDoc("Pre delete boards")
     @ResourceFilter(ManageBoardRight.class)
     @SecuredAction(value = "", type = ActionType.RESOURCE)
     @SuppressWarnings("unchecked")
     public void preDeleteBoards(HttpServerRequest request) {
-        RequestUtils.bodyToJson(request, pathPrefix + "deleteBoard", boards ->
+        RequestUtils.bodyToJson(request, pathPrefix + "boardList", boards ->
                 UserUtils.getUserInfos(eb, request, user -> {
                             List<String> boardIds = boards.getJsonArray(Field.BOARDIDS).getList();
                             boardService.preDeleteBoards(user.getUserId(), boardIds, false)
@@ -98,7 +126,7 @@ public class BoardController extends ControllerHelper {
     @SecuredAction(value = "", type = ActionType.RESOURCE)
     @SuppressWarnings("unchecked")
     public void restorePreDeletedBoards(HttpServerRequest request) {
-        RequestUtils.bodyToJson(request, pathPrefix + "deleteBoard", boards ->
+        RequestUtils.bodyToJson(request, pathPrefix + "boardList", boards ->
                 UserUtils.getUserInfos(eb, request, user -> {
                             List<String> boardIds = boards.getJsonArray(Field.BOARDIDS).getList();
                             boardService.preDeleteBoards(user.getUserId(), boardIds, true)
@@ -114,14 +142,18 @@ public class BoardController extends ControllerHelper {
     @SecuredAction(value = "", type = ActionType.RESOURCE)
     @SuppressWarnings("unchecked")
     public void deleteBoards(HttpServerRequest request) {
-        RequestUtils.bodyToJson(request, pathPrefix + "deleteBoard", boards ->
+        RequestUtils.bodyToJson(request, pathPrefix + "boardList", boards ->
                 UserUtils.getUserInfos(eb, request, user -> {
-                            List<String> boardIds = boards.getJsonArray(Field.BOARDIDS).getList();
-                            boardService.deleteBoards(user.getUserId(), boardIds)
-                                    .onFailure(err -> renderError(request))
-                                    .onSuccess(result -> renderJson(request, result));
-                        }
-                ));
+                    List<String> boardIds = boards.getJsonArray(Field.BOARDIDS).getList();
+                    Future<JsonObject> removeCardsFuture = cardService.deleteCardsByBoards(boardIds);
+                    Future<JsonObject> removeBoardsFuture = boardService.deleteBoards(user.getUserId(), boardIds);
+                    CompositeFuture.all(removeCardsFuture, removeBoardsFuture)
+                            .onFailure(err -> renderError(request))
+                            .onSuccess(result -> renderJson(request, new JsonObject()
+                                    .put(Field.NBBOARDS, removeBoardsFuture.result())
+                                    .put(Field.NBCARDS, removeCardsFuture.result())));
+                })
+        );
     }
 
     @Put("/boards/folder/:folderId")

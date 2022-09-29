@@ -1,7 +1,8 @@
-package fr.cgi.magneto.model;
+package fr.cgi.magneto.model.boards;
 
 import fr.cgi.magneto.core.constants.*;
 import fr.cgi.magneto.helper.*;
+import fr.cgi.magneto.model.Model;
 import io.vertx.core.json.*;
 
 import java.util.*;
@@ -16,8 +17,9 @@ public class BoardPayload implements Model<BoardPayload> {
     private String creationDate;
     private String modificationDate;
     private String folderId;
+    private List<String> cardIds;
 
-
+    @SuppressWarnings("unchecked")
     public BoardPayload(JsonObject board) {
         this._id = board.getString(Field._ID, null);
         this.title = board.getString(Field.TITLE);
@@ -25,10 +27,11 @@ public class BoardPayload implements Model<BoardPayload> {
         this.description = board.getString(Field.DESCRIPTION);
         this.ownerId = board.getString(Field.OWNERID);
         this.ownerName = board.getString(Field.OWNERNAME);
-        this.creationDate = board.getString(Field.CREATIONDATE);
-        this.modificationDate = board.getString(Field.MODIFICATIONDATE);
         this.folderId = board.getString(Field.FOLDERID);
-        this.setCreationDate(DateHelper.getDateString(new Date(), DateHelper.MONGO_FORMAT));
+        this.cardIds = board.getJsonArray(Field.CARDIDS, new JsonArray()).getList();
+        if (this.getId() == null) {
+            this.setCreationDate(DateHelper.getDateString(new Date(), DateHelper.MONGO_FORMAT));
+        }
         this.setModificationDate(DateHelper.getDateString(new Date(), DateHelper.MONGO_FORMAT));
     }
 
@@ -113,6 +116,21 @@ public class BoardPayload implements Model<BoardPayload> {
         return this;
     }
 
+    public List<String> getCardIds() {
+        return cardIds;
+    }
+
+    public BoardPayload addCardId(String cardId) {
+        this.cardIds.add(cardId);
+        return this;
+    }
+
+    public BoardPayload removeCardIds(List<String> cardIds) {
+        if(cardIds != null) {
+            cardIds.forEach((id) -> this.cardIds.remove(id));
+        }
+        return this;
+    }
 
     @Override
     public JsonObject toJson() {
@@ -121,7 +139,8 @@ public class BoardPayload implements Model<BoardPayload> {
                 .put(Field.TITLE, this.getTitle())
                 .put(Field.IMAGEURL, this.getImageUrl())
                 .put(Field.DESCRIPTION, this.getDescription())
-                .put(Field.MODIFICATIONDATE, this.getModificationDate());
+                .put(Field.MODIFICATIONDATE, this.getModificationDate())
+                .put(Field.CARDIDS, this.getCardIds());
 
         // If create
         if (this.getId() == null) {
@@ -130,8 +149,7 @@ public class BoardPayload implements Model<BoardPayload> {
                     .put(Field.PUBLIC, false)
                     .put(Field.FOLDERID, this.getFolderId())
                     .put(Field.OWNERID, this.getOwnerId())
-                    .put(Field.OWNERNAME, this.getOwnerName())
-                    .put(Field.CARDIDS, new JsonArray());
+                    .put(Field.OWNERNAME, this.getOwnerName());
         }
 
         return json;
@@ -141,4 +159,5 @@ public class BoardPayload implements Model<BoardPayload> {
     public BoardPayload model(JsonObject board) {
         return new BoardPayload(board);
     }
+
 }

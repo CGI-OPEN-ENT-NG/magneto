@@ -1,7 +1,10 @@
 package fr.cgi.magneto.service;
 
-import fr.cgi.magneto.core.constants.*;
-import fr.cgi.magneto.service.impl.*;
+import fr.cgi.magneto.core.constants.Collections;
+import fr.cgi.magneto.service.impl.DefaultBoardService;
+import fr.cgi.magneto.service.impl.DefaultCardService;
+import fr.cgi.magneto.service.impl.DefaultFolderService;
+import fr.cgi.magneto.service.impl.DefaultMagnetoService;
 import fr.wseduc.mongodb.MongoDb;
 import io.vertx.core.Vertx;
 import io.vertx.core.eventbus.EventBus;
@@ -32,9 +35,14 @@ public class ServiceFactory {
         return new DefaultBoardService(Collections.BOARD_COLLECTION, mongoDb);
     }
 
+    public CardService cardService() {
+        return new DefaultCardService(Collections.CARD_COLLECTION, mongoDb);
+    }
+
     public FolderService folderService() {
         return new DefaultFolderService(Collections.FOLDER_COLLECTION, mongoDb);
     }
+
     // Helpers
     public EventBus eventBus() {
         return this.vertx.eventBus();

@@ -1,5 +1,6 @@
 package fr.cgi.magneto.model;
 
+import fr.cgi.magneto.model.boards.BoardPayload;
 import io.vertx.core.json.*;
 import io.vertx.ext.unit.*;
 import io.vertx.ext.unit.junit.*;
@@ -26,7 +27,8 @@ public class BoardPayloadTest {
             .put("title", "title")
             .put("imageUrl", "imageUrl")
             .put("description", "description")
-            .put("modificationDate", "modificationDate");
+            .put("modificationDate", "modificationDate")
+            .put("cardIds", new JsonArray());
 
     @Test
     public void testBoardPayloadHasBeenInstantiated(TestContext ctx) {

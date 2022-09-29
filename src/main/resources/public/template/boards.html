@@ -113,7 +113,7 @@
 
     <toaster
             display="vm.selectedBoardIds.length > 0 || vm.selectedFolderIds.length > 0"
-            has-open="vm.selectedFolderIds.length == 1 && vm.selectedBoardIds.length == 0"
+            has-open="(vm.selectedFolderIds.length == 1 || vm.selectedBoardIds.length == 1) && vm.selectedFolderIds.length + vm.selectedBoardIds.length == 1"
             on-open="vm.openBoardOrFolder"
             has-properties="!vm.filter.isPublic && !vm.filter.isTrash && vm.selectedBoardIds.length == 1 && vm.selectedFolderIds.length == 0"
             on-properties="vm.openPropertiesForm"

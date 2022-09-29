@@ -3,6 +3,7 @@ package fr.cgi.magneto.service.impl;
 import fr.cgi.magneto.*;
 import fr.cgi.magneto.core.constants.*;
 import fr.cgi.magneto.model.*;
+import fr.cgi.magneto.model.boards.BoardPayload;
 import fr.cgi.magneto.service.BoardService;
 import io.vertx.core.*;
 import io.vertx.core.json.*;
@@ -103,6 +104,25 @@ public class DefaultBoardService implements BoardService {
         return promise.future();
     }
 
+    @Override
+    public Future<JsonArray> getBoards(List<String> boardIds) {
+        Promise<JsonArray> promise = Promise.promise();
+        JsonObject query = this.getBoardByIds(boardIds);
+        mongoDb.command(query.toString(), MongoDbResult.validResultHandler(either -> {
+            if (either.isLeft()) {
+                log.error("[Magneto@%s::getBoards] Failed to get boards", this.getClass().getSimpleName(),
+                        either.left().getValue());
+                promise.fail(either.left().getValue());
+            } else {
+                JsonArray result = either.right().getValue()
+                        .getJsonObject(Field.CURSOR, new JsonObject())
+                        .getJsonArray(Field.FIRSTBATCH, new JsonArray());
+                promise.complete(result);
+            }
+        }));
+
+        return promise.future();
+    }
 
     @Override
     public Future<JsonObject> getAllBoards(UserInfos user, Integer page,
@@ -127,7 +147,7 @@ public class DefaultBoardService implements BoardService {
                 .onSuccess(success -> {
                     JsonArray boards = fetchAllBoardsFuture.result();
                     int boardsCount = (fetchAllBoardsCountFuture.result().isEmpty()) ? 0 :
-                            fetchAllBoardsCountFuture.result().getJsonObject(0).getInteger("count");
+                            fetchAllBoardsCountFuture.result().getJsonObject(0).getInteger(Field.COUNT);
                     promise.complete(new JsonObject()
                             .put(Field.ALL, boards)
                             .put(Field.COUNT, boardsCount)
@@ -154,8 +174,8 @@ public class DefaultBoardService implements BoardService {
                 promise.fail(either.left().getValue());
             } else {
                 JsonArray result = either.right().getValue()
-                        .getJsonObject("cursor", new JsonObject())
-                        .getJsonArray("firstBatch", new JsonArray());
+                        .getJsonObject(Field.CURSOR, new JsonObject())
+                        .getJsonArray(Field.FIRSTBATCH, new JsonArray());
                 promise.complete(result);
             }
         }));
@@ -164,8 +184,8 @@ public class DefaultBoardService implements BoardService {
     }
 
     private JsonObject getAllBoardsQuery(UserInfos user, Integer page,
-                                           String searchText, String folderId,
-                                           boolean isPublic, boolean isShared, boolean isDeleted,
+                                         String searchText, String folderId,
+                                         boolean isPublic, boolean isShared, boolean isDeleted,
                                          String sortBy, boolean getCount) {
 
         //TODO: fetch shared boards (MAG-16)
@@ -178,21 +198,37 @@ public class DefaultBoardService implements BoardService {
                 .matchRegex(searchText, Arrays.asList(Field.TITLE, Field.DESCRIPTION))
                 .sort(sortBy, -1);
 
-                if (!getCount)
-                    query = query.page(page)
+        if (!getCount)
+            query = query.page(page)
 
-                .project(new JsonObject()
+                    .project(new JsonObject()
+                            .put(Field._ID, 1)
+                            .put(Field.TITLE, 1)
+                            .put(Field.IMAGEURL, 1)
+                            .put(Field.NBCARDS, new JsonObject().put(Mongo.SIZE, "$cardIds"))
+                            .put(Field.MODIFICATIONDATE, 1)
+                            .put(Field.FOLDERID, 1)
+                            .put(Field.DESCRIPTION, 1));
+        if (getCount) {
+            query = query.count();
+        }
+
+        return query.getAggregate();
+    }
+
+    private JsonObject getBoardByIds(List<String> boardIds) {
+        MongoQuery query = new MongoQuery(this.collection)
+                .match(new JsonObject()
+                        .put(Field._ID, new JsonObject().put(Mongo.IN, new JsonArray(boardIds))))
+/*                .project(new JsonObject()
                         .put(Field._ID, 1)
                         .put(Field.TITLE, 1)
                         .put(Field.IMAGEURL, 1)
                         .put(Field.NBCARDS, new JsonObject().put(Mongo.SIZE, "$cardIds"))
                         .put(Field.MODIFICATIONDATE, 1)
                         .put(Field.FOLDERID, 1)
-                        .put(Field.DESCRIPTION, 1));
-                if (getCount) {
-                    query = query.count();
-                }
-
+                        .put(Field.CARDIDS, 1)
+                        .put(Field.DESCRIPTION, 1))*/;
         return query.getAggregate();
     }
 

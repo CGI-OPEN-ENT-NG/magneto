@@ -13,4 +13,12 @@ public class Mongo {
     public static final String SIZE = "$size";
     public static final String SKIP = "$skip";
     public static final String SORT = "$sort";
+    public static final String LOOKUP = "$lookup";
+    public static final String UNWIND = "$unwind";
+    public static final String FROM = "from";
+    public static final String LOCALFIELD = "localField";
+    public static final String FOREIGNFIELD = "foreignField";
+    public static final String AS = "as";
+    public static final String PATH = "path";
+    public static final String NULLOREMPTY = "preserveNullAndEmptyArrays";
 }

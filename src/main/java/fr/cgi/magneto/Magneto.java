@@ -22,6 +22,7 @@ public class Magneto extends BaseServer {
 
 		addController(new MagnetoController(serviceFactory));
 		addController(new BoardController(serviceFactory));
+		addController(new CardController(serviceFactory));
 		addController(new FolderController(serviceFactory));
 
 	}

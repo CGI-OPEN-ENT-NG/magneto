@@ -58,13 +58,13 @@ public class MongoQuery {
 
     public MongoQuery project(JsonObject parameters) {
         this.pipeline.add(new JsonObject()
-                .put(Mongo.PROJECT,parameters));
+                .put(Mongo.PROJECT, parameters));
         return this;
     }
 
     public MongoQuery count() {
         this.pipeline.add(new JsonObject()
-                .put(Mongo.COUNT, "count"));
+                .put(Mongo.COUNT, Field.COUNT));
         return this;
     }
 
@@ -73,6 +73,24 @@ public class MongoQuery {
             this.pipeline.add(new JsonObject().put(Mongo.SKIP, pageNumber * PAGE_SIZE));
         }
         this.pipeline.add(new JsonObject().put(Mongo.LIMIT, PAGE_SIZE));
+        return this;
+    }
+
+    public MongoQuery lookUp(String from, String localField, String foreignField, String output) {
+        this.pipeline.add(new JsonObject()
+                .put(Mongo.LOOKUP, new JsonObject()
+                        .put(Mongo.FROM, from)
+                        .put(Mongo.LOCALFIELD, localField)
+                        .put(Mongo.FOREIGNFIELD, foreignField)
+                        .put(Mongo.AS, output)));
+        return this;
+    }
+
+    public MongoQuery unwind(String path, boolean empty) {
+        this.pipeline.add(new JsonObject()
+                .put(Mongo.UNWIND, new JsonObject()
+                        .put(Mongo.PATH, path)
+                        .put(Mongo.NULLOREMPTY, empty)));
         return this;
     }
 

@@ -1,0 +1,35 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "title": {
+      "type": "string"
+    },
+    "resourceUrl": {
+      "type": "string"
+    },
+    "resourceType": {
+      "type": "string"
+    },
+    "caption": {
+      "type": "string"
+    },
+    "description": {
+      "type": "string"
+    },
+    "parentId": {
+      "type": "number"
+    },
+    "sectionIndex": {
+      "type": "number"
+    },
+    "boardId": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "title",
+    "resourceType"
+  ]
+}
