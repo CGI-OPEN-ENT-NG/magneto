@@ -1,0 +1,30 @@
+<lightbox class="card-delete-lightbox"
+          show="vm.display"
+          on-close="vm.display = false">
+    <section class="head card-delete-lightbox-head">
+        <h3>
+            <i18n>magneto.delete.cards</i18n>
+        </h3>
+    </section>
+
+    <section class="body card-delete-lightbox-body">
+        <div class="row vertical-spacing card-delete-lightbox-body-inputs">
+            <i18n>magneto.delete.cards.message</i18n>
+        </div>
+    </section>
+    <!-- Form submit/cancel buttons -->
+    <section>
+        <div class="row horizontal-spacing">
+            <div class="twelve cell">
+                <button class="right-magnet"
+                        data-ng-click="vm.submitDelete()">
+                    <i18n>magneto.delete</i18n>
+                </button>
+                <button class="right-magnet cancel"
+                        data-ng-click="vm.closeForm()">
+                    <i18n>magneto.cancel</i18n>
+                </button>
+            </div>
+        </div>
+    </section>
+</lightbox>

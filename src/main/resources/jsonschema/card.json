@@ -6,6 +6,9 @@
     "title": {
       "type": "string"
     },
+    "resourceId": {
+      "type": "string"
+    },
     "resourceUrl": {
       "type": ["string", "null"]
     },
@@ -29,7 +32,6 @@
     }
   },
   "required": [
-    "title",
     "resourceType"
   ]
 }

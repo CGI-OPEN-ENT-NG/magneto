@@ -14,7 +14,7 @@ describe('BoardsController', () => {
 
     beforeEach(() => {
         const testApp = angular.module('app', []);
-        let $controller, $rootScope;
+        let $controller, $rootScope, $sce;
 
         angular.mock.module('app');
 
@@ -39,6 +39,7 @@ describe('BoardsController', () => {
 
         boardsControllerTest = $controller('BoardsController', {
             $scope: $scope,
+            $location: $rootScope.location,
             boardsService: BoardsService
         });
 

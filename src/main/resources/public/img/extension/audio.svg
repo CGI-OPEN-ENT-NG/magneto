@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   sodipodi:docname="icon-son.svg"
+   inkscape:version="1.0 (4035a4fb49, 2020-05-01)"
+   id="svg1276"
+   version="1.1"
+   viewBox="0 0 22.851539 31.880587"
+   height="31.880587mm"
+   width="22.85154mm">
+  <defs
+     id="defs1270">
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient1258"
+       id="linearGradient1252"
+       gradientUnits="userSpaceOnUse"
+       x1="119.12916"
+       y1="21.434843"
+       x2="123.24678"
+       y2="17.844069" />
+    <linearGradient
+       id="linearGradient1258"
+       inkscape:collect="always">
+      <stop
+         id="stop1254"
+         offset="0"
+         style="stop-color:#731c48;stop-opacity:1" />
+      <stop
+         id="stop1256"
+         offset="1"
+         style="stop-color:#b48d12;stop-opacity:0;" />
+    </linearGradient>
+  </defs>
+  <sodipodi:namedview
+     inkscape:window-maximized="1"
+     inkscape:window-y="-9"
+     inkscape:window-x="-9"
+     inkscape:window-height="1001"
+     inkscape:window-width="1920"
+     showgrid="false"
+     inkscape:document-rotation="0"
+     inkscape:current-layer="layer1"
+     inkscape:document-units="mm"
+     inkscape:cy="367.78498"
+     inkscape:cx="-858.36559"
+     inkscape:zoom="0.35"
+     inkscape:pageshadow="2"
+     inkscape:pageopacity="0.0"
+     borderopacity="1.0"
+     bordercolor="#666666"
+     pagecolor="#ffffff"
+     id="base" />
+  <metadata
+     id="metadata1273">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     transform="translate(-332.94257,-50.856891)"
+     id="layer1"
+     inkscape:groupmode="layer"
+     inkscape:label="Calque 1">
+    <g
+       id="g1218-7"
+       transform="translate(230.2174,35.52665)">
+      <path
+         sodipodi:nodetypes="sccssssss"
+         d="m 104.8057,15.59752 h 14.4855 l 6.28551,6.332759 V 45.1303 c 0,1.15261 -0.92791,2.080528 -2.08052,2.080528 H 104.8057 c -1.15262,0 -2.08053,-0.927918 -2.08053,-2.080528 V 17.678047 c 0,-1.152612 0.92791,-2.080527 2.08053,-2.080527 z"
+         style="opacity:1;fill:#ac2a6c;fill-opacity:1;stroke:none;stroke-width:4.26188;stroke-linecap:round;stroke-linejoin:round;paint-order:markers stroke fill"
+         id="rect833-8-6" />
+      <path
+         sodipodi:nodetypes="ccccc"
+         d="m 125.04217,21.663009 -4.88545,0.01779 c -0.99639,0.0036 -1.40554,-0.706499 -1.40554,-1.66299 l 0.005,-4.687568 z"
+         inkscape:transform-center-y="-1.7574522"
+         inkscape:transform-center-x="0.85388347"
+         style="opacity:0.762238;fill:url(#linearGradient1252);fill-opacity:1;stroke:none;stroke-width:2.235;stroke-linecap:round;stroke-linejoin:round;paint-order:markers stroke fill"
+         id="path927-3-7" />
+      <path
+         id="path2"
+         d="m 110.02534,33.50052 h 1.31525 l 1.64407,1.64407 c 1.81064,1.95528 1.64407,1.716051 1.64407,-0.986436 v -2.630507 -2.630506 c -0.0635,-2.949207 0.10359,-2.734096 -1.64407,-0.986441 l -1.64407,1.644066 -1.31107,-0.0042 c -1.20446,-0.04886 -1.31317,0.03176 -1.31317,0.984338 l -0.002,0.988539 -0.002,0.988538 c 0,0.977909 0.22233,0.988539 1.31316,0.988539 z m 5.91865,0 c 0,-0.75052 -0.006,-3.113128 0,-3.945754 0.006,-0.832626 1.31524,-0.845638 1.31524,0 v 3.909213 c 0,0.789639 -1.31524,0.787061 -1.31524,0.03654 z m 3.94576,2.63051 c 0,0.791545 -1.31526,0.779726 -1.31526,0 v -9.206769 c 0,-0.933592 1.31526,-0.934782 1.31526,0 z"
+         style="fill:#ffffff;stroke-width:0.658;stroke-miterlimit:4;stroke-dasharray:none"
+         sodipodi:nodetypes="zcccccccccccczzzzzzzzzzz" />
+    </g>
+  </g>
+</svg>

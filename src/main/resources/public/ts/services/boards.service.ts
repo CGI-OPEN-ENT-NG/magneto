@@ -1,9 +1,11 @@
 import {ng} from 'entcore'
 import http, {AxiosResponse} from 'axios';
-import {IBoardsParamsRequest, Boards, BoardForm} from "../models";
+import {IBoardsParamsRequest, Boards, BoardForm, Board} from "../models";
 
 export interface IBoardsService {
     getAllBoards(params: IBoardsParamsRequest): Promise<Boards>;
+
+    getBoardsByIds(boardIds: Array<string>): Promise<Boards>;
 
     createBoard(params: BoardForm): Promise<AxiosResponse>;
 
@@ -31,6 +33,11 @@ export const boardsService: IBoardsService = {
             urlParams += `&searchText=${params.searchText}`;
         }
         return http.get(`/magneto/boards${urlParams}`)
+            .then((res: AxiosResponse) => new Boards(res.data));
+    },
+
+    getBoardsByIds: async (boardIds: Array<string>): Promise<Boards> => {
+        return http.post(`/magneto/boards`, {boardIds: boardIds})
             .then((res: AxiosResponse) => new Boards(res.data));
     },
 

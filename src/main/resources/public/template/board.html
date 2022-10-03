@@ -1,0 +1,58 @@
+<div ng-controller="BoardViewController as vm" class="board-container">
+    <div class="row board-container-header">
+        <div class="row">
+            <h1 ng-click="vm.goToBoards()" class="cell paddingRight">
+                <img class="application-logo" ng-src="/magneto/public/img/uni-magneto.png"
+                     alt="" src="/magneto/public/img/uni-magneto.png">
+                <i18n>magneto.title</i18n>
+                / [[vm.board.title]]
+            </h1>
+            <button class="right-magnet create-button" ng-click="vm.openCreateForm()">
+                <i18n>magneto.reading.board</i18n>
+            </button>
+            <div class="cell right-magnet board-container-header-date">
+                <board-date date="vm.board.modificationDate"></board-date>
+            </div>
+        </div>
+        <div class="board-container-header-description">
+            [[vm.board.description]]
+        </div>
+    </div>
+    <div class="twelve cell board-container-body">
+        <div class="one cell">
+        </div>
+
+        <div class="eleven cell board-container-body-list">
+            <div class="empty-state" ng-if="vm.cards.length == 0">
+                <i18n>magneto.add.content.from.menu</i18n>
+                <i class="magneto-arrow-left"></i>
+            </div>
+            <card-list
+                    cards="vm.cards"
+                    on-edit="vm.openEditResourceLightbox"
+                    on-delete="vm.openDeleteResourceLightbox">
+            </card-list>
+        </div>
+
+        <card-manage-lightbox
+                display="vm.displayCardLightbox"
+                is-update="vm.displayUpdateCardLightbox"
+                form="vm.cardForm"
+                board-id="vm.filter.boardId"
+                on-submit="vm.onFormSubmit">
+        </card-manage-lightbox>
+
+        <!-- Card deletion modal -->
+        <card-delete-lightbox
+                display="vm.displayDeleteCardLightbox"
+                on-submit="vm.onFormSubmit"
+                board-id="vm.selectedCard.boardId"
+                card-ids="[vm.selectedCard._id]">
+        </card-delete-lightbox>
+
+        <infinite-scroll scrolled="vm.onScroll()"
+                         loading-mode="true"
+                         scroll-eventer="vm.infiniteScrollService">
+        </infinite-scroll>
+    </div>
+</div>

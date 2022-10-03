@@ -1,0 +1,32 @@
+<div ng-hide="!vm.isDisplayed" class="card-list-item-options">
+    <nav role="navigation" aria-label="main navigation">
+        <div class="nav">
+            <div class="items">
+                <a class="item" ng-if="vm.hasEdit" ng-click="vm.openEdit()">
+                    <i class="magneto-edit" aria-hidden="true"></i>
+                    <span>
+                        <i18n>magneto.card.options.edit</i18n>
+                    </span>
+                </a>
+                <a class="item" ng-if="vm.hasDuplicate" ng-click="vm.openDuplicate()">
+                    <i class="magneto-duplicate" aria-hidden="true"></i>
+                    <span>
+                        <i18n>magneto.card.options.duplicate</i18n>
+                    </span>
+                </a>
+                <a class="item" ng-if="vm.hasHide" ng-click="vm.openHide()">
+                    <i class="magneto-hide" aria-hidden="true"></i>
+                    <span>
+                        <i18n>magneto.card.options.hide</i18n>
+                    </span>
+                </a>
+                <a class="item" ng-if="vm.hasDelete" ng-click="vm.openDelete()">
+                    <i class="magneto-delete" aria-hidden="true"></i>
+                    <span>
+                        <i18n>magneto.card.options.delete</i18n>
+                    </span>
+                </a>
+            </div>
+        </div>
+    </nav>
+</div>

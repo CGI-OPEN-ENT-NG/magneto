@@ -1,0 +1,79 @@
+<lightbox class="card-manage-lightbox"
+          show="vm.display"
+          on-close="vm.closeForm()">
+    <section class="head card-manage-lightbox-head">
+        <h3 ng-if="!vm.isUpdate">
+            <i18n>magneto.new.card</i18n>
+        </h3>
+        <h3 ng-if="vm.isUpdate">
+            <i18n>magneto.edit.card</i18n>
+        </h3>
+    </section>
+    <section class="body card-manage-lightbox-body">
+        <div class="vertical-spacing card-manage-lightbox-body-resource">
+            <!-- Image preview -->
+            <div class="cell" ng-if="vm.form.resourceType == 'image'">
+                <image-select ng-model="vm.form.resourceUrl"
+                              default="/img/illustrations/collaborativeeditor-default.png">
+                </image-select>
+            </div>
+            <!-- Video preview -->
+            <div class="cell" ng-if="vm.form.resourceType == 'video'">
+
+                <!-- Preview for external video sources -->
+                <iframe ng-if="!vm.videoIsFromWorkspace()" id="video-preview"
+                        width="302" height="170" data-ng-src="[[vm.form.resourceUrl]]">
+                </iframe>
+                <!-- Preview for workspace video -->
+                <video controls ng-if="vm.videoIsFromWorkspace()"
+                       data-ng-src="[[vm.form.resourceUrl]]">
+                </video>
+            </div>
+            <!-- Audio preview -->
+            <div class="cell" ng-if="vm.form.resourceType == 'audio'">
+                <audio controls preload="none"
+                       src="/workspace/document/[[vm.form.resourceId]]">
+                </audio>
+            </div>
+            <!-- File preview -->
+            <div class="cell card-manage-lightbox-body-resource-file"
+                 ng-if="vm.form.resourceType == 'file'">
+                <img data-ng-src="/magneto/public/img/extension/[[vm.getFileExtension()]].svg">
+                <span>[[vm.form.resourceFileName]]</span>
+            </div>
+            <!-- Link preview -->
+            <div class="cell card-manage-lightbox-body-resource-link" ng-if="vm.form.resourceType == 'link'">
+                <a href="[[vm.form.resourceUrl]]" title="[[vm.form.title]]">[[vm.form.resourceUrl]]</a>
+            </div>
+        </div>
+        <div ng-if="vm.form.resourceType !== 'text' && vm.form.resourceType != 'link'"
+             class="vertical-spacing card-manage-lightbox-body-title">
+            <i18n>magneto.card.title</i18n>&nbsp;:
+            <input type="text" data-ng-model="vm.form.title" class="twelve cell">
+        </div>
+        <div ng-if="vm.form.resourceType !== 'text'" class="vertical-spacing card-manage-lightbox-body-caption">
+            <i18n>magneto.card.caption</i18n>&nbsp;:
+            <input type="text" data-ng-model="vm.form.caption" class="twelve cell">
+        </div>
+        <div class="row vertical-spacing card-manage-lightbox-body-description">
+            <i18n>magneto.card.description</i18n>&nbsp;:
+            <editor ng-model="vm.form.description"></editor>
+        </div>
+    </section>
+    <!-- Form submit/cancel buttons -->
+    <section>
+        <div class="row horizontal-spacing">
+            <div class="twelve cell">
+                <button class="right-magnet"
+                        data-ng-click="vm.submitCard()"
+                        data-ng-disabled="!vm.isFormValid()">
+                    <i18n>magneto.save</i18n>
+                </button>
+                <button class="right-magnet cancel"
+                        data-ng-click="vm.closeForm()">
+                    <i18n>magneto.cancel</i18n>
+                </button>
+            </div>
+        </div>
+    </section>
+</lightbox>

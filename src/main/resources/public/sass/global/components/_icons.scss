@@ -1,84 +1,147 @@
 i {
   &.magneto-magnet::before {
-    font-family: 'material-icons';
+    font-family: 'magneto-mdi';
     content: '\F347';
   }
 
   &.magneto-calendar::before {
-    font-family: 'material-icons';
+    font-family: 'magneto-mdi';
     content: '\F0EE';
   }
 
   &.magneto-sort-alphabetical::before {
-    font-family: 'material-icons';
+    font-family: 'magneto-mdi';
     content: '\F4BB';
   }
 
   &.magneto-filter::before {
-    font-family: 'material-icons';
+    font-family: 'magneto-mdi';
     content: '\F232';
   }
 
   &.magneto-view-list::before {
-    font-family: 'material-icons';
+    font-family: 'magneto-mdi';
     content: '\F572';
   }
 
   &.magneto-view-module::before {
-    font-family: 'material-icons';
+    font-family: 'magneto-mdi';
     content: '\F573';
   }
 
   &.magneto-folder::before {
-    font-family: 'material-icons';
+    font-family: 'magneto-mdi';
     content: '\F24B';
   }
 
   &.magneto-folder-plus::before {
-    font-family: 'material-icons';
+    font-family: 'magneto-mdi';
     content: '\F257';
   }
 
   &.magneto-check-decagram::before {
-    font-family: 'material-icons';
+    font-family: 'magneto-mdi';
     content: '\F790';
   }
 
   &.magneto-share-variant::before {
-    font-family: 'material-icons';
+    font-family: 'magneto-mdi';
     content: '\F497';
   }
 
   &.magneto-delete-forever::before {
-    font-family: 'material-icons';
+    font-family: 'magneto-mdi';
     content: '\F5E8';
   }
 
   &.magneto-chevron-right::before {
-    font-family: 'material-icons';
+    font-family: 'magneto-mdi';
     content: '\F142';
   }
 
   &.magneto-chevron-down::before {
-    font-family: 'material-icons';
+    font-family: 'magneto-mdi';
     content: '\F140'
   }
 
   &.magneto-book-variant-multiple::before {
-    font-family: 'material-icons';
+    font-family: 'magneto-mdi';
     content: '\F0BC';
   }
 
   &.magneto-magnify::before {
-    font-family: 'material-icons';
+    font-family: 'magneto-mdi';
     content: '\F349';
   }
 
   &.magneto-folder-open::before {
-    font-family: 'material-icons';
+    font-family: 'magneto-mdi';
     content: '\F76F';
   }
 
+  &.magneto-card-settings::before {
+    font-family: 'magneto-mdi';
+    content: '\F1D9';
+  }
 
+  &.magneto-text::before {
+    font-family: 'magneto-mdi';
+    content: '\F27F';
+    transform: scaleX(-1);
+  }
 
+  &.magneto-image::before {
+    font-family: 'magneto-mdi';
+    content: '\F2E9';
+  }
+
+  &.magneto-video::before {
+    font-family: 'magneto-mdi';
+    content: '\F40C';
+  }
+
+  &.magneto-file::before {
+    font-family: 'magneto-mdi';
+    content: '\F222';
+  }
+
+  &.magneto-link::before {
+    font-family: 'magneto-mdi';
+    content: '\F337';
+  }
+
+  &.magneto-audio::before {
+    font-family: 'magneto-mdi';
+    content: '\F387';
+  }
+
+  &.magneto-edit::before {
+    font-family: 'magneto-mdi';
+    content: '\F3EB'
+  }
+
+  &.magneto-duplicate::before {
+    font-family: 'magneto-mdi';
+    content: '\F0054'
+  }
+
+  &.magneto-hide::before {
+    font-family: 'magneto-mdi';
+    content: '\F209'
+  }
+
+  &.magneto-delete::before {
+    font-family: 'magneto-mdi';
+    content: '\F1C0'
+  }
+
+  &.magneto-arrow-left::before {
+    font-family: 'magneto-mdi';
+    content: '\F04D'
+  }
+
+  &.magneto-check-circle::before {
+    font-family: 'magneto-mdi';
+    content: '\F5E0';
+  }
 }

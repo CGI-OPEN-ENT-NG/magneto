@@ -1,0 +1,29 @@
+<!--Card Previsualisation-->
+<div class="card-list-item-preview">
+    <div class="card-list-item-type">
+        <span>
+            <i class="magneto-[[vm.card.resourceType]]"></i>
+            [[vm.getResourceType()]]
+        </span>
+    </div>
+    <div class="card-list-item-image">
+        <img ng-if="vm.card.isType(vm.RESOURCE_TYPES.IMAGE)" class="card-list-item-preview-[[vm.card.resourceType]]" ng-src="/workspace/document/[[vm.card.resourceId]]">
+        <img ng-if="vm.card.isType(vm.RESOURCE_TYPES.FILE)" class="type-icon" data-ng-src="/magneto/public/img/extension/[[vm.getExtension(vm.card.metadata.filename)]].svg">
+        <div ng-if="vm.card.isType(vm.RESOURCE_TYPES.LINK)" class="card-list-item-preview-[[vm.card.resourceType]]">
+            <a href="[[vm.card.resourceUrl]]" title="[[vm.card.title]]">[[vm.card.resourceUrl]]</a>
+        </div>
+        <div ng-if="vm.card.isType(vm.RESOURCE_TYPES.TEXT)" class="card-list-item-preview-[[vm.card.resourceType]]" ng-bind-html="vm.card.description"></div>
+
+
+        <audio ng-if="vm.card.isType(vm.RESOURCE_TYPES.AUDIO)" controls preload="none"
+               src="/workspace/document/[[vm.card.resourceId]]">
+        </audio>
+        <video controls ng-if="vm.card.isType(vm.RESOURCE_TYPES.VIDEO) && vm.videoIsFromWorkspace()" class="card-list-item-preview-[[vm.card.resourceType]]"
+               data-ng-src="[[vm.card.resourceUrl]]">
+        </video>
+        <iframe ng-if="vm.card.isType(vm.RESOURCE_TYPES.VIDEO) && !vm.videoIsFromWorkspace()" class="card-list-item-preview-[[vm.card.resourceType]]"
+                data-ng-src="[[vm.formatVideoUrl(vm.card.resourceUrl)]]">
+        </iframe>
+
+    </div>
+</div>

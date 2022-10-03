@@ -20,7 +20,7 @@
   },
   "homepage": "",
   "dependencies": {
-    "entcore": "4.5.1",
+    "entcore": "4.6.0-dev.0",
     "awesome-typescript-loader": "3.2.1",
     "axios": "0.16.2",
     "core-js": "2.4.1",
@@ -41,6 +41,7 @@
     "sockjs-client": "1.6.1"
   },
   "devDependencies": {
+    "@mdi/font": "^4.5.95",
     "@types/angular": "1.7.4",
     "@types/angular-mocks": "^1.7.1",
     "@types/core-js": "0.9.42",

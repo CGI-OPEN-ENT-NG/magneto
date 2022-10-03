@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   sodipodi:docname="icon-image.svg"
+   inkscape:version="1.0 (4035a4fb49, 2020-05-01)"
+   id="svg1276"
+   version="1.1"
+   viewBox="0 0 22.851549 31.61331"
+   height="31.61331mm"
+   width="22.851549mm">
+  <defs
+     id="defs1270">
+    <linearGradient
+       y2="16.367947"
+       x2="33.694511"
+       y1="20.608883"
+       x1="28.597717"
+       gradientUnits="userSpaceOnUse"
+       id="linearGradient975"
+       xlink:href="#linearGradient946"
+       inkscape:collect="always" />
+    <linearGradient
+       id="linearGradient946"
+       inkscape:collect="always">
+      <stop
+         id="stop942"
+         offset="0"
+         style="stop-color:#d96000;stop-opacity:1" />
+      <stop
+         id="stop944"
+         offset="1"
+         style="stop-color:#ff933c;stop-opacity:0" />
+    </linearGradient>
+  </defs>
+  <sodipodi:namedview
+     inkscape:window-maximized="1"
+     inkscape:window-y="-9"
+     inkscape:window-x="1911"
+     inkscape:window-height="1001"
+     inkscape:window-width="1920"
+     showgrid="false"
+     inkscape:document-rotation="0"
+     inkscape:current-layer="layer1"
+     inkscape:document-units="mm"
+     inkscape:cy="79.3683"
+     inkscape:cx="39.004822"
+     inkscape:zoom="2.8"
+     inkscape:pageshadow="2"
+     inkscape:pageopacity="0.0"
+     borderopacity="1.0"
+     bordercolor="#666666"
+     pagecolor="#ffffff"
+     id="base" />
+  <metadata
+     id="metadata1273">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     transform="translate(-334.67959,-49.712309)"
+     id="layer1"
+     inkscape:groupmode="layer"
+     inkscape:label="Calque 1">
+    <g
+       id="g971"
+       transform="translate(382.97852,35.720502)">
+      <g
+         transform="translate(-59.868369,-0.80250529)"
+         id="g978-1">
+        <path
+           id="rect833-08"
+           style="opacity:1;fill:#ff933c;fill-opacity:1;stroke:none;stroke-width:4.26188;stroke-linecap:round;stroke-linejoin:round;paint-order:markers stroke fill"
+           d="m 13.649965,14.794317 h 14.485507 l 6.285512,6.332759 v 23.200019 c 0,1.152612 -0.927915,2.080527 -2.080527,2.080527 H 13.649965 c -1.152612,0 -2.080527,-0.927915 -2.080527,-2.080527 V 16.874844 c 0,-1.152612 0.927915,-2.080527 2.080527,-2.080527 z"
+           sodipodi:nodetypes="sccssssss" />
+        <path
+           id="path927-5"
+           style="opacity:0.762238;fill:url(#linearGradient975);fill-opacity:1;stroke:none;stroke-width:2.235;stroke-linecap:round;stroke-linejoin:round;paint-order:markers stroke fill"
+           inkscape:transform-center-x="0.85388347"
+           inkscape:transform-center-y="-1.7574522"
+           d="m 34.420987,21.127077 -4.885447,0.01779 c -0.996393,0.0036 -1.405545,-0.706498 -1.405545,-1.662989 l 0.0054,-4.687566 z"
+           sodipodi:nodetypes="ccccc" />
+      </g>
+      <path
+         style="fill:#ffffff;stroke-width:0.680335"
+         d="m -39.326168,30.753541 1.700842,2.041007 2.381175,-3.061512 3.061511,4.082016 h -9.524701 m 10.885374,0.680335 v -9.524701 c 0,-0.755175 -0.612303,-1.360673 -1.360673,-1.360673 h -9.524701 a 1.3606719,1.3606719 0 0 0 -1.360673,1.360673 v 9.524701 a 1.3606719,1.3606719 0 0 0 1.360673,1.360673 h 9.524701 a 1.3606719,1.3606719 0 0 0 1.360673,-1.360673 z"
+         id="path2-8" />
+      <circle
+         style="fill:#ff933c;fill-opacity:1;stroke:none;stroke-width:0.944324;stroke-linejoin:round;paint-order:markers stroke fill"
+         id="path981"
+         cx="-40.00713"
+         cy="26.737717"
+         r="1.2466022" />
+    </g>
+  </g>
+</svg>

@@ -25,6 +25,9 @@ class Controller implements IViewModel {
 		this.$route({
 			boards: () => {
 				template.open('main', `boards`);
+			},
+			board: () => {
+				template.open('main', `board`);
 			}
 		});
 	}

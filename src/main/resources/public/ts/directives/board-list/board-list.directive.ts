@@ -8,6 +8,7 @@ interface IViewModel extends ng.IController, IBoardListProps {
     selectBoard(boardId: string): void;
     selectFolder(folderId: string): void;
     openFolder?(folderId: string): void;
+    openBoard?(boardId: string): void;
     isBoardSelected(boardId: string): boolean;
     isFolderSelected(folderId: string);
 }
@@ -94,6 +95,11 @@ function directive($parse: IParseService) {
 
             vm.openFolder = (folderId: string): void => {
                 $scope.vm.selectFolder(folderId);
+                $parse($scope.vm.onOpen())({});
+            }
+
+            vm.openBoard = (boardId: string): void => {
+                $scope.vm.selectBoard(boardId);
                 $parse($scope.vm.onOpen())({});
             }
         }

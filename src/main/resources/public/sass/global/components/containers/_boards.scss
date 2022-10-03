@@ -2,7 +2,8 @@
 
   &-header {
     background: $magneto-white;
-    padding: 20px;
+    padding: $spacing-L;
+    z-index: 1002;
     h1 {
       font-family: $magneto-font-secondary;
       color: $magneto-yellow-ochre;
@@ -10,7 +11,7 @@
 
       .application-logo {
         width: 36px;
-        margin-right: 10px;
+        margin-right: $spacing-XLXS;
       }
     }
   }
@@ -29,7 +30,7 @@
     &-search {
       border-bottom: solid 1px $magneto-white-blue;
       display: block;
-      padding: 20px;
+      padding: $spacing-L;
     }
 
     .list-header {
@@ -49,7 +50,7 @@
         border: solid $magneto-blue 1px;
         border-radius: 5px;
         background: none !important;
-        padding: 8px 24px;
+        padding: $spacing-LXS $spacing-L;
       }
     }
 
@@ -63,8 +64,9 @@
       }
 
       i18n {
-        padding: 20px;
+        padding: $spacing-L;
       }
+
     }
 
   }

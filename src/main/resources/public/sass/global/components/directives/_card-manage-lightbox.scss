@@ -1,0 +1,65 @@
+.card-manage-lightbox {
+
+  .content {
+
+    width: 904px;
+    overflow: auto;
+
+    .card-manage-lightbox-head {
+
+    }
+
+    .card-manage-lightbox-body {
+      &-resource {
+        display: flex;
+        justify-content: center;
+
+        image-select {
+          img {
+            max-height: 170px;
+            max-width: 170px;
+            object-fit: contain;
+          }
+        }
+
+        video {
+          width: 302px;
+          height: 170px;
+        }
+
+        &-file {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+        }
+
+        &-link {
+          a {
+            @include noTextOverflow(1);
+          }
+        }
+      }
+
+      &-title, &-caption {
+        display: flex;
+        align-items: center;
+
+        i18n {
+          font-weight: bold;
+        }
+
+        input {
+          margin-left: $spacing-S;
+          margin-bottom: 0 !important;
+        }
+      }
+
+      &-description {
+        i18n {
+          font-weight: bold;
+        }
+      }
+    }
+  }
+
+}

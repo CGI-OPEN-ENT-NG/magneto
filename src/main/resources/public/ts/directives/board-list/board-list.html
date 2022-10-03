@@ -11,6 +11,7 @@
     <div class="board-list-boards flex-row f-wrap justify-center">
         <board-list-item ng-repeat="board in vm.boards"
                          ng-click="vm.selectBoard(board._id)"
+                         ng-dblclick="vm.openBoard(board._id)"
                          board="board"
                          is-selected="vm.isBoardSelected(board._id)">
         </board-list-item>

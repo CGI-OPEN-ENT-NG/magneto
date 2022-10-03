@@ -100,6 +100,7 @@ class Controller implements ng.IController, IViewModel {
     infiniteScrollService: InfiniteScrollService;
 
     constructor(private $scope: IBoardsScope,
+                private $location: ng.ILocationService,
                 private boardsService: IBoardsService,
                 private foldersService: IFoldersService) {
         this.$scope.vm = this;
@@ -174,6 +175,7 @@ class Controller implements ng.IController, IViewModel {
      */
     openCreateForm = (): void => {
         this.selectedUpdateBoardForm = new BoardForm();
+        this.displayUpdateBoardLightbox = false;
         this.displayBoardLightbox = true;
     }
 
@@ -221,6 +223,8 @@ class Controller implements ng.IController, IViewModel {
             this.folderNavTreeSubject.next(new FolderTreeNavItem(
                 {id: this.openedFolder.id,
                 title : this.openedFolder.title, parentId : this.openedFolder.parentId}));
+        } else {
+            this.$location.path(`/board/view/${this.selectedBoardIds[0]}`);
         }
     }
 
@@ -445,4 +449,4 @@ class Controller implements ng.IController, IViewModel {
 }
 
 export const boardsController = ng.controller('BoardsController',
-    ['$scope', 'BoardsService', 'FoldersService', Controller]);
+    ['$scope', '$location', 'BoardsService', 'FoldersService', Controller]);

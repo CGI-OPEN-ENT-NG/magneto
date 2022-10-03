@@ -42,12 +42,11 @@ class Controller implements IViewModel {
     }
 
     isFormValid = (): boolean => {
-        return this.form.isValid();
+        return this.form && this.form.isValid();
     }
 
     closeForm = (): void => {
         this.display = false;
-        this.isUpdate = false;
     }
 
     $onDestroy() {

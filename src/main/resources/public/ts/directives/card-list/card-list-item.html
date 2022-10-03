@@ -1,0 +1,40 @@
+<div class="flex-row">
+    <div class="card card-list-item flex-row f-column"
+         ng-class="{'active': vm.isSelected}">
+        <div class="card-list-item-header">
+            <img class="card-list-item-avatar" ng-src="/userbook/avatar/[[vm.getLastUserId(vm.card)]]?thumbnail=48x48"/>
+            <span ng-bind="vm.getLastUserName(vm.card)"></span>
+            <span tooltip="[[vm.formatDate(vm.card.modificationDate)]]" class="card-list-item-date"> [[vm.formatDateModification(vm.card.modificationDate)]] </span>
+            <i class="magneto-card-settings" data-ng-click="vm.openCardOptions()"></i>
+        </div>
+        <!--Card title-->
+        <div class="card-list-item-infos-title">
+            <span class="card-list-item-infos-title-ellipsis"  ng-if="!!vm.card.title"> [[vm.card.title]] </span>
+        </div>
+
+        <!--Card Previsualisation-->
+        <card-list-item-preview
+                card="vm.card">
+        </card-list-item-preview>
+        <!--Card infos-->
+        <div class="card-list-item-infos flex-row">
+            <!-- Card info -->
+            <span ng-if="!!vm.card.caption" class="card-list-item-caption">[[vm.card.caption]]</span>
+            <div class="card-list-item-container">
+                <span ng-if="!!vm.card.description && !vm.card.isType(vm.RESOURCE_TYPES.TEXT)"
+                      class="card-list-item-description"
+                      ng-bind-html="vm.card.description">
+                </span>
+            </div>
+
+        </div>
+    </div>
+    <card-list-item-options
+            card="vm.card"
+            is-displayed="vm.isDisplayedOptions"
+            has-edit="true"
+            on-edit="vm.openEdit"
+            has-delete="true"
+            on-delete="vm.openDelete">
+    </card-list-item-options>
+</div>
