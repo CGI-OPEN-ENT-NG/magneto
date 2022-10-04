@@ -2,6 +2,7 @@
 
   &-header {
     background: $magneto-white;
+    left: $spacing-L;
     padding: $spacing-L;
     z-index: 2;
     @include noTextOverflow(1);
@@ -54,6 +55,10 @@
         }
 
       }
+    }
+
+    embedder {
+      z-index: 99999;
     }
   }
 }

@@ -9,7 +9,8 @@ describe('BoardModel', () => {
            description: 'description',
            nbCards: 0,
            modificationDate: 'modificationDate',
-           creationDate: 'creationDate'
+           creationDate: 'creationDate',
+           folderId: 'folderId'
        }
 
         const board = new Board().build(boardResponse);
@@ -21,6 +22,7 @@ describe('BoardModel', () => {
         expect(board.nbCards).toEqual(boardResponse.nbCards);
         expect(board.modificationDate).toEqual(boardResponse.modificationDate);
         expect(board.creationDate).toEqual(boardResponse.creationDate);
+        expect(board.folderId).toEqual(boardResponse.folderId);
         done();
    });
 
@@ -34,7 +36,8 @@ describe('BoardModel', () => {
                    description: 'description',
                    nbCards: 0,
                    modificationDate: 'modificationDate',
-                   creationDate: 'creationDate'
+                   creationDate: 'creationDate',
+                   folderId: 'folderId'
                }
            ],
            page: 1,
@@ -55,6 +58,7 @@ describe('BoardModel', () => {
         expect(form.title).toEqual('');
         expect(form.description).toEqual('');
         expect(form.imageUrl).toEqual('');
+        expect(form.folderId).toEqual(null);
         done();
     });
 

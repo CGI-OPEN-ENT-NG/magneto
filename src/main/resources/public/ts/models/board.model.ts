@@ -8,6 +8,7 @@ export interface IBoardItemResponse {
     nbCards: number;
     modificationDate: string;
     creationDate: string;
+    folderId: string;
 }
 
 export interface IBoardsResponse {
@@ -47,6 +48,16 @@ export class BoardForm {
         this._description = '';
         this._imageUrl = '';
         this._folderId = null;
+    }
+
+    build(board: Board): BoardForm {
+        this.id = board.id;
+        this.title = board.title;
+        this.description = board.description;
+        this.imageUrl = board.imageUrl;
+        this.folderId = board.folderId;
+
+        return this;
     }
 
     get id(): string {
@@ -118,6 +129,8 @@ export class Board {
     private _nbCards: number;
     private _modificationDate: string;
     private _creationDate: string;
+    private _folderId: string;
+
 
     build(data: IBoardItemResponse): Board {
         this._id = data._id;
@@ -127,6 +140,7 @@ export class Board {
         this._nbCards = data.nbCards;
         this._modificationDate = data.modificationDate;
         this._creationDate = data.creationDate;
+        this._folderId = data.folderId;
         return this;
     }
 
@@ -156,6 +170,14 @@ export class Board {
 
     get creationDate(): string {
         return this._creationDate;
+    }
+
+    get folderId(): string {
+        return this._folderId;
+    }
+
+    set folderId(value: string) {
+        this._folderId = value;
     }
 }
 

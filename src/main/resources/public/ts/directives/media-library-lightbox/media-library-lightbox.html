@@ -1,0 +1,9 @@
+<lightbox class="card-manage-lightbox"
+          show="vm.display"
+          on-close="vm.closeForm()">
+
+    <media-library ng-change="vm.updateDocument()"
+                   ng-model="vm.selectedFile"
+                   file-format="vm.fileFormat">
+    </media-library>
+</lightbox>

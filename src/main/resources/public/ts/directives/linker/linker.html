@@ -1,0 +1,35 @@
+<lightbox class="linker-lightbox"
+          show="vm.display"
+          on-close="vm.closeForm()">
+    <section class="head linker-lightbox-head">
+        <h3 ng-if="!vm.isUpdate">
+            <i18n>magneto.create.link</i18n>
+        </h3>
+    </section>
+    <section class="body linker-lightbox-body">
+        <div class="vertical-spacing linker-lightbox-body-url">
+            <i18n>magneto.site.address</i18n>&nbsp;:
+            <input type="text" data-ng-model="vm.form.url" class="twelve cell">
+        </div>
+        <div class="vertical-spacing linker-lightbox-body-title">
+            <i18n>magneto.card.title</i18n>&nbsp;:
+            <input type="text" data-ng-model="vm.form.title" class="twelve cell">
+        </div>
+    </section>
+    <!-- Form submit/cancel buttons -->
+    <section>
+        <div class="row horizontal-spacing">
+            <div class="twelve cell">
+                <button class="right-magnet"
+                        data-ng-click="vm.submitLink()"
+                        data-ng-disabled="!vm.isFormValid()">
+                    <i18n>magneto.create.link</i18n>
+                </button>
+                <button class="right-magnet cancel"
+                        data-ng-click="vm.closeForm()">
+                    <i18n>magneto.cancel</i18n>
+                </button>
+            </div>
+        </div>
+    </section>
+</lightbox>

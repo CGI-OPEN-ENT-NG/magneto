@@ -53,6 +53,8 @@
   "magneto.card.options.duplicate": "Duplicate",
   "magneto.card.options.hide": "Hide",
   "magneto.card.options.delete": "Delete",
+  "magneto.create.link": "Create link",
+  "magneto.site.address": "Site address",
   "magneto.add.content.from.menu": "Add content with the left-side menu",
   "magneto.delete.cards": "Delete the selected magnets",
   "magneto.delete.cards.message": "Are you sure you want to delete the selected cards ?",

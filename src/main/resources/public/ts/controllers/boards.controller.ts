@@ -191,10 +191,7 @@ class Controller implements ng.IController, IViewModel {
      */
     openPropertiesForm = (): void => {
         let selectedUpdateBoard: Board = this.boards.find((board: Board) => board.id === this.selectedBoardIds[0]);
-        this.selectedUpdateBoardForm.id = selectedUpdateBoard ? selectedUpdateBoard.id : null;
-        this.selectedUpdateBoardForm.title = selectedUpdateBoard ? selectedUpdateBoard.title : '';
-        this.selectedUpdateBoardForm.description = selectedUpdateBoard ? selectedUpdateBoard.description : '';
-        this.selectedUpdateBoardForm.imageUrl = selectedUpdateBoard ?  selectedUpdateBoard.imageUrl : '';
+        this.selectedUpdateBoardForm = new BoardForm().build(selectedUpdateBoard);
         this.displayUpdateBoardLightbox = true;
         this.displayBoardLightbox = true;
     }

@@ -115,6 +115,11 @@ i {
     content: '\F387';
   }
 
+  &.magneto-settings::before {
+    font-family: 'magneto-mdi';
+    content: '\F493';
+  }
+
   &.magneto-edit::before {
     font-family: 'magneto-mdi';
     content: '\F3EB'

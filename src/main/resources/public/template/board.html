@@ -4,8 +4,7 @@
             <h1 ng-click="vm.goToBoards()" class="cell paddingRight">
                 <img class="application-logo" ng-src="/magneto/public/img/uni-magneto.png"
                      alt="" src="/magneto/public/img/uni-magneto.png">
-                <i18n>magneto.title</i18n>
-                / [[vm.board.title]]
+                <i18n>magneto.title</i18n> / [[vm.board.title]]
             </h1>
             <button class="right-magnet create-button" ng-click="vm.openCreateForm()">
                 <i18n>magneto.reading.board</i18n>
@@ -20,9 +19,13 @@
     </div>
     <div class="twelve cell board-container-body">
         <div class="one cell">
+            <board-nav
+                on-create="vm.openAddResourceLightbox"
+                on-properties="vm.openBoardPropertiesForm">
+            </board-nav>
         </div>
 
-        <div class="eleven cell board-container-body-list">
+        <div class="cell board-container-body-list">
             <div class="empty-state" ng-if="vm.cards.length == 0">
                 <i18n>magneto.add.content.from.menu</i18n>
                 <i class="magneto-arrow-left"></i>
@@ -49,6 +52,33 @@
                 board-id="vm.selectedCard.boardId"
                 card-ids="[vm.selectedCard._id]">
         </card-delete-lightbox>
+
+        <!-- Board properties modal -->
+        <board-manage-lightbox
+                display="vm.displayBoardPropertiesLightbox"
+                on-submit="vm.onBoardFormSubmit"
+                is-update="true"
+                form="vm.boardForm"
+                folder-id="vm.boardForm.folderId">
+        </board-manage-lightbox>
+
+        <media-library-lightbox
+            display="vm.displayMediaLibraryLightbox"
+            file-format="vm.getMediaLibraryFileFormat()"
+            on-submit="vm.onFileSelected">
+        </media-library-lightbox>
+
+        <embedder file-format="'video'"
+                  hidden-share-video-code="false"
+                  ng-model="vm.videoUrl"
+                  ng-change="vm.onVideoSelected()"
+                  ng-if="vm.displayResourceLightbox.video"
+                  show="vm.displayResourceLightbox.video">
+        </embedder>
+
+        <linker display="vm.displayLinkerLightbox"
+                on-submit="vm.onLinkSubmit">
+        </linker>
 
         <infinite-scroll scrolled="vm.onScroll()"
                          loading-mode="true"

@@ -58,5 +58,7 @@
   "magneto.delete.cards.message": "Êtes-vous sûr(e) de vouloir supprimer définitivement les aimants selectionnés ?",
   "magneto.delete.cards.error": "Une erreur est survenue lors de la suppression des aimants selectionnés.",
   "magneto.delete.cards.confirm": "Les aimants selectionnés ont été supprimés avec succès.",
-  "magneto.board.saved.at": "Tableau enregistré le {0} à {1}"
+  "magneto.board.saved.at": "Tableau enregistré le {0} à {1}",
+  "magneto.create.link": "Créer un lien",
+  "magneto.site.address": "Adresse du site"
 }

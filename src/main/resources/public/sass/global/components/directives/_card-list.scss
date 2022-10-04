@@ -2,5 +2,6 @@
   margin-top: 30px;
   background: $magneto-lighter-grey;
   gap: 16px;
+  justify-content: center;
   @include paddingY(15px);
 }
