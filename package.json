@@ -37,7 +37,8 @@
     "yargs": "^8.0.2",
     "entcore-toolkit": "^1.0.1",
     "tsconfig-paths-webpack-plugin": "^3.2.0",
-    "rxjs": "5.4.2"
+    "rxjs": "5.4.2",
+    "sockjs-client": "1.6.1"
   },
   "devDependencies": {
     "@types/angular": "1.7.4",
@@ -45,6 +46,7 @@
     "@types/core-js": "0.9.42",
     "@types/jest": "^22.2.0",
     "@types/jquery": "^2.0.34",
+    "@types/sockjs-client": "1.5.1",
     "axios-mock-adapter": "^1.19.0",
     "gulp-append-prepend": "^1.0.8",
     "jest": "^24.7.1",

@@ -58,6 +58,8 @@ compileTestJava {
 dependencies {
     compileOnly "io.vertx:vertx-core:$vertxVersion"
     compile "org.entcore:common:$entCoreVersion"
+    compile "io.vertx:vertx-sockjs-service-proxy:$vertxVersion"
+    compile "io.vertx:vertx-service-proxy:$vertxVersion"
     testCompile "io.vertx:vertx-unit:$vertxVersion"
     testCompile "org.junit.jupiter:junit-jupiter-engine:$junitVersion"
     testCompile "org.entcore:tests:$entCoreVersion"

@@ -3,19 +3,25 @@ import {IScope, IWindowService} from "angular";
 
 declare let window: any;
 
-interface IViewModel {
-
+interface IViewModel extends ng.IController{
 }
 
-class Controller implements ng.IController, IViewModel {
+interface IMainscope extends IScope {
+	vm: IViewModel;
+}
 
-	constructor(private $scope: IScope,
+class Controller implements IViewModel {
+
+	private eventBus: any;
+
+	constructor(private $scope: IMainscope,
 				private $route: any,
 				private $window: IWindowService) {
-		this.$scope['vm'] = this;
+		this.$scope.vm = this;
 	}
 
 	$onInit() {
+
 		this.$route({
 			boards: () => {
 				template.open('main', `boards`);

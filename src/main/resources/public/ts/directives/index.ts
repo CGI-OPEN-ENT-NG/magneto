@@ -11,3 +11,5 @@ export * from './folder-tree-nav/folder-tree-nav-item/folder-tree-nav-item.direc
 export * from './board-list/board-list-folder/board-list-folder.directive';
 export * from './board-move-lightbox/board-move-lightbox.directive';
 export * from './folder-delete-lightbox/folder-delete-lightbox.directive';
+export * from './websocket-test/card-profile.directive';
+export * from './websocket-test/card-notify/card-notify.directive';

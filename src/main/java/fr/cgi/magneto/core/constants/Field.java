@@ -1,6 +1,20 @@
 package fr.cgi.magneto.core.constants;
 
 public class Field {
+    public static final String HOST = "host";
+    public static final String WSPORT = "wsPort";
+    public static final String MODE = "mode";
+    public static final String DEV = "dev";
+    public static final String PROD = "prod";
+    public static final String WEBSOCKET_CONFIG_HYPHENS = "websocket-config";
+    public static final String WEBSOCKETCONFIG = "websocketConfig";
+    public static final String WEBSOCKETENDPOINT = "websocketEndpoint";
+    public static final String ENDPOINT_PROXY_HYPHENS = "endpoint-proxy";
+    public static final String PORT = "port";
+
+    public static final String CREATE = "CREATE";
+    public static final String UPDATE = "UPDATE";
+    public static final String MANDATORY = "MANDATORY";
 
     public static final String ID = "id";
     public static final String _ID = "_id";

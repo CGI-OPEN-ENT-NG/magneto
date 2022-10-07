@@ -1,6 +1,8 @@
 package fr.cgi.magneto;
 
+import fr.cgi.magneto.config.MagnetoConfig;
 import fr.cgi.magneto.controller.*;
+import fr.cgi.magneto.realtime.RealTimeCollaboration;
 import fr.cgi.magneto.service.ServiceFactory;
 import fr.wseduc.mongodb.MongoDb;
 import org.entcore.common.http.BaseServer;
@@ -17,14 +19,15 @@ public class Magneto extends BaseServer {
 		super.start();
 
 		Storage storage = new StorageFactory(vertx, config).getStorage();
-
-		ServiceFactory serviceFactory = new ServiceFactory(vertx, storage, Neo4j.getInstance(), Sql.getInstance(), MongoDb.getInstance());
+		MagnetoConfig magnetoConfig = new MagnetoConfig(config);
+		ServiceFactory serviceFactory = new ServiceFactory(vertx, storage, magnetoConfig, Neo4j.getInstance(), Sql.getInstance(), MongoDb.getInstance());
 
 		addController(new MagnetoController(serviceFactory));
 		addController(new BoardController(serviceFactory));
 		addController(new CardController(serviceFactory));
 		addController(new FolderController(serviceFactory));
 
+		// TODO Websocket
+		// new RealTimeCollaboration(vertx, magnetoConfig).initRealTime();
 	}
-
 }
