@@ -56,10 +56,32 @@ public class Field {
     // CARD FIELD
 
     public static final String BOARDID = "boardId";
-    public static final String RESSOURCEURL = "resourceUrl";
-    public static final String RESSOURCETYPE = "resourceType";
+    public static final String RESOURCEID = "resourceId";
+    public static final String RESOURCETYPE = "resourceType";
+    public static final String RESOURCEURL = "resourceUrl";
     public static final String LASTMODIFIERID = "lastModifierId";
     public static final String LASTMODIFIERNAME = "lastModifierName";
     public static final String CAPTION = "caption";
+
+    // FUTURE FIELD
     public static final String RESULT = "result";
+    public static final String RESULTS = "results";
+    public static final String STATUS = "status";
+    public static final String ERROR = "error";
+    public static final String MESSAGE = "message";
+    public static final String ACTION = "action";
+    public static final String OK = "ok";
+
+
+
+    // METADATA FIELD
+
+    public static final String NAME = "name";
+    public static final String FILENAME = "filename";
+    public static final String CONTENT_TYPE = "content-type";
+    public static final String CONTENT_TRANSFER_ENCODING = "content-transfer-encoding";
+    public static final String CHARSET = "charset";
+    public static final String SIZE = "size";
+    public static final String METADATA = "metadata";
+    public static final String INDEX = "index";
 }

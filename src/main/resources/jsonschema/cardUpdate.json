@@ -3,33 +3,32 @@
   "type": "object",
   "additionalProperties": false,
   "properties": {
-    "title": {
+    "id": {
       "type": "string"
     },
-    "resourceUrl": {
+    "title": {
+      "type": ["string", "null"]
+    },
+    "resourceId": {
       "type": ["string", "null"]
     },
     "resourceType": {
       "type": "string"
     },
+    "resourceUrl": {
+      "type": ["string", "null"]
+    },
     "caption": {
-      "type": "string"
+      "type": ["string", "null"]
     },
     "description": {
-      "type": "string"
-    },
-    "parentId": {
-      "type": "number"
-    },
-    "sectionIndex": {
-      "type": "number"
+      "type": ["string", "null"]
     },
     "boardId": {
       "type": "string"
     }
   },
   "required": [
-    "title",
-    "resourceType"
+    "resourceType", "boardId"
   ]
 }

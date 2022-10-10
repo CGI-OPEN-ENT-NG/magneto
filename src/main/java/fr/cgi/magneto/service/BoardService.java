@@ -1,5 +1,6 @@
 package fr.cgi.magneto.service;
 
+import fr.cgi.magneto.model.boards.Board;
 import fr.cgi.magneto.model.boards.BoardPayload;
 import io.vertx.core.*;
 import io.vertx.core.json.*;
@@ -22,11 +23,10 @@ public interface BoardService {
     /**
      * Update a board
      *
-     * @param user  User Object containing user id and displayed name
      * @param board Board to update
      * @return Future {@link Future <JsonObject>} containing updated board
      */
-    Future<JsonObject> update(UserInfos user, BoardPayload board);
+    Future<JsonObject> update(BoardPayload board);
 
     /**
      * Get boards by id
@@ -34,7 +34,7 @@ public interface BoardService {
      * @param boardIds Board ids to get data
      * @return Future {@link Future <JsonObject>} containing a list of board
      */
-    Future<JsonArray> getBoards(List<String> boardIds);
+    Future<List<Board>> getBoards(List<String> boardIds);
 
 
     /**

@@ -2,7 +2,9 @@ package fr.cgi.magneto.service.impl;
 
 import fr.cgi.magneto.*;
 import fr.cgi.magneto.core.constants.*;
+import fr.cgi.magneto.helper.ModelHelper;
 import fr.cgi.magneto.model.*;
+import fr.cgi.magneto.model.boards.Board;
 import fr.cgi.magneto.model.boards.BoardPayload;
 import fr.cgi.magneto.service.BoardService;
 import io.vertx.core.*;
@@ -48,11 +50,10 @@ public class DefaultBoardService implements BoardService {
     }
 
     @Override
-    public Future<JsonObject> update(UserInfos user, BoardPayload board) {
+    public Future<JsonObject> update(BoardPayload board) {
         Promise<JsonObject> promise = Promise.promise();
         JsonObject query = new JsonObject()
-                .put(Field._ID, board.getId())
-                .put(Field.OWNERID, user.getUserId());
+                .put(Field._ID, board.getId());
         JsonObject update = new JsonObject().put(Mongo.SET, board.toJson());
         mongoDb.update(this.collection, query, update, MongoDbResult.validActionResultHandler(results -> {
             if (results.isLeft()) {
@@ -105,8 +106,8 @@ public class DefaultBoardService implements BoardService {
     }
 
     @Override
-    public Future<JsonArray> getBoards(List<String> boardIds) {
-        Promise<JsonArray> promise = Promise.promise();
+    public Future<List<Board>> getBoards(List<String> boardIds) {
+        Promise<List<Board>> promise = Promise.promise();
         JsonObject query = this.getBoardByIds(boardIds);
         mongoDb.command(query.toString(), MongoDbResult.validResultHandler(either -> {
             if (either.isLeft()) {
@@ -117,7 +118,7 @@ public class DefaultBoardService implements BoardService {
                 JsonArray result = either.right().getValue()
                         .getJsonObject(Field.CURSOR, new JsonObject())
                         .getJsonArray(Field.FIRSTBATCH, new JsonArray());
-                promise.complete(result);
+                promise.complete(ModelHelper.toList(result, Board.class));
             }
         }));
 
@@ -220,15 +221,15 @@ public class DefaultBoardService implements BoardService {
         MongoQuery query = new MongoQuery(this.collection)
                 .match(new JsonObject()
                         .put(Field._ID, new JsonObject().put(Mongo.IN, new JsonArray(boardIds))))
-/*                .project(new JsonObject()
+                .project(new JsonObject()
                         .put(Field._ID, 1)
                         .put(Field.TITLE, 1)
                         .put(Field.IMAGEURL, 1)
-                        .put(Field.NBCARDS, new JsonObject().put(Mongo.SIZE, "$cardIds"))
+                        .put(Field.CREATIONDATE, 1)
+                        .put(Field.CARDIDS, 1)
                         .put(Field.MODIFICATIONDATE, 1)
                         .put(Field.FOLDERID, 1)
-                        .put(Field.CARDIDS, 1)
-                        .put(Field.DESCRIPTION, 1))*/;
+                        .put(Field.DESCRIPTION, 1));
         return query.getAggregate();
     }
 

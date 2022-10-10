@@ -2,6 +2,8 @@ package fr.cgi.magneto.controller;
 
 import fr.cgi.magneto.core.constants.Field;
 import fr.cgi.magneto.core.constants.Rights;
+import fr.cgi.magneto.helper.DateHelper;
+import fr.cgi.magneto.model.boards.Board;
 import fr.cgi.magneto.model.boards.BoardPayload;
 import fr.cgi.magneto.security.ManageBoardRight;
 import fr.cgi.magneto.security.ViewRight;
@@ -15,12 +17,15 @@ import fr.wseduc.webutils.request.RequestUtils;
 import io.vertx.core.CompositeFuture;
 import io.vertx.core.Future;
 import io.vertx.core.http.HttpServerRequest;
+import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 import org.entcore.common.controller.ControllerHelper;
 import org.entcore.common.http.filter.ResourceFilter;
 import org.entcore.common.user.UserUtils;
 
+import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class BoardController extends ControllerHelper {
 
@@ -58,16 +63,24 @@ public class BoardController extends ControllerHelper {
         });
     }
 
+
     @Post("/boards")
-    @ApiDoc("Get all boards by ids")
+    @ApiDoc("Get boards by ids")
     @ResourceFilter(ViewRight.class)
     @SecuredAction(value = "", type = ActionType.RESOURCE)
     @SuppressWarnings("unchecked")
-    public void getAllBoardsByIds(HttpServerRequest request) {
+    public void getBoardsByIds(HttpServerRequest request) {
         RequestUtils.bodyToJson(request, pathPrefix + "boardList", boards -> {
             List<String> boardIds = boards.getJsonArray(Field.BOARDIDS).getList();
             boardService.getBoards(boardIds)
-                    .onSuccess(result -> renderJson(request, result))
+                    .onSuccess(result -> {
+                        JsonArray boardsResult = new JsonArray(result
+                                .stream()
+                                .map(Board::toJson)
+                                .collect(Collectors.toList()));
+                        renderJson(request, new JsonObject()
+                                .put(Field.ALL, boardsResult));
+                    })
                     .onFailure(fail -> {
                         String message = String.format("[Magneto@%s::getAllBoardsByIds] Failed to get all boards by ids : %s",
                                 this.getClass().getSimpleName(), fail.getMessage());
@@ -95,11 +108,15 @@ public class BoardController extends ControllerHelper {
     public void update(HttpServerRequest request) {
         RequestUtils.bodyToJson(request, pathPrefix + "boardUpdate", board -> {
             String boardId = request.getParam(Field.ID);
-            BoardPayload updateBoard = new BoardPayload(board).setId(boardId);
-            UserUtils.getUserInfos(eb, request, user ->
-                    boardService.update(user, updateBoard)
-                            .onFailure(err -> renderError(request))
-                            .onSuccess(result -> renderJson(request, result)));
+            UserUtils.getUserInfos(eb, request, user -> {
+                BoardPayload updateBoard = new BoardPayload(board)
+                        .setId(boardId)
+                        .setCardIds(null)
+                        .setModificationDate(DateHelper.getDateString(new Date(), DateHelper.MONGO_FORMAT));
+                boardService.update(updateBoard)
+                        .onFailure(err -> renderError(request))
+                        .onSuccess(result -> renderJson(request, result));
+            });
         });
     }
 

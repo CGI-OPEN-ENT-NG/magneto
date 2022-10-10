@@ -14,8 +14,9 @@ public class CardPayloadTest {
 
     JsonObject cardCreateJsonObject_1 = new JsonObject()
             .put("title", "title")
-            .put("resourceUrl", "resourceUrl")
+            .put("resourceId", "resourceId")
             .put("resourceType", "resourceType")
+            .put("resourceUrl", "resourceUrl")
             .put("caption", "caption")
             .put("description", "description")
             .put("ownerId", "ownerId")
@@ -29,8 +30,9 @@ public class CardPayloadTest {
 
     JsonObject cardUpdateJsonObject_1 = new JsonObject()
             .put("title", "title")
-            .put("resourceUrl", "resourceUrl")
+            .put("resourceId", "resourceId")
             .put("resourceType", "resourceType")
+            .put("resourceUrl", "resourceUrl")
             .put("caption", "caption")
             .put("description", "description")
             .put("lastModifierId", "lastModifierId")
@@ -58,8 +60,9 @@ public class CardPayloadTest {
         CardPayload card = new CardPayload(cardCreateJsonObject_1);
         boolean isNotEmpty =
                 !card.getTitle().isEmpty() &&
-                !card.getResourceUrl().isEmpty() &&
+                !card.getResourceId().isEmpty() &&
                 !card.getResourceType().isEmpty() &&
+                !card.getResourceUrl().isEmpty() &&
                 !card.getDescription().isEmpty() &&
                 !card.getCaption().isEmpty() &&
                 !card.getOwnerId().isEmpty() &&

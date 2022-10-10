@@ -3,6 +3,7 @@ package fr.cgi.magneto.model.boards;
 import fr.cgi.magneto.core.constants.*;
 import fr.cgi.magneto.helper.*;
 import fr.cgi.magneto.model.Model;
+import fr.cgi.magneto.model.cards.Card;
 import io.vertx.core.json.*;
 
 import java.util.*;
@@ -18,6 +19,10 @@ public class BoardPayload implements Model<BoardPayload> {
     private String modificationDate;
     private String folderId;
     private List<String> cardIds;
+
+    public BoardPayload() {
+
+    }
 
     @SuppressWarnings("unchecked")
     public BoardPayload(JsonObject board) {
@@ -120,8 +125,13 @@ public class BoardPayload implements Model<BoardPayload> {
         return cardIds;
     }
 
-    public BoardPayload addCardId(String cardId) {
-        this.cardIds.add(cardId);
+    public BoardPayload setCardIds(List<String> cardIds) {
+        this.cardIds = cardIds;
+        return this;
+    }
+
+    public BoardPayload addCard(String cardId) {
+        this.cardIds.add(0, cardId);
         return this;
     }
 
@@ -135,12 +145,22 @@ public class BoardPayload implements Model<BoardPayload> {
     @Override
     public JsonObject toJson() {
 
-        JsonObject json = new JsonObject()
-                .put(Field.TITLE, this.getTitle())
-                .put(Field.IMAGEURL, this.getImageUrl())
-                .put(Field.DESCRIPTION, this.getDescription())
-                .put(Field.MODIFICATIONDATE, this.getModificationDate())
-                .put(Field.CARDIDS, this.getCardIds());
+        JsonObject json = new JsonObject();
+        if (this.getTitle() != null) {
+            json.put(Field.TITLE, this.getTitle());
+        }
+        if (this.getImageUrl() != null) {
+            json.put(Field.IMAGEURL, this.getImageUrl());
+        }
+        if (this.getDescription() != null) {
+            json.put(Field.DESCRIPTION, this.getDescription());
+        }
+
+        if (this.getCardIds() != null && this.getId() != null) {
+            json.put(Field.CARDIDS, new JsonArray(this.getCardIds()));
+        }
+
+        json.put(Field.MODIFICATIONDATE, this.getModificationDate());
 
         // If create
         if (this.getId() == null) {
@@ -149,7 +169,8 @@ public class BoardPayload implements Model<BoardPayload> {
                     .put(Field.PUBLIC, false)
                     .put(Field.FOLDERID, this.getFolderId())
                     .put(Field.OWNERID, this.getOwnerId())
-                    .put(Field.OWNERNAME, this.getOwnerName());
+                    .put(Field.OWNERNAME, this.getOwnerName())
+                    .put(Field.CARDIDS, new JsonArray());
         }
 
         return json;

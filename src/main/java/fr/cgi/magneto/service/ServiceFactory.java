@@ -45,11 +45,15 @@ public class ServiceFactory {
     }
 
     public CardService cardService() {
-        return new DefaultCardService(Collections.CARD_COLLECTION, mongoDb);
+        return new DefaultCardService(Collections.CARD_COLLECTION, mongoDb, this);
     }
 
     public FolderService folderService() {
         return new DefaultFolderService(Collections.FOLDER_COLLECTION, mongoDb);
+    }
+
+    public WorkspaceService workSpaceService() {
+        return new DefaultWorkspaceService(vertx);
     }
 
     // Helpers

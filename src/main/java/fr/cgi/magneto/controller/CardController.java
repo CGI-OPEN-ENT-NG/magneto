@@ -3,7 +3,9 @@ package fr.cgi.magneto.controller;
 import fr.cgi.magneto.core.constants.Field;
 import fr.cgi.magneto.core.constants.Rights;
 import fr.cgi.magneto.helper.DateHelper;
+import fr.cgi.magneto.model.boards.Board;
 import fr.cgi.magneto.model.boards.BoardPayload;
+import fr.cgi.magneto.model.cards.Card;
 import fr.cgi.magneto.model.cards.CardPayload;
 import fr.cgi.magneto.security.ManageBoardRight;
 import fr.cgi.magneto.security.ViewRight;
@@ -26,6 +28,7 @@ import org.entcore.common.user.UserUtils;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class CardController extends ControllerHelper {
 
@@ -68,7 +71,8 @@ public class CardController extends ControllerHelper {
         UserUtils.getUserInfos(eb, request, user -> {
             String boardId = request.getParam(Field.BOARDID);
             Integer page = request.getParam(Field.PAGE) != null ? Integer.parseInt(request.getParam(Field.PAGE)) : null;
-            cardService.getAllCardsByBoard(user, boardId, page, false)
+            boardService.getBoards(Collections.singletonList(boardId))
+                    .compose(board -> cardService.getAllCardsByBoard(user, board.get(0), page, false))
                     .onSuccess(result -> renderJson(request, result))
                     .onFailure(fail -> {
                         String message = String.format("[Magneto@%s::getAllCardsByBoardId] Failed to get all cards : %s",
@@ -101,21 +105,30 @@ public class CardController extends ControllerHelper {
     public void create(HttpServerRequest request) {
         RequestUtils.bodyToJson(request, pathPrefix + "card", body ->
                 UserUtils.getUserInfos(eb, request, user -> {
-                    CardPayload card = new CardPayload(body);
-                    Future<JsonObject> createCardFuture = cardService.create(user, card);
-                    Future<JsonArray> getBoardFuture = boardService.getBoards(Collections.singletonList(card.getBoardId()));
+                    CardPayload cardPayload = new CardPayload(body)
+                            .setOwnerId(user.getUserId())
+                            .setOwnerName(user.getUsername());
+
+                    Future<JsonObject> createCardFuture = cardService.create(cardPayload);
+                    Future<List<Board>> getBoardFuture = boardService.getBoards(Collections.singletonList(cardPayload.getBoardId()));
                     CompositeFuture.all(createCardFuture, getBoardFuture)
-                            .compose(result -> cardService.getLastCard(user, card))
+                            .compose(result -> cardService.getLastCard(cardPayload))
                             .compose(result -> {
                                 if (getBoardFuture.result().isEmpty()) {
                                     String message = String.format("[Magneto@%s::create] Failed to create card: No board found with id %s",
-                                            this.getClass().getSimpleName(), card.getBoardId());
+                                            this.getClass().getSimpleName(), cardPayload.getBoardId());
                                     return Future.failedFuture(message);
                                 }
-                                BoardPayload updateBoard = new BoardPayload(getBoardFuture.result().getJsonObject(0));
-                                updateBoard.setModificationDate(DateHelper.getDateString(new Date(), DateHelper.MONGO_FORMAT));
-                                updateBoard.addCardId(result.getString(Field._ID));
-                                return boardService.update(user, updateBoard);
+                                Board currentBoard = getBoardFuture.result().get(0);
+                                BoardPayload boardToUpdate = new BoardPayload()
+                                        .setId(currentBoard.getId())
+                                        .setCardIds(currentBoard.cards()
+                                                .stream()
+                                                .map(Card::getId)
+                                                .collect(Collectors.toList()))
+                                        .addCard(result.getString(Field._ID))
+                                        .setModificationDate(DateHelper.getDateString(new Date(), DateHelper.MONGO_FORMAT));
+                                return boardService.update(boardToUpdate);
                             })
                             .onFailure(err -> renderError(request))
                             .onSuccess(res -> renderJson(request, res));
@@ -127,19 +140,24 @@ public class CardController extends ControllerHelper {
     @ResourceFilter(ManageBoardRight.class)
     @SecuredAction(value = "", type = ActionType.RESOURCE)
     public void update(HttpServerRequest request) {
-        RequestUtils.bodyToJson(request, pathPrefix + "card", card -> {
-            String cardId = request.getParam(Field.ID);
+        RequestUtils.bodyToJson(request, pathPrefix + "cardUpdate", card -> {
             CardPayload updateCard = new CardPayload(card)
-                    .setId(cardId)
+                    .setId(card.getString(Field.ID))
                     .setModificationDate(DateHelper.getDateString(new Date(), DateHelper.MONGO_FORMAT));
             UserUtils.getUserInfos(eb, request, user -> {
                 Future<JsonObject> updateCardFuture = cardService.update(user, updateCard);
-                Future<JsonArray> getBoardFuture = boardService.getBoards(Collections.singletonList(updateCard.getBoardId()));
+                Future<List<Board>> getBoardFuture = boardService.getBoards(Collections.singletonList(updateCard.getBoardId()));
                 CompositeFuture.all(updateCardFuture, getBoardFuture)
                         .compose(result -> {
-                            BoardPayload updateBoard = new BoardPayload(getBoardFuture.result().getJsonObject(0));
-                            updateBoard.setModificationDate(DateHelper.getDateString(new Date(), DateHelper.MONGO_FORMAT));
-                            return boardService.update(user, updateBoard);
+                            Board currentBoard = getBoardFuture.result().get(0);
+                            BoardPayload boardToUpdate = new BoardPayload()
+                                    .setId(currentBoard.getId())
+                                    .setCardIds(currentBoard.cards()
+                                            .stream()
+                                            .map(Card::getId)
+                                            .collect(Collectors.toList()))
+                                    .setModificationDate(DateHelper.getDateString(new Date(), DateHelper.MONGO_FORMAT));
+                            return boardService.update(boardToUpdate);
                         })
                         .onFailure(err -> renderError(request))
                         .onSuccess(res -> renderJson(request, res));
@@ -158,13 +176,24 @@ public class CardController extends ControllerHelper {
                             List<String> cardIds = cards.getJsonArray(Field.CARDIDS, new JsonArray()).getList();
                             String boardId = request.getParam(Field.BOARDID);
                             Future<JsonObject> deleteCardsFuture = cardService.deleteCards(user.getUserId(), cardIds);
-                            Future<JsonArray> getBoardFuture = boardService.getBoards(Collections.singletonList(boardId));
+                            Future<List<Board>> getBoardFuture = boardService.getBoards(Collections.singletonList(boardId));
                             CompositeFuture.all(deleteCardsFuture, getBoardFuture)
                                     .compose(result -> {
-                                        BoardPayload updateBoard = new BoardPayload(getBoardFuture.result().getJsonObject(0));
-                                        updateBoard.setModificationDate(DateHelper.getDateString(new Date(), DateHelper.MONGO_FORMAT));
-                                        updateBoard.removeCardIds(cardIds);
-                                        return boardService.update(user, updateBoard);
+                                        if (!getBoardFuture.result().isEmpty()) {
+                                            Board currentBoard = getBoardFuture.result().get(0);
+                                            BoardPayload boardToUpdate = new BoardPayload()
+                                                    .setId(currentBoard.getId())
+                                                    .setCardIds(currentBoard.cards()
+                                                            .stream()
+                                                            .map(Card::getId)
+                                                            .collect(Collectors.toList()))
+                                                    .removeCardIds(cardIds)
+                                                    .setModificationDate(DateHelper.getDateString(new Date(), DateHelper.MONGO_FORMAT));
+                                            return boardService.update(boardToUpdate);
+                                        } else {
+                                            return Future.failedFuture(String.format("[Magneto%s::deleteCards] " +
+                                                    "No board found with id %s", this.getClass().getSimpleName(), boardId));
+                                        }
                                     })
                                     .onFailure(err -> renderError(request))
                                     .onSuccess(res -> renderJson(request, res));

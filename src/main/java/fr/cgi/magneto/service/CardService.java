@@ -1,5 +1,6 @@
 package fr.cgi.magneto.service;
 
+import fr.cgi.magneto.model.boards.Board;
 import fr.cgi.magneto.model.cards.CardPayload;
 import io.vertx.core.Future;
 import io.vertx.core.json.JsonObject;
@@ -13,11 +14,10 @@ public interface CardService {
     /**
      * Create a Card
      *
-     * @param user User Object containing user id and displayed name
-     * @param card JsonObjet Card to create
+     * @param card Card to create {@link CardPayload}
      * @return Future {@link Future <JsonObject>} containing newly created card
      */
-    Future<JsonObject> create(UserInfos user, CardPayload card);
+    Future<JsonObject> create(CardPayload card);
 
     /**
      * Update a card
@@ -44,7 +44,7 @@ public interface CardService {
      * @param card Card information
      * @return Future {@link Future <JsonObject>} containing last card created by the user
      */
-    Future<JsonObject> getLastCard(UserInfos user, CardPayload card);
+    Future<JsonObject> getLastCard(CardPayload card);
 
     /**
      * Get all cards
@@ -80,11 +80,11 @@ public interface CardService {
      * Get all cards
      *
      * @param user      User Object containing user id and displayed name
-     * @param boardId   Board identifier
+     * @param board     Board object
      * @param page      Page number
      * @param isSection fetch sections if true
      * @return Future {@link Future <JsonObject>} containing the cards corresponding to the board identifier
      */
-    Future<JsonObject> getAllCardsByBoard(UserInfos user, String boardId, Integer page, boolean isSection);
+    Future<JsonObject> getAllCardsByBoard(UserInfos user, Board board, Integer page, boolean isSection);
 
 }

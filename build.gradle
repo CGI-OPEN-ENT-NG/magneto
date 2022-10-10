@@ -63,6 +63,7 @@ dependencies {
     testCompile "io.vertx:vertx-unit:$vertxVersion"
     testCompile "org.junit.jupiter:junit-jupiter-engine:$junitVersion"
     testCompile "org.entcore:tests:$entCoreVersion"
+    testCompile "org.reflections:reflections:$reflectionsVersion"
     testCompile "org.mockito:mockito-core:$mockitoVersion"
     testCompile "org.powermock:powermock-core:$powerMockVersion"
     testCompile "org.powermock:powermock-api-mockito2:$powerMockVersion"

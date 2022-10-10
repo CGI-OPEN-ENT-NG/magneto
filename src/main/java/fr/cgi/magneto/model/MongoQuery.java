@@ -56,6 +56,12 @@ public class MongoQuery {
         return this;
     }
 
+    public MongoQuery addFields(String field, JsonObject value) {
+        this.pipeline.add(new JsonObject()
+                .put(Mongo.ADD_FIELDS, new JsonObject().put(field, value)));
+        return this;
+    }
+
     public MongoQuery sort(String field, Integer sortOrder) {
         this.pipeline.add(new JsonObject()
                 .put(Mongo.SORT, new JsonObject().put(field, sortOrder)));

@@ -2,56 +2,58 @@ package fr.cgi.magneto.model.cards;
 
 import fr.cgi.magneto.core.constants.Field;
 import fr.cgi.magneto.helper.DateHelper;
+import fr.cgi.magneto.model.Metadata;
 import fr.cgi.magneto.model.Model;
+import fr.cgi.magneto.model.user.User;
 import io.vertx.core.json.JsonObject;
 
 import java.util.Date;
 
-public class CardPayload implements Model<CardPayload> {
+public class Card implements Model<Card> {
 
-    private String id;
+    private String _id;
     private String title;
     private String resourceId;
     private String resourceType;
     private String resourceUrl;
     private String description;
-    private String ownerId;
-    private String ownerName;
-    private String lastModifierId;
-    private String lastModifierName;
+    private User owner;
+    private User editor;
     private String creationDate;
     private String modificationDate;
     private String caption;
     private String parentId;
     private String boardId;
+    private Metadata metadata;
 
-    public CardPayload(JsonObject card) {
-        this.id = card.getString(Field._ID, null);
+
+    public Card(JsonObject card) {
+        this._id = card.getString(Field._ID, null);
         this.title = card.getString(Field.TITLE);
         this.resourceId = card.getString(Field.RESOURCEID);
         this.resourceType = card.getString(Field.RESOURCETYPE);
         this.resourceUrl = card.getString(Field.RESOURCEURL);
-        this.ownerId = card.getString(Field.OWNERID);
-        this.ownerName = card.getString(Field.OWNERNAME);
-        this.lastModifierId = card.getString(Field.LASTMODIFIERID);
-        this.lastModifierName = card.getString(Field.LASTMODIFIERNAME);
+        this.owner = new User(card.getString(Field.OWNERID), card.getString(Field.OWNERNAME));
+        this.editor = new User(card.getString(Field.LASTMODIFIERID), card.getString(Field.LASTMODIFIERNAME));
         this.caption = card.getString(Field.CAPTION);
         this.description = card.getString(Field.DESCRIPTION);
         this.parentId = card.getString(Field.PARENTID);
         this.boardId = card.getString(Field.BOARDID);
+        this.modificationDate = card.getString(Field.MODIFICATIONDATE);
+        this.metadata = null;
 
         if (this.getId() == null) {
             this.setCreationDate(DateHelper.getDateString(new Date(), DateHelper.MONGO_FORMAT));
+            this.setModificationDate(DateHelper.getDateString(new Date(), DateHelper.MONGO_FORMAT));
         }
-        this.setModificationDate(DateHelper.getDateString(new Date(), DateHelper.MONGO_FORMAT));
     }
 
     public String getId() {
-        return id;
+        return _id;
     }
 
-    public CardPayload setId(String id) {
-        this.id = id;
+    public Card setId(String id) {
+        this._id = id;
         return this;
     }
 
@@ -59,26 +61,27 @@ public class CardPayload implements Model<CardPayload> {
         return title;
     }
 
-    public CardPayload setTitle(String title) {
+    public Card setTitle(String title) {
         this.title = title;
         return this;
     }
 
     public String getOwnerId() {
-        return ownerId;
+        return owner.getUserId();
+
     }
 
-    public CardPayload setOwnerId(String ownerId) {
-        this.ownerId = ownerId;
+    public Card setOwnerId(String ownerId) {
+        this.owner.setUserId(ownerId);
         return this;
     }
 
     public String getOwnerName() {
-        return ownerName;
+        return owner.getUsername();
     }
 
-    public CardPayload setOwnerName(String ownerName) {
-        this.ownerName = ownerName;
+    public Card setOwnerName(String ownerName) {
+        this.owner.setUsername(ownerName);
         return this;
     }
 
@@ -86,7 +89,7 @@ public class CardPayload implements Model<CardPayload> {
         return creationDate;
     }
 
-    public CardPayload setCreationDate(String creationDate) {
+    public Card setCreationDate(String creationDate) {
         this.creationDate = creationDate;
         return this;
     }
@@ -95,7 +98,7 @@ public class CardPayload implements Model<CardPayload> {
         return caption;
     }
 
-    public CardPayload setCaption(String caption) {
+    public Card setCaption(String caption) {
         this.caption = caption;
         return this;
     }
@@ -104,7 +107,7 @@ public class CardPayload implements Model<CardPayload> {
         return modificationDate;
     }
 
-    public CardPayload setModificationDate(String modificationDate) {
+    public Card setModificationDate(String modificationDate) {
         this.modificationDate = modificationDate;
         return this;
     }
@@ -113,26 +116,26 @@ public class CardPayload implements Model<CardPayload> {
         return resourceType;
     }
 
-    public CardPayload setResourceType(String resourceType) {
+    public Card setResourceType(String resourceType) {
         this.resourceType = resourceType;
         return this;
     }
 
     public String getLastModifierId() {
-        return lastModifierId;
+        return editor.getUserId();
     }
 
-    public CardPayload setLastModifierId(String lastModifierId) {
-        this.lastModifierId = lastModifierId;
+    public Card setLastModifierId(String lastModifierId) {
+        this.editor.setUserId(lastModifierId);
         return this;
     }
 
     public String getLastModifierName() {
-        return lastModifierName;
+        return editor.getUsername();
     }
 
-    public CardPayload setLastModifierName(String lastModifierName) {
-        this.lastModifierName = lastModifierName;
+    public Card setLastModifierName(String lastModifierName) {
+        this.editor.setUsername(lastModifierName);
         return this;
     }
 
@@ -140,7 +143,7 @@ public class CardPayload implements Model<CardPayload> {
         return parentId;
     }
 
-    public CardPayload setParentId(String parentId) {
+    public Card setParentId(String parentId) {
         this.parentId = parentId;
         return this;
     }
@@ -149,7 +152,7 @@ public class CardPayload implements Model<CardPayload> {
         return description;
     }
 
-    public CardPayload setDescription(String description) {
+    public Card setDescription(String description) {
         this.description = description;
         return this;
     }
@@ -158,7 +161,7 @@ public class CardPayload implements Model<CardPayload> {
         return resourceId;
     }
 
-    public CardPayload setResourceId(String resourceId) {
+    public Card setResourceId(String resourceId) {
         this.resourceId = resourceId;
         return this;
     }
@@ -167,8 +170,17 @@ public class CardPayload implements Model<CardPayload> {
         return boardId;
     }
 
-    public CardPayload setBoardId(String boardId) {
+    public Card setBoardId(String boardId) {
         this.boardId = boardId;
+        return this;
+    }
+
+    public Metadata getMetadata() {
+        return metadata;
+    }
+
+    public Card setMetadata(Metadata metadata) {
+        this.metadata = metadata;
         return this;
     }
 
@@ -176,7 +188,7 @@ public class CardPayload implements Model<CardPayload> {
         return resourceUrl;
     }
 
-    public CardPayload setResourceVideoUrl(String resourceUrl) {
+    public Card setResourceUrl(String resourceUrl) {
         this.resourceUrl = resourceUrl;
         return this;
     }
@@ -208,8 +220,8 @@ public class CardPayload implements Model<CardPayload> {
     }
 
     @Override
-    public CardPayload model(JsonObject card) {
-        return new CardPayload(card);
+    public Card model(JsonObject card) {
+        return new Card(card);
     }
 
 }

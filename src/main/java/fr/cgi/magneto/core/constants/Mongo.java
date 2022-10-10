@@ -28,4 +28,6 @@ public class Mongo {
     public static final String CONNECTTOFIELD = "connectToField";
     public static final String CURSOR = "cursor";
     public static final String FIRSTBATCH = "firstBatch";
+    public static final String ADD_FIELDS = "$addFields";
+    public static final String INDEX_OF_ARRAY = "$indexOfArray";
 }
