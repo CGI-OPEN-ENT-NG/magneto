@@ -174,7 +174,12 @@ public class DefaultCardService implements CardService {
                 promise.fail(message);
                 return;
             }
-            promise.complete(results.right().getValue());
+            setMetadataCards(java.util.Collections.singletonList(new Card(results.right().getValue()))).onFailure(fail -> {
+                        log.error("[Magneto@%s::getAllCardsByBoard] Failed to get cards", this.getClass().getSimpleName(),
+                                fail.getMessage());
+                        promise.fail(fail.getMessage());
+                    })
+                    .onSuccess(card -> promise.complete(card.get(0).toJson()));
         }));
         return promise.future();
     }

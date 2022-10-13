@@ -1,17 +1,18 @@
 import {Board, BoardForm, Boards} from "../board.model";
 
 describe('BoardModel', () => {
-   it('test Board initialization', done => {
-       const boardResponse = {
-           _id: 'id',
-           title: 'title',
-           imageUrl: 'imageUrl',
-           description: 'description',
-           nbCards: 0,
-           modificationDate: 'modificationDate',
-           creationDate: 'creationDate',
-           folderId: 'folderId'
-       }
+    it('test Board initialization', done => {
+        const boardResponse = {
+            _id: 'id',
+            title: 'title',
+            imageUrl: 'imageUrl',
+            description: 'description',
+            cardIds: ["card123"],
+            nbCards: 0,
+            modificationDate: 'modificationDate',
+            creationDate: 'creationDate',
+            folderId: 'folderId'
+        }
 
         const board = new Board().build(boardResponse);
 
@@ -19,38 +20,40 @@ describe('BoardModel', () => {
         expect(board.title).toEqual(boardResponse.title);
         expect(board.imageUrl).toEqual(boardResponse.imageUrl);
         expect(board.description).toEqual(boardResponse.description);
+        expect(board.cardIds).toEqual(boardResponse.cardIds);
         expect(board.nbCards).toEqual(boardResponse.nbCards);
         expect(board.modificationDate).toEqual(boardResponse.modificationDate);
         expect(board.creationDate).toEqual(boardResponse.creationDate);
         expect(board.folderId).toEqual(boardResponse.folderId);
         done();
-   });
+    });
 
-   it('test Boards initialization', done => {
-       const boardsResponse = {
-           all: [
-               {
-                   _id: 'id',
-                   title: 'title',
-                   imageUrl: 'imageUrl',
-                   description: 'description',
-                   nbCards: 0,
-                   modificationDate: 'modificationDate',
-                   creationDate: 'creationDate',
-                   folderId: 'folderId'
-               }
-           ],
-           page: 1,
-           pageCount: 1
-       }
+    it('test Boards initialization', done => {
+        const boardsResponse = {
+            all: [
+                {
+                    _id: 'id',
+                    title: 'title',
+                    imageUrl: 'imageUrl',
+                    description: 'description',
+                    cardIds: ["card123"],
+                    nbCards: 0,
+                    modificationDate: 'modificationDate',
+                    creationDate: 'creationDate',
+                    folderId: 'folderId'
+                }
+            ],
+            page: 1,
+            pageCount: 1
+        }
 
-       const boards = new Boards(boardsResponse);
+        const boards = new Boards(boardsResponse);
 
-       expect(boards.all.length).toEqual(1);
-       expect(boards.page).toEqual(1);
-       expect(boards.pageCount).toEqual(1);
-       done();
-   });
+        expect(boards.all.length).toEqual(1);
+        expect(boards.page).toEqual(1);
+        expect(boards.pageCount).toEqual(1);
+        done();
+    });
 
     it('test BordForm initialization', done => {
         let form = new BoardForm();

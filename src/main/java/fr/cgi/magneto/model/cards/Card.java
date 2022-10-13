@@ -39,6 +39,7 @@ public class Card implements Model<Card> {
         this.description = card.getString(Field.DESCRIPTION);
         this.parentId = card.getString(Field.PARENTID);
         this.boardId = card.getString(Field.BOARDID);
+        this.creationDate = card.getString(Field.CREATIONDATE);
         this.modificationDate = card.getString(Field.MODIFICATIONDATE);
         this.metadata = null;
 
@@ -197,6 +198,7 @@ public class Card implements Model<Card> {
     public JsonObject toJson() {
 
         JsonObject json = new JsonObject()
+                .put(Field._ID, this.getId())
                 .put(Field.TITLE, this.getTitle())
                 .put(Field.RESOURCETYPE, this.getResourceType())
                 .put(Field.RESOURCEID, this.getResourceId())
@@ -205,16 +207,13 @@ public class Card implements Model<Card> {
                 .put(Field.CAPTION, this.getCaption())
                 .put(Field.MODIFICATIONDATE, this.getModificationDate())
                 .put(Field.LASTMODIFIERID, this.getLastModifierId())
-                .put(Field.LASTMODIFIERNAME, this.getLastModifierName());
-
-        // If create
-        if (this.getId() == null) {
-            json.put(Field.CREATIONDATE, this.getCreationDate())
-                    .put(Field.OWNERID, this.getOwnerId())
-                    .put(Field.OWNERNAME, this.getOwnerName())
-                    .put(Field.BOARDID, this.getBoardId())
-                    .put(Field.PARENTID, this.getParentId());
-        }
+                .put(Field.LASTMODIFIERNAME, this.getLastModifierName())
+                .put(Field.CREATIONDATE, this.getCreationDate())
+                .put(Field.OWNERID, this.getOwnerId())
+                .put(Field.METADATA, this.getMetadata() != null ? this.getMetadata().toJson() : null)
+                .put(Field.OWNERNAME, this.getOwnerName())
+                .put(Field.BOARDID, this.getBoardId())
+                .put(Field.PARENTID, this.getParentId());
 
         return json;
     }

@@ -60,5 +60,7 @@
   "magneto.delete.cards.confirm": "Les aimants selectionnés ont été supprimés avec succès.",
   "magneto.board.saved.at": "Tableau enregistré le {0} à {1}",
   "magneto.create.link": "Créer un lien",
-  "magneto.site.address": "Adresse du site"
+  "magneto.site.address": "Adresse du site",
+  "magneto.return": "Retour",
+  "magneto.card.saved.by": "Crée par {0}, modifié par {1}"
 }

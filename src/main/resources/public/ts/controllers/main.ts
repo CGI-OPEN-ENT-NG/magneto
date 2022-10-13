@@ -28,12 +28,16 @@ class Controller implements IViewModel {
 			},
 			board: () => {
 				template.open('main', `board`);
+			},
+			boardRead: () => {
+				template.open('main', `board-read`);
 			}
 		});
 	}
 
 	$onDestroy() {
 	}
+
 }
 
 export const mainController = ng.controller('MainController',

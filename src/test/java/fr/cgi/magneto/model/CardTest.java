@@ -11,6 +11,7 @@ import org.junit.runner.*;
 public class CardTest {
 
     JsonObject cardJsonObject = new JsonObject()
+            .put("_id", "id")
             .put("title", "title")
             .put("resourceId", "resourceId")
             .put("resourceType", "resourceType")
@@ -18,14 +19,19 @@ public class CardTest {
             .put("description", "description")
             .put("lastModifierName", "lastModifierName")
             .put("lastModifierId", "lastModifierId")
+            .put("creationDate", "creationDate")
             .put("modificationDate", "modificationDate")
+            .put("creationDate", "creationDate")
+            .put("ownerId", "ownerId")
+            .put("ownerName", "ownerName")
+            .put("boardId", "boardId")
+            .putNull("metadata")
+            .putNull("parentId")
             .put("caption", "caption");
 
     @Test
     public void testCardHasBeenInstantiated(TestContext ctx) {
         Card card = new Card(cardJsonObject);
-        card.setId("id");
-        card.setModificationDate("modificationDate");
         ctx.assertEquals(cardJsonObject, card.toJson());
     }
 

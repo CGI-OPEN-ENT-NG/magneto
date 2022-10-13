@@ -163,6 +163,13 @@ class Controller implements IViewModel {
     }
 
     /**
+     * Open reading board page
+     */
+    openReading = (): void => {
+        this.$location.path(`/board/view/reading/${this.board.id}`);
+    }
+
+    /**
      * Open card edition form.
      */
     openEditResourceLightbox = (card: Card): void => {

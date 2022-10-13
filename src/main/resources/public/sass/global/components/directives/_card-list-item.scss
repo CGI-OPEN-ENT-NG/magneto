@@ -59,6 +59,8 @@
 
     &-text {
       @include noTextOverflow(4);
+      margin-left: auto;
+      margin-right: auto;
     }
   }
 
@@ -120,7 +122,7 @@
   }
 
   &-date {
-    color: $magneto-lighter-grey;
+    color: $magneto-light-grey;
   }
 
   i.magneto-card-settings {

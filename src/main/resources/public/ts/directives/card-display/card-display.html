@@ -1,0 +1,20 @@
+<div class="card-display">
+    <div class="flex-row f-column">
+        <div>
+            <span ng-if="!!vm.card.title" class="card-display-title"> [[vm.card.title]] </span>
+        </div>
+        <div class="flex-row card-display-info">
+            <span>[[vm.getOwnerText()]]</span>
+            <span class="card-display-date">[[vm.formatDateModification(vm.card.modificationDate)]]</span>
+        </div>
+    </div>
+    <!--Card title-->
+    <card-preview-image
+            card="vm.card">
+    </card-preview-image>
+    <div class="flex-row f-column">
+        <!-- Card info -->
+        <span ng-if="!!vm.card.caption" class="card-display-info">[[vm.card.caption]]</span>
+        <span ng-if="!!vm.card.description" data-ng-bind-html="vm.getDescriptionHTML(vm.card.description)"> </span>
+    </div>
+</div>

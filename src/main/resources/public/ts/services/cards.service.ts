@@ -1,10 +1,12 @@
 import {ng} from 'entcore'
 import http, {AxiosResponse} from 'axios';
-import {CardForm, Cards, ICardsParamsRequest} from "../models";
+import {Card, CardForm, Cards, ICardsParamsRequest} from "../models";
 
 
 export interface ICardsService {
     getAllCards(params: ICardsParamsRequest): Promise<Cards>;
+
+    getCardById(params): Promise<Card>;
 
     createCard(params: CardForm): Promise<AxiosResponse>;
 
@@ -19,6 +21,11 @@ export const cardsService: ICardsService = {
         let urlParams: string = `?page=${params.page}`;
         return http.get(`/magneto/cards/${params.boardId}${urlParams}`)
             .then((res: AxiosResponse) => new Cards(res.data));
+    },
+
+    getCardById: async (id: string): Promise<Card> => {
+        return http.get(`/magneto/card/${id}`)
+            .then((res: AxiosResponse) => new Card().build(res.data));
     },
 
     createCard: async (params: CardForm): Promise<AxiosResponse> => {

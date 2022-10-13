@@ -59,6 +59,11 @@ i {
     content: '\F142';
   }
 
+  &.magneto-chevron-left::before {
+    font-family: 'magneto-mdi';
+    content: '\F141'
+  }
+
   &.magneto-chevron-down::before {
     font-family: 'magneto-mdi';
     content: '\F140'
@@ -108,6 +113,11 @@ i {
   &.magneto-link::before {
     font-family: 'magneto-mdi';
     content: '\F337';
+  }
+
+  &.magneto-card::before {
+    font-family: 'magneto-mdi';
+    content: '\F0BC';
   }
 
   &.magneto-audio::before {

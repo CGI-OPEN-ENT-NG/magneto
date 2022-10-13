@@ -23,6 +23,9 @@ routes.define(function($routeProvider){
 		.when('/board/view/:boardId', {
 			action: 'board'
 		})
+		.when('/board/view/reading/:boardId', {
+			action: 'boardRead'
+		})
 		.otherwise({
 			redirectTo: '/'
 		});

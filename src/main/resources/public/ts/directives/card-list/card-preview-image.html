@@ -1,0 +1,23 @@
+<!--Card Previsualisation-->
+<div class="card-preview-image">
+    <img ng-if="vm.card.isType(vm.RESOURCE_TYPES.IMAGE)"
+         ng-src="/workspace/document/[[vm.card.resourceId]]"
+         ng-class="card-preview-image-img">
+    <img ng-if="vm.card.isType(vm.RESOURCE_TYPES.FILE)" class="card-preview-image-icons"
+         ng-click="vm.downloadFile()"
+         data-ng-src="/magneto/public/img/extension/[[vm.getExtension()]].svg">
+    <a ng-href="[[vm.card.resourceUrl]]" target="_blank" ng-if="vm.card.isType(vm.RESOURCE_TYPES.LINK)">
+        <img class="card-preview-image-icons" data-ng-src="/magneto/public/img/extension/link.svg">
+    </a>
+    <audio ng-if="vm.card.isType(vm.RESOURCE_TYPES.AUDIO)" controls preload="none"
+           src="/workspace/document/[[vm.card.resourceId]]">
+    </audio>
+    <video controls ng-if="vm.card.isType(vm.RESOURCE_TYPES.VIDEO) && vm.videoIsFromWorkspace()"
+           data-ng-src="[[vm.card.resourceUrl]]">
+    </video>
+    <iframe ng-if="vm.card.isType(vm.RESOURCE_TYPES.VIDEO) && !vm.videoIsFromWorkspace()"
+            data-ng-src="[[vm.formatVideoUrl(vm.card.resourceUrl)]]">
+    </iframe>
+</div>
+
+

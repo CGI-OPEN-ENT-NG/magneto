@@ -1,0 +1,16 @@
+<div ng-controller="BoardReadController as vm" class="board-read-container">
+    <!-- Header -->
+    <button class="return-button create-button" ng-click="vm.goToBoard()">
+        <i class="magneto-chevron-left button-icon"></i>
+        <span><i18n>magneto.return</i18n></span>
+    </button>
+
+    <!-- Card display -->
+    <card-display
+            card="vm.card">
+    </card-display>
+
+    <!-- Navigation icons -->
+    <i class="magneto-chevron-left nav-left" ng-if="vm.filter.page > 0" ng-click="vm.previousPage()"></i>
+    <i class="magneto-chevron-right nav-right" ng-if="!vm.isLastPage()" ng-click="vm.nextPage()"></i>
+</div>

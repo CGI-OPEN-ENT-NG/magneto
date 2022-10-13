@@ -49,12 +49,12 @@ public class Metadata implements Model {
     @Override
     public JsonObject toJson() {
         return new JsonObject()
-                .put(Field.TITLE, this.getName())
-                .put(Field.RESOURCETYPE, this.getFilename())
-                .put(Field.RESOURCEID, this.getContentType())
-                .put(Field.DESCRIPTION, this.getContentTransferEncoding())
-                .put(Field.CAPTION, this.getCharset())
-                .put(Field.MODIFICATIONDATE, this.getSize());
+                .put(Field.NAME, this.getName())
+                .put(Field.FILENAME, this.getFilename())
+                .put(Field.CONTENT_TYPE, this.getContentType())
+                .put(Field.CONTENT_TRANSFER_ENCODING, this.getContentTransferEncoding())
+                .put(Field.CHARSET, this.getCharset())
+                .put(Field.SIZE, this.getSize());
     }
 
     @Override

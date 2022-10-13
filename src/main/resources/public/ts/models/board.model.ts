@@ -5,6 +5,7 @@ export interface IBoardItemResponse {
     title: string;
     description: string;
     imageUrl: string;
+    cardIds: Array<string>;
     nbCards: number;
     modificationDate: string;
     creationDate: string;
@@ -147,10 +148,12 @@ export class BoardForm {
 }
 
 export class Board {
+
     private _id: string;
     private _title: string;
     private _imageUrl: string;
     private _description: string;
+    private _cardIds: Array<string>;
     private _nbCards: number;
     private _modificationDate: string;
     private _creationDate: string;
@@ -162,6 +165,7 @@ export class Board {
         this._title = data.title;
         this._imageUrl = data.imageUrl;
         this._description = data.description;
+        this._cardIds = data.cardIds;
         this._nbCards = data.nbCards;
         this._modificationDate = data.modificationDate;
         this._creationDate = data.creationDate;
@@ -183,6 +187,10 @@ export class Board {
 
     get imageUrl(): string {
         return this._imageUrl;
+    }
+
+    get cardIds(): Array<string> {
+        return this._cardIds;
     }
 
     get nbCards(): number {

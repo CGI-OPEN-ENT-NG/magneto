@@ -9,8 +9,8 @@
     <div class="card-list-item-image flex">
         <img ng-if="vm.card.isType(vm.RESOURCE_TYPES.IMAGE)" class="card-list-item-preview-[[vm.card.resourceType]]" ng-src="/workspace/document/[[vm.card.resourceId]]">
         <img ng-if="vm.card.isType(vm.RESOURCE_TYPES.FILE)" class="type-icon" data-ng-src="/magneto/public/img/extension/[[vm.getExtension(vm.card.metadata.filename)]].svg">
-        <a ng-href="[[vm.card.resourceUrl]]" ng-if="vm.card.isType(vm.RESOURCE_TYPES.LINK)" target="_blank">
-            <img class="type-icon" data-ng-src="/magneto/public/img/extension/link.svg">
+        <a ng-href="[[vm.card.resourceUrl]]" ng-if="vm.card.isType(vm.RESOURCE_TYPES.LINK)" target="_blank" class="type-icon">
+            <img data-ng-src="/magneto/public/img/extension/link.svg">
         </a>
         <div ng-if="vm.card.isType(vm.RESOURCE_TYPES.TEXT)" class="card-list-item-preview-[[vm.card.resourceType]]" ng-bind-html="vm.card.description"></div>
         <audio ng-if="vm.card.isType(vm.RESOURCE_TYPES.AUDIO)" controls preload="none"
