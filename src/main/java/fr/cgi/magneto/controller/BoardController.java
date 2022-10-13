@@ -111,8 +111,8 @@ public class BoardController extends ControllerHelper {
             UserUtils.getUserInfos(eb, request, user -> {
                 BoardPayload updateBoard = new BoardPayload(board)
                         .setId(boardId)
-                        .setCardIds(null)
                         .setModificationDate(DateHelper.getDateString(new Date(), DateHelper.MONGO_FORMAT));
+
                 boardService.update(updateBoard)
                         .onFailure(err -> renderError(request))
                         .onSuccess(result -> renderJson(request, result));

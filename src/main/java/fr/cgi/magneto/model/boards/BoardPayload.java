@@ -33,7 +33,8 @@ public class BoardPayload implements Model<BoardPayload> {
         this.ownerId = board.getString(Field.OWNERID);
         this.ownerName = board.getString(Field.OWNERNAME);
         this.folderId = board.getString(Field.FOLDERID);
-        this.cardIds = board.getJsonArray(Field.CARDIDS, new JsonArray()).getList();
+        this.cardIds = !board.getJsonArray(Field.CARDIDS, new JsonArray()).isEmpty() ?
+                board.getJsonArray(Field.CARDIDS, new JsonArray()).getList() : null;
         if (this.getId() == null) {
             this.setCreationDate(DateHelper.getDateString(new Date(), DateHelper.MONGO_FORMAT));
         }

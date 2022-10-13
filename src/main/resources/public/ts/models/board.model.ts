@@ -29,10 +29,11 @@ export interface IBoardsParamsRequest {
 
 export interface IBoardPayload {
     id?: string;
-    title: string;
-    description: string;
-    imageUrl: string;
+    title?: string;
+    description?: string;
+    imageUrl?: string;
     folderId?: string;
+    cardIds?: Array<string>;
 }
 
 export class BoardForm {
@@ -41,13 +42,15 @@ export class BoardForm {
     private _description: string;
     private _imageUrl: string;
     private _folderId: string;
+    private _cardIds: Array<string>;
 
     constructor() {
-        this._id = '';
-        this._title = '';
-        this._description = '';
-        this._imageUrl = '';
+        this._id = null;
+        this._title = null;
+        this._description = null;
+        this._imageUrl = null;
         this._folderId = null;
+        this._cardIds = null;
     }
 
     build(board: Board): BoardForm {
@@ -101,6 +104,14 @@ export class BoardForm {
             || value === FOLDER_TYPE.DELETED_BOARDS) ? null : value;
     }
 
+    get cardIds(): Array<string> {
+        return this._cardIds;
+    }
+
+    set cardIds(value: Array<string>) {
+        this._cardIds = value;
+    }
+
     isValid(): boolean {
         return this.title !== null && this.title !== '' &&
             this.imageUrl != null && this.imageUrl !== ''
@@ -108,14 +119,28 @@ export class BoardForm {
 
     toJSON(): IBoardPayload {
 
-        let payload : IBoardPayload = {
-            title: this.title,
-            description: this.description,
-            imageUrl: this.imageUrl,
-            folderId: this.folderId
-        } ;
+        let payload : IBoardPayload = {};
 
-        if (this.id && this.id != '') payload.id = this.id;
+        if (this.title) {
+            payload.title = this.title;
+        }
+        if (this.description) {
+            payload.description = this.description;
+        }
+        if (this.imageUrl) {
+            payload.imageUrl = this.imageUrl;
+        }
+        if (this.folderId) {
+            payload.folderId = this.folderId;
+        }
+
+        if (this.cardIds) {
+            payload.cardIds = this.cardIds;
+        }
+
+        if (this.id && this.id != '')  {
+            payload.id = this.id;
+        }
 
         return payload;
     }

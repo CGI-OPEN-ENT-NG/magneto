@@ -4,13 +4,13 @@
   "additionalProperties": false,
   "properties": {
     "title": {
-      "type": "string"
+      "type": ["string", "null"]
     },
     "imageUrl": {
-      "type": "string"
+      "type": ["string", "null"]
     },
     "description": {
-      "type": "string"
+      "type": ["string", "null"]
     },
     "folderId": {
       "type": ["string", "null"]
@@ -34,8 +34,5 @@
         ]
       }
     }
-  },
-  "required": [
-    "title"
-  ]
+  }
 }

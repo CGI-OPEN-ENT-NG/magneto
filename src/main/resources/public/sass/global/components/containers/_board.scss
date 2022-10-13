@@ -24,8 +24,7 @@
 
     &-description {
       height: 64px;
-      text-overflow: ellipsis;
-      overflow: hidden;
+      overflow-y: scroll;
     }
   }
 

@@ -54,10 +54,10 @@ describe('BoardModel', () => {
 
     it('test BordForm initialization', done => {
         let form = new BoardForm();
-        expect(form.id).toEqual('');
-        expect(form.title).toEqual('');
-        expect(form.description).toEqual('');
-        expect(form.imageUrl).toEqual('');
+        expect(form.id).toEqual(null);
+        expect(form.title).toEqual(null);
+        expect(form.description).toEqual(null);
+        expect(form.imageUrl).toEqual(null);
         expect(form.folderId).toEqual(null);
         done();
     });
@@ -76,16 +76,14 @@ describe('BoardModel', () => {
         const formJSON1 = {
             title: 'title',
             description: 'description',
-            imageUrl: 'imageUrl',
-            folderId: null
+            imageUrl: 'imageUrl'
         }
 
         const formJSON2 = {
             id: 'id',
             title: 'title',
             description: 'description',
-            imageUrl: 'imageUrl',
-            folderId: null
+            imageUrl: 'imageUrl'
         }
 
         let form = new BoardForm();

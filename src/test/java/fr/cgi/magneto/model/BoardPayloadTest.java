@@ -27,8 +27,7 @@ public class BoardPayloadTest {
             .put("title", "title")
             .put("imageUrl", "imageUrl")
             .put("description", "description")
-            .put("modificationDate", "modificationDate")
-            .put("cardIds", new JsonArray());
+            .put("modificationDate", "modificationDate");
 
     @Test
     public void testBoardPayloadHasBeenInstantiated(TestContext ctx) {
