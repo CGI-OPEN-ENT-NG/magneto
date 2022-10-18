@@ -50,4 +50,21 @@ public interface FolderService {
          * @return           Future {@link Future <JsonObject>} containing predeleted folders
          */
         Future<JsonObject> preDeleteFoldersAndBoards(UserInfos user, List<String> folderIds, boolean restore);
+
+        /**
+         * Move boards to another folder
+         * @param userId        User identifier
+         * @param boardIds      Boards identifiers
+         * @param folderId      Folder identifier
+         * @return              Future {@link Future <JsonObject>} containing board
+         */
+        Future<JsonObject> moveBoardsToFolder(String userId, List<String> boardIds, String folderId);
+
+
+        /**
+         * Remove boardIds from corresponding folder
+         * @param boardIds   Boards identifiers
+         * @return           Future {@link Future <JsonObject>} containing folder
+         */
+        Future<JsonObject> updateOldFolder(List<String> boardIds);
 }

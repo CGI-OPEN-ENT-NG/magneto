@@ -11,6 +11,8 @@ interface IViewModel extends ng.IController, IBoardNavProps {
 }
 
 interface IBoardNavProps {
+    hasProperties: boolean;
+
     onCreate?;
 }
 
@@ -19,6 +21,8 @@ interface IBoardNavScope extends IScope, IBoardNavProps {
 }
 
 class Controller implements IViewModel {
+
+    hasProperties: boolean;
 
     resourceTypes: typeof RESOURCE_TYPE;
 
@@ -43,7 +47,8 @@ function directive($parse: IParseService) {
         templateUrl: `${RootsConst.directive}board-nav/board-nav.html`,
         scope: {
             onCreate: '&',
-            onProperties: '&'
+            onProperties: '&',
+            hasProperties: '='
         },
         controllerAs: 'vm',
         bindToController: true,

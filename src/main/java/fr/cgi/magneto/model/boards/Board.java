@@ -19,6 +19,7 @@ public class Board implements Model<Board> {
     private String imageUrl;
     private String description;
     private User owner;
+    private JsonArray shared;
     private String creationDate;
     private String modificationDate;
     private boolean isDeleted;
@@ -33,6 +34,7 @@ public class Board implements Model<Board> {
         this.imageUrl = board.getString(Field.IMAGEURL);
         this.description = board.getString(Field.DESCRIPTION);
         this.owner = new User(board.getString(Field.OWNERID), board.getString(Field.OWNERNAME));
+        this.shared = board.getJsonArray(Field.SHARED, new JsonArray());
         this.folderId = board.getString(Field.FOLDERID);
         this.modificationDate = board.getString(Field.MODIFICATIONDATE);
         JsonArray cardsArray = new JsonArray(((List<String>) board.getJsonArray(Field.CARDIDS, new JsonArray()).getList())
@@ -167,7 +169,8 @@ public class Board implements Model<Board> {
                 .put(Field.PUBLIC, this.isPublic())
                 .put(Field.FOLDERID, this.getFolderId())
                 .put(Field.OWNERID, this.getOwnerId())
-                .put(Field.OWNERNAME, this.getOwnerName());
+                .put(Field.OWNERNAME, this.getOwnerName())
+                .put(Field.SHARED, this.shared);
 }
 
     @Override

@@ -2,11 +2,12 @@ package fr.cgi.magneto.service.impl;
 
 import fr.cgi.magneto.*;
 import fr.cgi.magneto.core.constants.*;
-import fr.cgi.magneto.helper.ModelHelper;
+import fr.cgi.magneto.core.constants.Collections;
+import fr.cgi.magneto.helper.*;
 import fr.cgi.magneto.model.*;
 import fr.cgi.magneto.model.boards.Board;
 import fr.cgi.magneto.model.boards.BoardPayload;
-import fr.cgi.magneto.service.BoardService;
+import fr.cgi.magneto.service.*;
 import io.vertx.core.*;
 import io.vertx.core.json.*;
 import fr.wseduc.mongodb.MongoDb;
@@ -23,23 +24,59 @@ public class DefaultBoardService implements BoardService {
 
     private final MongoDb mongoDb;
     private final String collection;
+    private final FolderService folderService;
     protected static final Logger log = LoggerFactory.getLogger(DefaultBoardService.class);
 
 
-    public DefaultBoardService(String collection, MongoDb mongo) {
+    public DefaultBoardService(String collection, MongoDb mongo, ServiceFactory serviceFactory) {
         this.collection = collection;
         this.mongoDb = mongo;
+        this.folderService = serviceFactory.folderService();
     }
 
     @Override
     public Future<JsonObject> create(UserInfos user, JsonObject board) {
         Promise<JsonObject> promise = Promise.promise();
         BoardPayload createBoard = new BoardPayload(board);
+        String newId = UUID.randomUUID().toString();
         createBoard.setOwnerId(user.getUserId());
         createBoard.setOwnerName(user.getFirstName() + " " + user.getLastName());
-        mongoDb.insert(this.collection, createBoard.toJson(), MongoDbResult.validResultHandler(results -> {
+
+        this.createBoard(createBoard, newId)
+                .compose(success -> this.updateFolderOnBoardCreate(user.getUserId(), createBoard, newId))
+                .onFailure(promise::fail)
+                .onSuccess(promise::complete);
+        return promise.future();
+    }
+
+    private Future<JsonObject> createBoard(BoardPayload board, String id) {
+        Promise<JsonObject> promise = Promise.promise();
+        JsonObject newBoard = board.toJson().put(Field._ID, id);
+        mongoDb.insert(this.collection, newBoard, MongoDbResult.validResultHandler(results -> {
             if (results.isLeft()) {
-                String message = String.format("[Magneto@%s::create] Failed to create board", this.getClass().getSimpleName());
+                String message = String.format("[Magneto@%s::createBoard] Failed to create board", this.getClass().getSimpleName());
+                log.error(String.format("%s. %s", message, results.left().getValue()));
+                promise.fail(message);
+                return;
+            }
+            promise.complete(results.right().getValue());
+        }));
+        return promise.future();
+    }
+
+    private Future<JsonObject> updateFolderOnBoardCreate(String ownerId, BoardPayload board, String boardId) {
+
+        Promise<JsonObject> promise = Promise.promise();
+        JsonObject query = new JsonObject()
+                .put(Field._ID, board.getFolderId())
+                .put(Field.OWNERID, ownerId);
+        JsonObject update = new JsonObject()
+                .put(Mongo.PUSH, new JsonObject()
+                        .put(Field.BOARDIDS, boardId));
+        mongoDb.update(Collections.FOLDER_COLLECTION, query, update, MongoDbResult.validActionResultHandler(results -> {
+            if (results.isLeft()) {
+                String message = String.format("[Magneto@%s::updateFolderOnBoardCreate] " +
+                        "Failed to update folder", this.getClass().getSimpleName());
                 log.error(String.format("%s. %s", message, results.left().getValue()));
                 promise.fail(message);
                 return;
@@ -87,7 +124,18 @@ public class DefaultBoardService implements BoardService {
         return promise.future();
     }
 
-    public Future<JsonObject> deleteBoards(String userId, List<String> boardIds) {
+    @Override
+    public Future<JsonObject> delete(String userId, List<String> boardIds) {
+        Promise<JsonObject> promise = Promise.promise();
+        this.deleteBoards(userId, boardIds)
+                .compose(success -> this.folderService.updateOldFolder(boardIds))
+                .onFailure(promise::fail)
+                .onSuccess(promise::complete);
+
+        return promise.future();
+    }
+
+    private Future<JsonObject> deleteBoards(String userId, List<String> boardIds) {
         Promise<JsonObject> promise = Promise.promise();
         JsonObject query = new JsonObject()
                 .put(Field._ID, new JsonObject().put(Mongo.IN, new JsonArray(boardIds)))
@@ -189,15 +237,27 @@ public class DefaultBoardService implements BoardService {
                                          boolean isPublic, boolean isShared, boolean isDeleted,
                                          String sortBy, boolean getCount) {
 
-        //TODO: fetch shared boards (MAG-16)
         MongoQuery query = new MongoQuery(this.collection)
                 .match(new JsonObject()
                         .put(Field.DELETED, isDeleted)
-                        .put(Field.FOLDERID, folderId)
-                        .put(Field.OWNERID, user.getUserId())
-                        .put(Field.PUBLIC, isPublic))
-                .matchRegex(searchText, Arrays.asList(Field.TITLE, Field.DESCRIPTION))
-                .sort(sortBy, -1);
+                        .put(Field.PUBLIC, isPublic));
+
+        if (isShared) {
+            query.matchOr(new JsonArray()
+                    .add(new JsonObject().put(Field.OWNERID, user.getUserId()))
+                    .add(new JsonObject()
+                            .put(String.format("%s.%s", Field.SHARED, Field.USERID), new JsonObject().put(Mongo.IN,
+                                    new JsonArray().add(user.getUserId()))))
+                    .add(new JsonObject()
+                            .put(String.format("%s.%s", Field.SHARED, Field.GROUPID), new JsonObject().put(Mongo.IN, user.getGroupsIds()))));
+        } else {
+            query.match(new JsonObject().put(Field.OWNERID, user.getUserId()));
+        }
+
+        query.matchRegex(searchText, Arrays.asList(Field.TITLE, Field.DESCRIPTION))
+                .sort(sortBy, -1)
+                .lookUp(Collections.FOLDER_COLLECTION, Field._ID, Field.BOARDIDS, Field.FOLDERS);
+
 
         if (!getCount)
             query = query.page(page)
@@ -206,10 +266,38 @@ public class DefaultBoardService implements BoardService {
                             .put(Field._ID, 1)
                             .put(Field.TITLE, 1)
                             .put(Field.IMAGEURL, 1)
-                            .put(Field.NBCARDS, new JsonObject().put(Mongo.SIZE, "$cardIds"))
+                            .put(Field.NBCARDS, new JsonObject().put(Mongo.SIZE, String.format("$%s", Field.CARDIDS)))
                             .put(Field.MODIFICATIONDATE, 1)
-                            .put(Field.FOLDERID, 1)
-                            .put(Field.DESCRIPTION, 1));
+                            .put(Field.FOLDERID, new JsonObject().put(Mongo.FILTER,
+                                    new JsonObject()
+                                            .put(Mongo.INPUT, String.format("$%s", Field.FOLDERS))
+                                            .put(Mongo.AS, Field.FOLDER)
+                                            .put(Mongo.COND, new JsonObject().put(Mongo.EQ, new JsonArray()
+                                                    .add(String.format("$$%s.%s", Field.FOLDER, Field.OWNERID))
+                                                    .add(user.getUserId())))))
+                            .put(Field.DESCRIPTION, 1)
+                            .put(Field.OWNERID, 1)
+                            .put(Field.OWNERNAME, 1)
+                            .put(Field.SHARED, 1))
+                    .unwind(Field.FOLDERID, true);
+
+            if (folderId != null) {
+                query.match(new JsonObject().put(String.format("%s.%s", Field.FOLDERID, Field._ID), folderId));
+            } else if (!isDeleted){
+                query.match(new JsonObject().putNull(String.format("%s.%s", Field.FOLDERID, Field._ID)));
+            }
+
+        query.project(new JsonObject()
+                .put(Field._ID, 1)
+                .put(Field.TITLE, 1)
+                .put(Field.IMAGEURL, 1)
+                .put(Field.NBCARDS, 1)
+                .put(Field.MODIFICATIONDATE, 1)
+                .put(Field.FOLDERID, String.format("$%s.%s", Field.FOLDERID, Field._ID))
+                .put(Field.DESCRIPTION, 1)
+                .put(Field.OWNERID, 1)
+                .put(Field.OWNERNAME, 1)
+                .put(Field.SHARED, 1));
         if (getCount) {
             query = query.count();
         }
@@ -228,29 +316,10 @@ public class DefaultBoardService implements BoardService {
                         .put(Field.CREATIONDATE, 1)
                         .put(Field.CARDIDS, 1)
                         .put(Field.MODIFICATIONDATE, 1)
-                        .put(Field.FOLDERID, 1)
-                        .put(Field.DESCRIPTION, 1));
+                        .put(Field.DESCRIPTION, 1)
+                        .put(Field.OWNERID, 1)
+                        .put(Field.OWNERNAME, 1)
+                        .put(Field.SHARED, 1));
         return query.getAggregate();
     }
-
-    @Override
-    public Future<JsonObject> moveBoardsToFolder(String userId, List<String> boardIds, String folderId) {
-        Promise<JsonObject> promise = Promise.promise();
-        JsonObject query = new JsonObject()
-                .put(Field._ID, new JsonObject().put(Mongo.IN, new JsonArray(boardIds)))
-                .put(Field.OWNERID, userId);
-        JsonObject update = new JsonObject().put(Mongo.SET, new JsonObject().put(Field.FOLDERID, folderId));
-        mongoDb.update(this.collection, query, update, false, true, MongoDbResult.validActionResultHandler(results -> {
-            if (results.isLeft()) {
-                String message = String.format("[Magneto@%s::moveBoardsToFolder] Failed to move boards to folder",
-                        this.getClass().getSimpleName());
-                log.error(String.format("%s : %s", message, results.left().getValue()));
-                promise.fail(message);
-                return;
-            }
-            promise.complete(results.right().getValue());
-        }));
-        return promise.future();
-    }
-
 }

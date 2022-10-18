@@ -20,6 +20,7 @@ public class Field {
     public static final String _ID = "_id";
     public static final String SEARCHTEXT = "searchText";
     public static final String FOLDERID = "folderId";
+    public static final String OLDFOLDERID = "oldFolderId";
     public static final String PUBLIC = "public";
     public static final String ISPUBLIC = "isPublic";
     public static final String SHARED = "shared";
@@ -44,6 +45,12 @@ public class Field {
     public static final String FOLDERIDS = "folderIds";
     public static final String CHILDREN = "children";
     public static final String CHILDRENIDS = "childrenIds";
+    public static final String FOLDER = "folder";
+    public static final String FOLDERS = "folders";
+
+    public static final String OWNER = "owner";
+    public static final String USERID = "userId";
+    public static final String GROUPID = "groupId";
 
     // PAGE FIELD
     public static final String COUNT = "count";
@@ -84,4 +91,9 @@ public class Field {
     public static final String SIZE = "size";
     public static final String METADATA = "metadata";
     public static final String INDEX = "index";
+
+    public static final String PROFILURI = "profilUri";
+    public static final String USERNAME = "username";
+    public static final String BODY = "body";
+    public static final String PUSHNOTIF = "pushNotif";
 }

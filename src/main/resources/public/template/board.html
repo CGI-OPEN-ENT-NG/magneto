@@ -20,8 +20,10 @@
     <div class="twelve cell board-container-body">
         <div class="cell board-container-body-nav">
             <board-nav
-                on-create="vm.openAddResourceLightbox"
-                on-properties="vm.openBoardPropertiesForm">
+                    ng-if="vm.board.myRights.contrib"
+                    on-create="vm.openAddResourceLightbox"
+                    on-properties="vm.openBoardPropertiesForm"
+                    has-properties="vm.board.myRights.manager">
             </board-nav>
         </div>
 
@@ -31,6 +33,8 @@
                 <i class="magneto-arrow-left"></i>
             </div>
             <card-list
+                    is-draggable="vm.board.myRights.contrib !== undefined"
+                    has-options="vm.board.myRights.contrib !== undefined"
                     cards="vm.cards"
                     on-edit="vm.openEditResourceLightbox"
                     on-delete="vm.openDeleteResourceLightbox">

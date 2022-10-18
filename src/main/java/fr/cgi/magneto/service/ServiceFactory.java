@@ -41,7 +41,7 @@ public class ServiceFactory {
     }
 
     public BoardService boardService() {
-        return new DefaultBoardService(Collections.BOARD_COLLECTION, mongoDb);
+        return new DefaultBoardService(Collections.BOARD_COLLECTION, mongoDb, this);
     }
 
     public CardService cardService() {

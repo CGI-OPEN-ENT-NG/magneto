@@ -71,14 +71,5 @@ public interface BoardService {
      * @param boardIds List of board identifiers
      * @return Future {@link Future <JsonObject>} containing list of deleted boards
      */
-    Future<JsonObject> deleteBoards(String userId, List<String> boardIds);
-
-    /**
-     * Get board by id
-     * @param userId        User identifier
-     * @param boardIds      Boards identifiers
-     * @param folderId      Folder identifier
-     * @return              Future {@link Future <JsonObject>} containing board
-     */
-    Future<JsonObject> moveBoardsToFolder(String userId, List<String> boardIds, String folderId);
+    Future<JsonObject> delete(String userId, List<String> boardIds);
 }

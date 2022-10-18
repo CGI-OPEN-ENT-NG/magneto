@@ -5,11 +5,8 @@ import fr.cgi.magneto.core.constants.Rights;
 import fr.cgi.magneto.helper.DateHelper;
 import fr.cgi.magneto.model.boards.Board;
 import fr.cgi.magneto.model.boards.BoardPayload;
-import fr.cgi.magneto.security.ManageBoardRight;
-import fr.cgi.magneto.security.ViewRight;
-import fr.cgi.magneto.service.BoardService;
-import fr.cgi.magneto.service.CardService;
-import fr.cgi.magneto.service.ServiceFactory;
+import fr.cgi.magneto.security.*;
+import fr.cgi.magneto.service.*;
 import fr.wseduc.rs.*;
 import fr.wseduc.security.ActionType;
 import fr.wseduc.security.SecuredAction;
@@ -31,11 +28,13 @@ public class BoardController extends ControllerHelper {
 
     private final BoardService boardService;
     private final CardService cardService;
+    private final FolderService folderService;
 
 
     public BoardController(ServiceFactory serviceFactory) {
         this.boardService = serviceFactory.boardService();
         this.cardService = serviceFactory.cardService();
+        this.folderService = serviceFactory.folderService();
     }
 
     @Get("/boards")
@@ -123,7 +122,7 @@ public class BoardController extends ControllerHelper {
 
     @Put("/boards/predelete")
     @ApiDoc("Pre delete boards")
-    @ResourceFilter(ManageBoardRight.class)
+    @ResourceFilter(DeleteBoardRight.class)
     @SecuredAction(value = "", type = ActionType.RESOURCE)
     @SuppressWarnings("unchecked")
     public void preDeleteBoards(HttpServerRequest request) {
@@ -139,7 +138,7 @@ public class BoardController extends ControllerHelper {
 
     @Put("/boards/restore")
     @ApiDoc("Restore pre deleted boards")
-    @ResourceFilter(ManageBoardRight.class)
+    @ResourceFilter(DeleteBoardRight.class)
     @SecuredAction(value = "", type = ActionType.RESOURCE)
     @SuppressWarnings("unchecked")
     public void restorePreDeletedBoards(HttpServerRequest request) {
@@ -155,7 +154,7 @@ public class BoardController extends ControllerHelper {
 
     @Delete("/boards")
     @ApiDoc("Delete boards")
-    @ResourceFilter(ManageBoardRight.class)
+    @ResourceFilter(DeleteBoardRight.class)
     @SecuredAction(value = "", type = ActionType.RESOURCE)
     @SuppressWarnings("unchecked")
     public void deleteBoards(HttpServerRequest request) {
@@ -163,7 +162,7 @@ public class BoardController extends ControllerHelper {
                 UserUtils.getUserInfos(eb, request, user -> {
                     List<String> boardIds = boards.getJsonArray(Field.BOARDIDS).getList();
                     Future<JsonObject> removeCardsFuture = cardService.deleteCardsByBoards(boardIds);
-                    Future<JsonObject> removeBoardsFuture = boardService.deleteBoards(user.getUserId(), boardIds);
+                    Future<JsonObject> removeBoardsFuture = boardService.delete(user.getUserId(), boardIds);
                     CompositeFuture.all(removeCardsFuture, removeBoardsFuture)
                             .onFailure(err -> renderError(request))
                             .onSuccess(result -> renderJson(request, new JsonObject()
@@ -175,7 +174,7 @@ public class BoardController extends ControllerHelper {
 
     @Put("/boards/folder/:folderId")
     @ApiDoc("Move boards to a folder")
-    @ResourceFilter(ManageBoardRight.class)
+    @ResourceFilter(MoveBoardRight.class)
     @SecuredAction(value = "", type = ActionType.RESOURCE)
     @SuppressWarnings("unchecked")
     public void moveBoardsToFolder(HttpServerRequest request) {
@@ -183,7 +182,7 @@ public class BoardController extends ControllerHelper {
                 UserUtils.getUserInfos(eb, request, user -> {
                     String folderId = request.getParam(Field.FOLDERID);
                     List<String> boardIds = boards.getJsonArray(Field.BOARDIDS).getList();
-                    boardService.moveBoardsToFolder(user.getUserId(), boardIds, folderId)
+                    folderService.moveBoardsToFolder(user.getUserId(), boardIds, folderId)
                             .onFailure(err -> renderError(request))
                             .onSuccess(result -> renderJson(request, result));
                 }));

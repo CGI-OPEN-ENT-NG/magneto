@@ -139,16 +139,54 @@ public class DefaultFolderService implements FolderService {
     private Future<JsonObject> deleteBoardsInFolder(List<String> folderIds, String ownerId) {
         Promise<JsonObject> promise = Promise.promise();
 
-        JsonObject query = new JsonObject()
-                .put(Field.OWNERID, ownerId)
-                .put(Field.FOLDERID, new JsonObject().put(Mongo.IN, folderIds));
+        this.getBoardIdsInFolders(folderIds)
+                .onFailure(promise::fail)
+                .onSuccess(boardIds -> {
+                    JsonObject query = new JsonObject()
+                            .put(Field.OWNERID, ownerId)
+                            .put(Field._ID, new JsonObject().put(Mongo.IN, boardIds));
 
-        mongoDb.delete(Collections.BOARD_COLLECTION, query,
-                MongoDbResult.validResultHandler(PromiseHelper.handler(promise,
-                String.format("[Magneto@%s::deleteBoardsInFolder] Failed to delete boards",
-                        this.getClass().getSimpleName()))));
+                    mongoDb.delete(Collections.BOARD_COLLECTION, query,
+                            MongoDbResult.validResultHandler(PromiseHelper.handler(promise,
+                                    String.format("[Magneto@%s::deleteBoardsInFolder] Failed to delete boards",
+                                            this.getClass().getSimpleName()))));
+
+                });
         return promise.future();
     }
+
+    @SuppressWarnings("unchecked")
+    private Future<List<String>> getBoardIdsInFolders(List<String> folderIds) {
+        Promise<List<String>> promise = Promise.promise();
+        JsonObject query = new MongoQuery(this.collection)
+                .match(new JsonObject()
+                        .put(Field._ID, new JsonObject().put(Mongo.IN, folderIds)))
+                .project(new JsonObject().put(Field.BOARDIDS, 1))
+                .getAggregate();
+
+        mongoDb.command(query.toString(), MongoDbResult.validResultHandler(results -> {
+            if (results.isLeft()) {
+                String message = String.format("[Magneto@%s::getBoardIdsInFolders] Failed to get board ids in folders", this.getClass().getSimpleName());
+                log.error(String.format("%s : %s", message, results.left().getValue()));
+                promise.fail(message);
+                return;
+            }
+            JsonArray result = results.right().getValue()
+                    .getJsonObject(Mongo.CURSOR, new JsonObject())
+                    .getJsonArray(Mongo.FIRSTBATCH, new JsonArray());
+
+            List<String> boardIds = ((List<JsonObject>) result.getList()).stream().flatMap(r -> {
+                List<String> bIds = (r.getJsonArray(Field.BOARDIDS, new JsonArray())).getList();
+                return bIds.stream();
+            }).collect(Collectors.toList());
+
+            promise.complete(boardIds);
+        }));
+
+
+        return promise.future();
+    }
+
 
     @Override
     public Future<JsonObject> preDeleteFoldersAndBoards(UserInfos user, List<String> folderIds, boolean restore) {
@@ -259,6 +297,63 @@ public class DefaultFolderService implements FolderService {
 
             promise.complete(childrenFolderIds);
         }));
+
+        return promise.future();
+    }
+
+    @Override
+    public Future<JsonObject> moveBoardsToFolder(String userId, List<String> boardIds, String folderId) {
+        Promise<JsonObject> promise = Promise.promise();
+
+        this.updateOldFolder(boardIds)
+                .compose(success -> this.updateNewFolder(userId, boardIds, folderId))
+                .onFailure(promise::fail)
+                .onSuccess(promise::complete);
+        return promise.future();
+    }
+
+    private Future<JsonObject> updateNewFolder(String userId, List<String> boardIds, String folderId) {
+        Promise<JsonObject> promise = Promise.promise();
+        JsonObject query = new JsonObject()
+                .put(Field._ID, folderId)
+                .put(Field.OWNERID, userId);
+        JsonObject update = new JsonObject().put(Mongo.PUSH,
+                new JsonObject().put(Field.BOARDIDS, new JsonObject().put(Mongo.EACH, new JsonArray(boardIds))));
+        mongoDb.update(this.collection, query, update, false, false,
+                MongoDbResult.validActionResultHandler(results -> {
+                    if (results.isLeft()) {
+                        String message = String.format("[Magneto@%s::updateNewFolder] Failed to move boards to folder",
+                                this.getClass().getSimpleName());
+                        log.error(String.format("%s : %s", message, results.left().getValue()));
+                        promise.fail(message);
+                        return;
+                    }
+                    promise.complete(results.right().getValue());
+                }));
+        return promise.future();
+    }
+
+    @Override
+    public Future<JsonObject> updateOldFolder(List<String> boardIds) {
+        Promise<JsonObject> promise = Promise.promise();
+        JsonObject query = new JsonObject()
+                .put(Field.BOARDIDS, new JsonObject().put(Mongo.ELEMMATCH, new JsonObject().put(Mongo.IN,
+                        new JsonArray(java.util.Collections.singletonList(boardIds.get(0))))));
+
+        JsonObject update = new JsonObject().put(Mongo.PULL, new JsonObject().put(Field.BOARDIDS,
+                new JsonObject().put(Mongo.IN, new JsonArray(boardIds))));
+
+        mongoDb.update(this.collection, query, update, false, false,
+                MongoDbResult.validActionResultHandler(results -> {
+                    if (results.isLeft()) {
+                        String message = String.format("[Magneto@%s::updateOldFolder] Failed to update old folder",
+                                this.getClass().getSimpleName());
+                        log.error(String.format("%s : %s", message, results.left().getValue()));
+                        promise.fail(message);
+                        return;
+                    }
+                    promise.complete(results.right().getValue());
+                }));
 
         return promise.future();
     }

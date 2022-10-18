@@ -53,6 +53,14 @@ export const model = {
     },
 };
 
+export const Behaviours = {
+    applicationsBehaviours: {
+        magneto: {
+            resource: jest.fn((resource: any) => resource)
+        }
+    }
+}
+
 export const idiom = {
     translate: jest.fn((key: string) => key)
 };

@@ -1,10 +1,16 @@
-export const MAGNETO_APP = "magneto";
-
 export const magnetoBehaviours = {
-    rights: {
-
-    },
-    sniplets: {
-
+    resources: {
+        read: {
+            right: "fr-cgi-magneto-controller-ShareBoardController|initReadRight"
+        },
+        publish: {
+            right: "fr-cgi-magneto-controller-ShareBoardController|initPublishRight"
+        },
+        contrib: {
+            right: "fr-cgi-magneto-controller-ShareBoardController|initContribRight"
+        },
+        manager: {
+            right: "fr-cgi-magneto-controller-ShareBoardController|initManagerRight"
+        }
     }
 };

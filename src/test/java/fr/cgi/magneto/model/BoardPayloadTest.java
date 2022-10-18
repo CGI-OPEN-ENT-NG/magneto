@@ -20,7 +20,6 @@ public class BoardPayloadTest {
             .put("modificationDate", "modificationDate")
             .put("deleted", false)
             .put("public", false)
-            .put("folderId", "folderId")
             .put("cardIds", new JsonArray());
 
     JsonObject boardUpdateJsonObject_1 = new JsonObject()
@@ -52,8 +51,7 @@ public class BoardPayloadTest {
                 !board.getOwnerId().isEmpty() &&
                 !board.getOwnerName().isEmpty() &&
                 !board.getCreationDate().isEmpty() &&
-                !board.getModificationDate().isEmpty() &&
-                !board.getFolderId().isEmpty();
+                !board.getModificationDate().isEmpty();
         ctx.assertTrue(isNotEmpty);
     }
 }

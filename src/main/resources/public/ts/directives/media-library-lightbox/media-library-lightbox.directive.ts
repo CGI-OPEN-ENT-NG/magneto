@@ -2,18 +2,18 @@ import {ng} from "entcore";
 import {ILocationService, IScope, IWindowService, IParseService} from "angular";
 import {RootsConst} from "../../core/constants/roots.const";
 
-interface IViewModel extends ng.IController, IFolderManageProps {
+interface IViewModel extends ng.IController, IMediaLibraryProps {
     selectedFile: Document;
     closeForm(): void;
     updateDocument?(): void;
 }
 
-interface IFolderManageProps {
+interface IMediaLibraryProps {
     fileFormat: string;
     onSubmit?;
 }
 
-interface IFolderManageScope extends IScope, IFolderManageProps {
+interface IMediaLibraryScope extends IScope, IMediaLibraryProps {
     vm: IViewModel;
 }
 
@@ -23,7 +23,7 @@ class Controller implements IViewModel {
     fileFormat: string;
     selectedFile: Document;
 
-    constructor(private $scope: IFolderManageScope,
+    constructor(private $scope: IMediaLibraryScope,
                 private $location: ILocationService,
                 private $window: IWindowService) {
     }
@@ -53,7 +53,7 @@ function directive($parse: IParseService) {
         bindToController: true,
         controller: ['$scope', '$location', '$window', '$parse', Controller],
         /* interaction DOM/element */
-        link: function ($scope: IFolderManageScope,
+        link: function ($scope: IMediaLibraryScope,
                         element: ng.IAugmentedJQuery,
                         attrs: ng.IAttributes,
                         vm: IViewModel) {

@@ -25,3 +25,4 @@ export * from './card-manage-lightbox/card-manage-lightbox.directive';
 export * from './media-library-lightbox/media-library-lightbox.directive';
 export * from './board-date/board-date.directive';
 export * from './linker/linker.directive';
+export * from './share-panel-lightbox/share-panel-lightbox.directive';

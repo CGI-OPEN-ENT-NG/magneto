@@ -1,4 +1,5 @@
 import {FOLDER_TYPE} from "../core/enums/folder-type.enum";
+import {_, Behaviours, model, Shareable} from "entcore";
 
 export interface IBoardItemResponse {
     _id: string;
@@ -10,6 +11,9 @@ export interface IBoardItemResponse {
     modificationDate: string;
     creationDate: string;
     folderId: string;
+    shared: any[];
+    ownerId: string;
+    ownerName: string;
 }
 
 export interface IBoardsResponse {
@@ -147,8 +151,7 @@ export class BoardForm {
     }
 }
 
-export class Board {
-
+export class Board implements Shareable {
     private _id: string;
     private _title: string;
     private _imageUrl: string;
@@ -158,6 +161,11 @@ export class Board {
     private _modificationDate: string;
     private _creationDate: string;
     private _folderId: string;
+
+    // Share resource properties
+    public shared: any[];
+    public owner: {userId: string, displayName: string};
+    public myRights: any;
 
 
     build(data: IBoardItemResponse): Board {
@@ -170,6 +178,8 @@ export class Board {
         this._modificationDate = data.modificationDate;
         this._creationDate = data.creationDate;
         this._folderId = data.folderId;
+        this.owner = {userId: data.ownerId, displayName: data.ownerName};
+        this.shared = data.shared;
         return this;
     }
 
@@ -212,6 +222,10 @@ export class Board {
     set folderId(value: string) {
         this._folderId = value;
     }
+
+    isMyBoard() {
+        return this.owner.userId === model.me.userId;
+    }
 }
 
 export class Boards {
@@ -220,7 +234,8 @@ export class Boards {
     pageCount: number;
 
     constructor(data: IBoardsResponse) {
-        this.all = data.all.map((board: IBoardItemResponse) => new Board().build(board));
+        this.all = data.all.map((board: IBoardItemResponse) =>
+            Behaviours.applicationsBehaviours.magneto.resource(new Board().build(board)));
         this.page = data.page;
         this.pageCount = data.pageCount;
     }

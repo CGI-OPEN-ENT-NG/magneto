@@ -1,18 +1,21 @@
 import {Board, BoardForm, Boards} from "../board.model";
 
 describe('BoardModel', () => {
-    it('test Board initialization', done => {
-        const boardResponse = {
-            _id: 'id',
-            title: 'title',
-            imageUrl: 'imageUrl',
-            description: 'description',
-            cardIds: ["card123"],
-            nbCards: 0,
-            modificationDate: 'modificationDate',
-            creationDate: 'creationDate',
-            folderId: 'folderId'
-        }
+   it('test Board initialization', done => {
+       const boardResponse = {
+           _id: 'id',
+           title: 'title',
+           imageUrl: 'imageUrl',
+           description: 'description',
+           cardIds: ["card123"],
+           nbCards: 0,
+           modificationDate: 'modificationDate',
+           creationDate: 'creationDate',
+           folderId: 'folderId',
+           shared: [],
+           ownerId: 'ownerId',
+           ownerName: 'ownerName'
+       }
 
         const board = new Board().build(boardResponse);
 
@@ -28,24 +31,27 @@ describe('BoardModel', () => {
         done();
     });
 
-    it('test Boards initialization', done => {
-        const boardsResponse = {
-            all: [
-                {
-                    _id: 'id',
-                    title: 'title',
-                    imageUrl: 'imageUrl',
-                    description: 'description',
-                    cardIds: ["card123"],
-                    nbCards: 0,
-                    modificationDate: 'modificationDate',
-                    creationDate: 'creationDate',
-                    folderId: 'folderId'
-                }
-            ],
-            page: 1,
-            pageCount: 1
-        }
+   it('test Boards initialization', done => {
+       const boardsResponse = {
+           all: [
+               {
+                   _id: 'id',
+                   title: 'title',
+                   imageUrl: 'imageUrl',
+                   description: 'description',
+                   cardIds: ["card123"],
+                   nbCards: 0,
+                   modificationDate: 'modificationDate',
+                   creationDate: 'creationDate',
+                   folderId: 'folderId',
+                   shared: [],
+                   ownerId: 'ownerId',
+                   ownerName: 'ownerName'
+               }
+           ],
+           page: 1,
+           pageCount: 1
+       }
 
         const boards = new Boards(boardsResponse);
 

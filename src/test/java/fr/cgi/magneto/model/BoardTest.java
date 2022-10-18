@@ -22,7 +22,8 @@ public class BoardTest {
             .put("public", false)
             .put("folderId", "folderId")
             .put("ownerId", "ownerId")
-            .put("ownerName", "ownerName");
+            .put("ownerName", "ownerName")
+            .put("shared", new JsonArray());
 
     @Test
     public void testBoardHasBeenInstantiated(TestContext ctx) {

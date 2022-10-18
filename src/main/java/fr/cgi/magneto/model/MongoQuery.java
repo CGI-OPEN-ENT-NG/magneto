@@ -101,7 +101,7 @@ public class MongoQuery {
     public MongoQuery unwind(String path, boolean empty) {
         this.pipeline.add(new JsonObject()
                 .put(Mongo.UNWIND, new JsonObject()
-                        .put(Mongo.PATH, path)
+                        .put(Mongo.PATH, String.format("$%s", path))
                         .put(Mongo.NULLOREMPTY, empty)));
         return this;
     }

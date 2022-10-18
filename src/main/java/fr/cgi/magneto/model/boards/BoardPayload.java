@@ -168,7 +168,6 @@ public class BoardPayload implements Model<BoardPayload> {
             json.put(Field.CREATIONDATE, this.getCreationDate())
                     .put(Field.DELETED, false)
                     .put(Field.PUBLIC, false)
-                    .put(Field.FOLDERID, this.getFolderId())
                     .put(Field.OWNERID, this.getOwnerId())
                     .put(Field.OWNERNAME, this.getOwnerName())
                     .put(Field.CARDIDS, new JsonArray());

@@ -2,8 +2,8 @@
 
   &-header {
     background: $magneto-white;
-    left: $spacing-L;
     padding: $spacing-L;
+    padding-left: $spacing-XM;
     z-index: 2;
     @include noTextOverflow(1);
     h1 {

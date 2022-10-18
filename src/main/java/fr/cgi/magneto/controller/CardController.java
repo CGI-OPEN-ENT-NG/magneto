@@ -1,14 +1,12 @@
 package fr.cgi.magneto.controller;
 
 import fr.cgi.magneto.core.constants.Field;
-import fr.cgi.magneto.core.constants.Rights;
 import fr.cgi.magneto.helper.DateHelper;
 import fr.cgi.magneto.model.boards.Board;
 import fr.cgi.magneto.model.boards.BoardPayload;
 import fr.cgi.magneto.model.cards.Card;
 import fr.cgi.magneto.model.cards.CardPayload;
-import fr.cgi.magneto.security.ManageBoardRight;
-import fr.cgi.magneto.security.ViewRight;
+import fr.cgi.magneto.security.*;
 import fr.cgi.magneto.service.BoardService;
 import fr.cgi.magneto.service.CardService;
 import fr.cgi.magneto.service.ServiceFactory;
@@ -101,7 +99,8 @@ public class CardController extends ControllerHelper {
 
     @Post("/card")
     @ApiDoc("Create a card")
-    @SecuredAction(Rights.MANAGE_BOARD)
+    @ResourceFilter(WriteBoardRight.class)
+    @SecuredAction(value = "", type = ActionType.RESOURCE)
     public void create(HttpServerRequest request) {
         RequestUtils.bodyToJson(request, pathPrefix + "card", body ->
                 UserUtils.getUserInfos(eb, request, user -> {
@@ -137,7 +136,7 @@ public class CardController extends ControllerHelper {
 
     @Put("/card/:id")
     @ApiDoc("Update a card")
-    @ResourceFilter(ManageBoardRight.class)
+    @ResourceFilter(WriteBoardRight.class)
     @SecuredAction(value = "", type = ActionType.RESOURCE)
     public void update(HttpServerRequest request) {
         RequestUtils.bodyToJson(request, pathPrefix + "cardUpdate", card -> {
@@ -167,7 +166,7 @@ public class CardController extends ControllerHelper {
 
     @Delete("/cards/:boardId")
     @ApiDoc("Delete cards")
-    @ResourceFilter(ManageBoardRight.class)
+    @ResourceFilter(WriteBoardRight.class)
     @SecuredAction(value = "", type = ActionType.RESOURCE)
     @SuppressWarnings("unchecked")
     public void deleteCards(HttpServerRequest request) {

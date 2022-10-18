@@ -61,6 +61,7 @@
                     folders="vm.currentFolderChildren"
                     categories-eventer="vm.boardCategoriesService"
                     selected-board-ids="vm.selectedBoardIds"
+                    selected-boards-for-sharing="vm.selectedBoards"
                     selected-folder-ids="vm.selectedFolderIds"
                     on-open="vm.openBoardOrFolder">
             </board-list>
@@ -110,6 +111,13 @@
             form="vm.selectedUpdateFolderForm">
     </folder-manage-lightbox>
 
+    <!-- Board share modal -->
+    <share-panel-lightbox
+            display="vm.displayShareBoardLightbox"
+            resources="vm.selectedBoards"
+            app-prefix="'magneto'">
+    </share-panel-lightbox>
+
     <infinite-scroll scrolled="vm.onScroll()"
                      loading-mode="true"
                      scroll-eventer="vm.infiniteScrollService">
@@ -119,11 +127,16 @@
             display="vm.selectedBoardIds.length > 0 || vm.selectedFolderIds.length > 0"
             has-open="(vm.selectedFolderIds.length == 1 || vm.selectedBoardIds.length == 1) && vm.selectedFolderIds.length + vm.selectedBoardIds.length == 1"
             on-open="vm.openBoardOrFolder"
-            has-properties="vm.filter.isMyBoards && vm.selectedBoardIds.length == 1 && vm.selectedFolderIds.length == 0"
+            has-properties="vm.filter.isMyBoards && vm.selectedBoardIds.length == 1
+                            && vm.selectedFolderIds.length == 0 && vm.selectedBoards[0].myRights.manager"
             on-properties="vm.openPropertiesForm"
-            has-delete="!vm.filter.isPublic && (vm.selectedFolderIds.length > 0 || vm.selectedBoardIds.length > 0)"
+            has-delete="!vm.filter.isPublic
+                        && (vm.selectedFolderIds.length > 0 || vm.selectedBoardIds.length > 0)
+                        && vm.areSelectedBoardsMine()"
             on-delete="vm.openDeleteForm"
-            has-share="false"
+            has-share="vm.filter.isMyBoards && vm.selectedBoardIds.length == 1
+                        && vm.selectedFolderIds.length == 0 && vm.selectedBoards[0].isMyBoard()"
+            on-share="vm.openShareForm"
             has-restore="vm.filter.isTrash"
             on-restore="vm.restoreBoardsOrFolders"
             has-move="vm.filter.isMyBoards && vm.selectedFolderIds.length == 0 && vm.selectedBoardIds.length > 0"

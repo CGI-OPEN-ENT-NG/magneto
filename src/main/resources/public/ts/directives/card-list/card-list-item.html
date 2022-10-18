@@ -1,11 +1,11 @@
 <div class="flex-row">
     <div class="card card-list-item flex-row f-column"
-         ng-class="{'active': vm.isSelected}">
+         ng-class="{'active': vm.isSelected, 'draggable': vm.isDraggable}">
         <div class="card-list-item-header">
             <img class="card-list-item-avatar" ng-src="/userbook/avatar/[[vm.getLastUserId(vm.card)]]?thumbnail=48x48"/>
             <span ng-bind="vm.getLastUserName(vm.card)"></span>
             <span tooltip="[[vm.formatDate(vm.card.modificationDate)]]" class="card-list-item-date"> [[vm.formatDateModification(vm.card.modificationDate)]] </span>
-            <i class="magneto-card-settings" data-ng-click="vm.openCardOptions()"></i>
+            <i ng-if="vm.hasOptions" class="magneto-card-settings" data-ng-click="vm.openCardOptions()"></i>
         </div>
         <!--Card title-->
         <div class="card-list-item-infos-title">

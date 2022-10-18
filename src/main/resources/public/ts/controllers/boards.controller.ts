@@ -15,6 +15,7 @@ import {BoardsFilter} from "../models/boards-filter.model";
 interface IViewModel {
     openedFolder: Folder;
     selectedBoardIds: Array<string>;
+    selectedBoards: Array<Board>;
     selectedFolderIds: Array<string>;
     selectedUpdateBoardForm: BoardForm;
     selectedUpdateFolderForm: IFolderForm;
@@ -23,6 +24,7 @@ interface IViewModel {
 
     displayBoardLightbox: boolean;
     displayDeleteBoardLightbox: boolean;
+    displayShareBoardLightbox: boolean;
     displayUpdateBoardLightbox: boolean;
     displayUpdateFolderLightbox: boolean;
     displayFolderLightbox: boolean;
@@ -51,6 +53,7 @@ interface IViewModel {
     getCurrentFolderChildren(): void;
     openCreateForm(): void;
     openDeleteForm(): void;
+    openShareForm(): void;
     openPropertiesForm(): void;
     openBoardOrFolder(): Promise<void>;
     openRenameFolderForm(): void;
@@ -65,6 +68,8 @@ interface IViewModel {
     resetBoards(): void;
     restoreBoardsOrFolders(): Promise<void>;
     moveBoards(): Promise<void>;
+
+    areSelectedBoardsMine(): boolean;
 }
 
 interface IBoardsScope extends IScope {
@@ -75,6 +80,7 @@ class Controller implements ng.IController, IViewModel {
 
     openedFolder: Folder;
     selectedBoardIds: Array<string>;
+    selectedBoards: Array<Board>;
     selectedFolderIds: Array<string>;
     selectedUpdateBoardForm: BoardForm;
     selectedUpdateFolderForm: IFolderForm;
@@ -89,6 +95,7 @@ class Controller implements ng.IController, IViewModel {
     folderNavTrees: Array<FolderTreeNavItem>;
     folderMoveNavTrees: Array<FolderTreeNavItem>;
     displayDeleteBoardLightbox: boolean;
+    displayShareBoardLightbox: boolean;
     displayUpdateBoardLightbox: boolean;
     displayUpdateFolderLightbox: boolean;
     displayFolderLightbox: boolean;
@@ -115,12 +122,14 @@ class Controller implements ng.IController, IViewModel {
         this.displayDeleteBoardLightbox = false;
         this.displayFolderLightbox = false;
         this.displayMoveBoardLightbox = false;
+        this.displayShareBoardLightbox = false;
 
         this.filter = new BoardsFilter();
         this.boards = [];
         this.folders = [];
         this.currentFolderChildren = [];
         this.selectedBoardIds = [];
+        this.selectedBoards = [];
         this.selectedFolderIds = [];
         this.folderNavTrees = [];
         this.folderMoveNavTrees = [];
@@ -187,6 +196,13 @@ class Controller implements ng.IController, IViewModel {
     }
 
     /**
+     * Open share board form.
+     */
+    openShareForm = (): void => {
+        this.displayShareBoardLightbox = true;
+    }
+
+    /**
      * Open board properties form.
      */
     openPropertiesForm = (): void => {
@@ -244,7 +260,7 @@ class Controller implements ng.IController, IViewModel {
         const params: IBoardsParamsRequest = {
             folderId: this.openedFolder ? this.openedFolder.id : null,
             isPublic: this.filter.isPublic,
-            isShared: null,
+            isShared: true,
             isDeleted: this.filter.isTrash,
             searchText: this.filter.searchText,
             sortBy: 'modificationDate',
@@ -335,6 +351,10 @@ class Controller implements ng.IController, IViewModel {
      */
     moveBoards = async (): Promise<void> => {
         this.displayMoveBoardLightbox = true;
+    }
+
+    areSelectedBoardsMine = (): boolean => {
+        return this.selectedBoards.every((board: Board) => board.isMyBoard());
     }
 
     /**

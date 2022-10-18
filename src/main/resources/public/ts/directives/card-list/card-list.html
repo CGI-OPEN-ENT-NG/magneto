@@ -1,6 +1,8 @@
 <div id="card-list" class="card-list flex-row f-wrap">
     <card-list-item ng-repeat="card in vm.cards"
                     card="card"
+                    has-options="vm.hasOptions"
+                    is-draggable="vm.isDraggable"
                     on-edit="vm.openEdit"
                     on-delete="vm.openDelete">
     </card-list-item>

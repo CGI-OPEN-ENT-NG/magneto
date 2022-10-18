@@ -15,6 +15,8 @@ interface IViewModel extends ng.IController, ICardListProps {
 
 interface ICardListProps {
     cards: Array<Card>;
+    isDraggable: boolean;
+    hasOptions: boolean;
 }
 
 interface ICardListScope extends IScope, ICardListProps {
@@ -24,6 +26,8 @@ interface ICardListScope extends IScope, ICardListProps {
 class Controller implements IViewModel {
 
     cards: Array<Card>;
+    isDraggable: boolean;
+    hasOptions: boolean;
     cardIds: Array<string>;
 
     constructor(private $scope: ICardListScope,
@@ -46,6 +50,8 @@ function directive($parse: IParseService) {
         templateUrl: `${RootsConst.directive}card-list/card-list.html`,
         scope: {
             cards: '=',
+            hasOptions: '=',
+            isDraggable: '=',
             onEdit: '&',
             onDuplicate: '&',
             onHide: '&',
@@ -67,7 +73,7 @@ function directive($parse: IParseService) {
                     delay: 150,
                     delayOnTouchOnly: true,
                     onUpdate: async (evt) => {
-                        if (vm.cards && vm.cards.length > 0) {
+                        if (vm.isDraggable && vm.cards && vm.cards.length > 0) {
                             vm.cardIds = vm.cards.map((card: Card) => card.id);
                             let movedCardId: string = vm.cardIds[evt.oldIndex];
                             let newCardIndex: number = evt.newIndex;

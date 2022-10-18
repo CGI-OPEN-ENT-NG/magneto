@@ -27,6 +27,8 @@ interface IViewModel extends ng.IController, ICardListItemProps {
 
 interface ICardListItemProps {
     card: Card;
+    isDraggable: boolean;
+    hasOptions: boolean;
 }
 
 interface ICardListItemScope extends IScope, ICardListItemProps {
@@ -37,6 +39,8 @@ class Controller implements IViewModel {
 
     card: Card;
     isDisplayedOptions: boolean;
+    isDraggable: boolean;
+    hasOptions: boolean;
 
     RESOURCE_TYPES: typeof RESOURCE_TYPE;
 
@@ -84,6 +88,8 @@ function directive($parse: IParseService) {
         templateUrl: `${RootsConst.directive}card-list/card-list-item.html`,
         scope: {
             card: '=',
+            hasOptions: '=',
+            isDraggable: '=',
             onEdit: '&',
             onDuplicate: '&',
             onHide: '&',
