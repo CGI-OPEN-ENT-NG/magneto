@@ -18,15 +18,8 @@
         </card-list-item-preview>
         <!--Card infos-->
         <div class="card-list-item-infos flex-row">
-            <!-- Card info -->
-            <span ng-if="!!vm.card.caption" class="card-list-item-caption">[[vm.card.caption]]</span>
-            <div class="card-list-item-container">
-                <span ng-if="!!vm.card.description && !vm.card.isType(vm.RESOURCE_TYPES.TEXT)"
-                      class="card-list-item-description"
-                      ng-bind-html="vm.card.description">
-                </span>
-            </div>
-
+            <!-- Card caption -->
+            <span tooltip="[[vm.card.caption]]" ng-if="!!vm.card.caption" class="card-list-item-caption">[[vm.card.caption]]</span>
         </div>
     </div>
     <card-list-item-options

@@ -35,8 +35,13 @@
     background: $magneto-lighter-grey;
     position: absolute;
 
+    &-nav {
+      width: 60px;
+    }
+
     &-list {
       min-height: 650px;
+      width: 100%;
 
       .empty-state {
         display: flex;

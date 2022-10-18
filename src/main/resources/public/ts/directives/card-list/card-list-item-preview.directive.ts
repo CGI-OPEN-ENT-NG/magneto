@@ -12,7 +12,9 @@ interface IViewModel extends ng.IController, ICardListItemProps {
 
     videoIsFromWorkspace(): boolean;
 
-    formatVideoUrl(url: string) : string;
+    formatVideoUrl(url: string): string;
+
+    getDescriptionHTML(description: string): string;
 }
 
 interface ICardListItemProps {
@@ -44,7 +46,7 @@ class Controller implements IViewModel {
     }
 
     getExtension = (fileName: string): string => {
-        let result: string = "";
+        let result: string = this.RESOURCE_TYPES.DEFAULT;
         if (!!fileName) {
             let extension: string;
             extension = fileName.split('.').pop();
@@ -58,7 +60,11 @@ class Controller implements IViewModel {
             this.card.resourceUrl.toString().includes("workspace") : false;
     }
 
-    formatVideoUrl = (url: string) : string => {
+    getDescriptionHTML = (description: string): string => {
+        return this.$sce.trustAsHtml(description.toString());
+    }
+
+    formatVideoUrl = (url: string): string => {
         return this.$sce.trustAsResourceUrl(url);
     }
 
@@ -76,6 +82,8 @@ class Controller implements IViewModel {
             result = this.RESOURCE_TYPES.VIDEO;
         } else if (EXTENSION_FORMAT.SHEET.some(element => element.includes(extension))) {
             result = this.RESOURCE_TYPES.SHEET;
+        } else {
+            result = this.RESOURCE_TYPES.DEFAULT;
         }
         return result;
     }
@@ -83,6 +91,7 @@ class Controller implements IViewModel {
     getResourceType = (): string => {
         return idiom.translate('magneto.card.type.' + this.card.resourceType);
     }
+
 }
 
 function directive() {

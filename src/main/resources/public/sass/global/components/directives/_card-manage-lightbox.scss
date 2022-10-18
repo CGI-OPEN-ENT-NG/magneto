@@ -3,7 +3,6 @@
   .content {
 
     width: 904px;
-    overflow: auto;
 
     .card-manage-lightbox-head {
 
@@ -57,6 +56,12 @@
       &-description {
         i18n {
           font-weight: bold;
+        }
+
+
+        .drawing-zone {
+          overflow-y: scroll;
+          height: 250px;
         }
       }
     }

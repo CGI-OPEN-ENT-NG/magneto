@@ -6,5 +6,6 @@ export enum RESOURCE_TYPE {
     PDF = 'pdf',
     SHEET = 'sheet',
     FILE = 'file',
-    LINK = 'link'
+    LINK = 'link',
+    DEFAULT = 'default'
 }
