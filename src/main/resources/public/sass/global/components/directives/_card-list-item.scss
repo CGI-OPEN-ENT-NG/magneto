@@ -17,18 +17,42 @@
     }
   }
 
+  &.reduced-format {
+    height: 200px;
+  }
+
   &.draggable {
     cursor: move;
   }
 
   @include mobile {
     width: 170px;
-    height: 140px;
+    height: 200px;
   }
 
   &-header {
     height: 15%;
-    @include noTextOverflow(1);
+    gap: 5px;
+    align-items: center;
+    display: flex;
+    &.reduced-format {
+      height: 20% !important;
+    }
+    &-creation {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      width: 100%;
+      margin-right: 15px;
+      &-user {
+        width: inherit !important;
+        @include noTextOverflow(1);
+      }
+      &-date {
+        width: inherit !important;
+        @include noTextOverflow(1);
+      }
+    }
   }
 
   &-image {
@@ -113,6 +137,9 @@
       font-weight: bold;
       &-ellipsis {
         @include noTextOverflow(1);
+      }
+      &.reduced-format {
+        height: 20% !important;
       }
     }
   }

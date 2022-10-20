@@ -6,13 +6,14 @@
             [[vm.getResourceType()]]
         </span>
     </div>
+    <!-- TODO: USE CARD PREVIEW IMAGE DIRECTIVE -->
     <div class="card-list-item-image flex">
         <img ng-if="vm.card.isType(vm.RESOURCE_TYPES.IMAGE)" class="card-list-item-preview-[[vm.card.resourceType]]" ng-src="/workspace/document/[[vm.card.resourceId]]">
         <img ng-if="vm.card.isType(vm.RESOURCE_TYPES.FILE)" class="type-icon" data-ng-src="/magneto/public/img/extension/[[vm.getExtension(vm.card.metadata.filename)]].svg">
-        <a ng-href="[[vm.card.resourceUrl]]" ng-if="vm.card.isType(vm.RESOURCE_TYPES.LINK)" target="_blank" class="type-icon">
+        <a  class="type-icon" ng-href="[[vm.card.resourceUrl]]" ng-if="vm.card.isType(vm.RESOURCE_TYPES.LINK)" target="_blank">
             <img data-ng-src="/magneto/public/img/extension/link.svg">
         </a>
-        <div ng-if="vm.card.isType(vm.RESOURCE_TYPES.TEXT)" class="card-list-item-preview-[[vm.card.resourceType]]" ng-bind-html="vm.card.description"></div>
+        <div ng-if="vm.card.isType(vm.RESOURCE_TYPES.TEXT)" class="card-list-item-preview-[[vm.card.resourceType]]" data-ng-bind-html="vm.getDescriptionHTML(vm.card.description)"></div>
         <audio ng-if="vm.card.isType(vm.RESOURCE_TYPES.AUDIO)" controls preload="none"
                src="/workspace/document/[[vm.card.resourceId]]">
         </audio>

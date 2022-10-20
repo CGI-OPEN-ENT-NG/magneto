@@ -61,11 +61,11 @@ class Controller implements IViewModel {
     }
 
     getDescriptionHTML = (description: string): string => {
-        return this.$sce.trustAsHtml(description.toString());
+        return !!description ? this.$sce.trustAsHtml(description.toString()) : null;
     }
 
     formatVideoUrl = (url: string): string => {
-        return this.$sce.trustAsResourceUrl(url);
+        return !!url ? this.$sce.trustAsResourceUrl(url) : null;
     }
 
     private getExtensionType = (extension: string): string => {

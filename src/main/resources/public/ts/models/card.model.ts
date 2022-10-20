@@ -15,6 +15,7 @@ export interface ICardItemResponse {
     lastModifierId: string;
     lastModifierName: string;
     boardId: string;
+    boardTitle?: string;
     parentId: string;
     metadata: IMetadata;
 }
@@ -26,9 +27,24 @@ export interface ICardsResponse {
 }
 
 export interface ICardsParamsRequest {
-    page: number,
+    page?: number,
+    boardId?: string;
+    searchText?: string;
+    sortBy?: string;
+    isPublic?: boolean;
+    isShared?: boolean;
+}
+
+export interface ICardsBoardParamsRequest {
+    cardIds: Array<string>,
     boardId: string;
 }
+
+export interface ICardsObjectBoardParamsRequest {
+    boardId: string;
+    cards: Array<Card>;
+}
+
 
 export interface ICardPayload {
     id?: string;
@@ -212,6 +228,7 @@ export class Card {
     private _lastModifierId: string;
     private _lastModifierName: string;
     private _boardId: string;
+    private _boardTitle: string;
     private _parentId: string;
     private _metadata: IMetadata;
 
@@ -230,6 +247,7 @@ export class Card {
         this._lastModifierId = data.lastModifierId;
         this._lastModifierName = data.lastModifierName;
         this._boardId = data.boardId;
+        this._boardTitle = data.boardTitle;
         this._parentId = data.parentId;
         this._metadata = data.metadata;
         return this;
@@ -299,6 +317,14 @@ export class Card {
         this._boardId = value;
     }
 
+    get boardTitle(): string {
+        return this._boardTitle;
+    }
+
+    set boardTitle(value: string) {
+        this._boardTitle = value;
+    }
+
     get lastModifierName(): string {
         return this._lastModifierName;
     }
@@ -346,5 +372,18 @@ export class Cards {
         this.all = data.all.map((card: ICardItemResponse) => new Card().build(card));
         this.page = data.page;
         this.pageCount = data.pageCount;
+    }
+}
+
+export class CardCollection {
+    cards: Array<Card>;
+    boardId: string;
+    boardTitle?: string;
+    isLinkedCardsDisplay: boolean
+
+    constructor(boardId: string, cards: Array<Card>) {
+        this.cards = cards;
+        this.boardId = boardId;
+        this.isLinkedCardsDisplay = false;
     }
 }

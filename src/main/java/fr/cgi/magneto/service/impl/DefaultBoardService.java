@@ -2,7 +2,6 @@ package fr.cgi.magneto.service.impl;
 
 import fr.cgi.magneto.*;
 import fr.cgi.magneto.core.constants.*;
-import fr.cgi.magneto.core.constants.Collections;
 import fr.cgi.magneto.helper.*;
 import fr.cgi.magneto.model.*;
 import fr.cgi.magneto.model.boards.Board;
@@ -73,7 +72,7 @@ public class DefaultBoardService implements BoardService {
         JsonObject update = new JsonObject()
                 .put(Mongo.PUSH, new JsonObject()
                         .put(Field.BOARDIDS, boardId));
-        mongoDb.update(Collections.FOLDER_COLLECTION, query, update, MongoDbResult.validActionResultHandler(results -> {
+        mongoDb.update(CollectionsConstant.FOLDER_COLLECTION, query, update, MongoDbResult.validActionResultHandler(results -> {
             if (results.isLeft()) {
                 String message = String.format("[Magneto@%s::updateFolderOnBoardCreate] " +
                         "Failed to update folder", this.getClass().getSimpleName());
@@ -199,7 +198,7 @@ public class DefaultBoardService implements BoardService {
                             fetchAllBoardsCountFuture.result().getJsonObject(0).getInteger(Field.COUNT);
                     promise.complete(new JsonObject()
                             .put(Field.ALL, boards)
-                            .put(Field.COUNT, boardsCount)
+                            .put(Field.PAGE, boardsCount)
                             .put(Field.PAGECOUNT, boardsCount <= Magneto.PAGE_SIZE ?
                                     0 : (long) Math.ceil(boardsCount / (double) Magneto.PAGE_SIZE)));
                 });
@@ -260,7 +259,7 @@ public class DefaultBoardService implements BoardService {
 
         query.matchRegex(searchText, Arrays.asList(Field.TITLE, Field.DESCRIPTION, Field.TAGS))
                 .sort(sortBy, -1)
-                .lookUp(Collections.FOLDER_COLLECTION, Field._ID, Field.BOARDIDS, Field.FOLDERS);
+                .lookUp(CollectionsConstant.FOLDER_COLLECTION, Field._ID, Field.BOARDIDS, Field.FOLDERS);
 
 
         if (!getCount)

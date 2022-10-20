@@ -169,4 +169,9 @@ i {
     font-family: 'magneto-mdi';
     content: '\F1E7';
   }
+
+  &.magneto-card-preview::before {
+    font-family: 'magneto-mdi';
+    content: '\FE9F';
+  }
 }

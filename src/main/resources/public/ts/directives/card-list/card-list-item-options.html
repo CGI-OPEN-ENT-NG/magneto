@@ -26,6 +26,12 @@
                         <i18n>magneto.card.options.delete</i18n>
                     </span>
                 </a>
+                <a class="item" ng-if="vm.hasPreview" ng-click="vm.openPreview()">
+                    <i class="magneto-card-preview" aria-hidden="true"></i>
+                    <span>
+                        <i18n>magneto.card.options.preview</i18n>
+                    </span>
+                </a>
             </div>
         </div>
     </nav>

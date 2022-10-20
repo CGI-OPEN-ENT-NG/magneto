@@ -8,6 +8,7 @@ interface IViewModel extends ng.IController, ICardListItemOptionsProps {
     openDuplicate?(): void;
     openHide?(): void;
     openDelete?(): void;
+    openPreview?(): void;
 }
 
 interface ICardListItemOptionsProps {
@@ -21,6 +22,8 @@ interface ICardListItemOptionsProps {
     onHide?;
     hasDelete: boolean;
     onDelete?;
+    hasPreview: boolean;
+    onPreview?;
 }
 
 interface ICardListItemOptionsScope extends IScope, ICardListItemOptionsProps {
@@ -35,6 +38,7 @@ class Controller implements IViewModel {
     hasDuplicate: boolean;
     hasHide: boolean;
     hasDelete: boolean;
+    hasPreview: boolean;
 
     constructor(private $scope: ICardListItemOptionsScope,
                 private $location: ILocationService,
@@ -65,6 +69,8 @@ function directive($parse: IParseService) {
             onHide: '&',
             hasDelete: '=',
             onDelete: '&',
+            hasPreview: '=',
+            onPreview: '&'
         },
         controllerAs: 'vm',
         bindToController: true,
@@ -75,19 +81,38 @@ function directive($parse: IParseService) {
                         attrs: ng.IAttributes,
                         vm: IViewModel) {
             vm.openEdit = (): void => {
-                $parse($scope.vm.onEdit())(vm.card);
+                element.click(function (event) {
+                    event.stopPropagation();
+                });
+               $parse($scope.vm.onEdit())(vm.card);
             }
 
             vm.openDuplicate = (): void => {
+                element.click(function (event) {
+                    event.stopPropagation();
+                });
                 $parse($scope.vm.onDuplicate())(vm.card);
             }
 
             vm.openHide = (): void => {
+                element.click(function (event) {
+                    event.stopPropagation();
+                });
                 $parse($scope.vm.onHide())(vm.card);
             }
 
             vm.openDelete = (): void => {
+                element.click(function (event) {
+                    event.stopPropagation();
+                });
                 $parse($scope.vm.onDelete())(vm.card);
+            }
+
+            vm.openPreview = (): void => {
+                element.click(function (event) {
+                    event.stopPropagation();
+                });
+                $parse($scope.vm.onPreview())(vm.card);
             }
         }
     }

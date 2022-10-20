@@ -41,6 +41,19 @@ public class CardServiceTest {
                 "   \"pipeline\":[\n" +
                 "      {\n" +
                 "         \"$match\":{\n" +
+                "            \"boardId\": {\"$ne\":\"boardId\"}\n" +
+                "           }\n" +
+                "      },\n" +
+                "      {\n" +
+                "         \"$lookup\":{\n" +
+                "            \"from\":\"magneto.boards\",\n" +
+                "            \"localField\":\"boardId\",\n" +
+                "            \"foreignField\":\"_id\",\n" +
+                "            \"as\":\"result\"\n" +
+                "         }\n" +
+                "      },\n" +
+                "      {\n" +
+                "         \"$match\":{\n" +
                 "            \"$or\":[\n" +
                 "               {\n" +
                 "                  \"title\":{\n" +
@@ -59,16 +72,14 @@ public class CardServiceTest {
                 "                     \"$regex\":\"test\",\n" +
                 "                     \"$options\":\"i\"\n" +
                 "                  }\n" +
+                "               },\n" +
+                "               {\n" +
+                "                  \"result.tags\":{\n" +
+                "                     \"$regex\":\"test\",\n" +
+                "                     \"$options\":\"i\"\n" +
+                "                  }\n" +
                 "               }\n" +
                 "            ]\n" +
-                "         }\n" +
-                "      },\n" +
-                "      {\n" +
-                "         \"$lookup\":{\n" +
-                "            \"from\":\"magneto.boards\",\n" +
-                "            \"localField\":\"boardId\",\n" +
-                "            \"foreignField\":\"_id\",\n" +
-                "            \"as\":\"result\"\n" +
                 "         }\n" +
                 "      },\n" +
                 "      {\n" +
@@ -87,11 +98,6 @@ public class CardServiceTest {
                 "         }\n" +
                 "      },\n" +
                 "      {\n" +
-                "         \"$sort\":{\n" +
-                "            \"title\":-1\n" +
-                "         }\n" +
-                "      },\n" +
-                "      {\n" +
                 "         \"$count\":\"count\"\n" +
                 "      }\n" +
                 "   ]\n" +
@@ -101,7 +107,7 @@ public class CardServiceTest {
         testUser.setUserId("ownerId");
 
         JsonObject query = Whitebox.invokeMethod(this.cardService, "getAllCardsQuery", testUser,
-                0, false, false, "test", "title", true);
+                "boardId", 0, false, false, "test", null, true);
 
         ctx.assertEquals(expected, query);
 

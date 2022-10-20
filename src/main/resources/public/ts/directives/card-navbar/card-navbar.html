@@ -1,0 +1,11 @@
+<div class="card-navbar flex-row align-center">
+    <navbar-item label="vm.lang.translate('magneto.cards.collection.mine')"
+                 ng-click="vm.changeNav(vm.NAVBAR_VIEWS.MY_CARDS)"
+                 is-selected="vm.isSelected(vm.NAVBAR_VIEWS.MY_CARDS)"></navbar-item>
+    <navbar-item label="vm.lang.translate('magneto.cards.collection.shared')"
+                 ng-click="vm.changeNav(vm.NAVBAR_VIEWS.SHARED_CARDS)"
+                 is-selected="vm.isSelected(vm.NAVBAR_VIEWS.SHARED_CARDS)"></navbar-item>
+    <navbar-item label="vm.lang.translate('magneto.cards.collection.public')"
+                 ng-click="vm.changeNav(vm.NAVBAR_VIEWS.PUBLIC_CARDS)"
+                 is-selected="vm.isSelected(vm.NAVBAR_VIEWS.PUBLIC_CARDS)"></navbar-item>
+</div>

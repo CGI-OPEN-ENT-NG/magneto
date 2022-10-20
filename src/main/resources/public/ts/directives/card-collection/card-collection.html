@@ -1,0 +1,77 @@
+<lightbox class="card-collection-lightbox"
+          show="vm.display"
+          id="collection"
+          on-close="vm.closeForm()">
+    <section class="head card-collection-lightbox-head">
+        <h3>
+            <i18n>magneto.cards.collection</i18n>
+        </h3>
+    </section>
+    <section class="body card-collection-lightbox-body">
+        <div class="row card-collection-lightbox-body-search">
+            <search-bar
+                    search-text="vm.filter.searchText"
+                    on-search="vm.onSearchCard">
+            </search-bar>
+        </div>
+        <card-navbar
+                navbar-view-selected="vm.navbarViewSelected"
+                on-nav-click="vm.changeNav">
+        </card-navbar>
+        <div>
+            <switch ng-change="vm.changeView()" ng-model="vm.displayBoard">
+                <label class="switch"></label>
+            </switch>
+            <span><i18n>magneto.cards.collection.board.view</i18n></span>
+        </div>
+        <div class="card-list-scrollable">
+            <div ng-show="vm.displayBoard" ng-repeat="collection in vm.displayedCard">
+                <div class="card-collection-lightbox-board">
+                    <span class="card-collection-lightbox-board-title">[[collection.cards[0].boardTitle]]</span>
+                    <span class="card-collection-lightbox-board-cards"
+                          ng-click="vm.getCardsByBoardId(collection.boardId)"
+                          ng-show="!!vm.filter.searchText && !collection.isLinkedCardsDisplay"><i18n>magneto.cards.collection.board.cards.show</i18n></span>
+                    <span class="card-collection-lightbox-board-cards"
+                          ng-click="vm.hideCardsByBoardId(collection.boardId)"
+                          ng-show="!!vm.filter.searchText && collection.isLinkedCardsDisplay"><i18n>magneto.cards.collection.board.cards.hide</i18n></span>
+                </div>
+                <card-list
+                        cards="collection.cards"
+                        selected-card-ids="vm.selectedCardIds"
+                        has-caption="false"
+                        has-duplicate="vm.board.myRights.contrib !== undefined"
+                        on-duplicate="vm.submitDuplicate"
+                        has-preview="true"
+                        on-preview="vm.openPreview">
+                </card-list>
+            </div>
+            <card-list ng-hide="vm.displayBoard"
+                       cards="vm.cards"
+                       selected-card-ids="vm.selectedCardIds"
+                       has-caption="false"
+                       has-duplicate="true"
+                       on-duplicate="vm.submitDuplicate"
+                       has-preview="true"
+                       on-preview="vm.openPreview">
+            </card-list>
+        </div>
+    </section>
+
+    <card-preview-lightbox
+            card="vm.selectedCard"
+            display="vm.displayPreview">
+    </card-preview-lightbox>
+
+    <infinite-scroll
+            scrolled="vm.onScroll()"
+            loading-mode="true"
+            query-selector="'.card-list-scrollable'"
+            scroll-eventer="vm.infiniteScrollService">
+    </infinite-scroll>
+
+    <button class="right-magnet create-button"
+            data-ng-disabled="vm.selectedCardIds.length == 0"
+            ng-click="vm.submitDuplicate()">
+        <i18n>magneto.duplicate</i18n>
+    </button>
+</lightbox>

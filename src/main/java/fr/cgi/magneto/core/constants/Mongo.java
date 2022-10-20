@@ -9,6 +9,11 @@ public class Mongo {
     public static final String MATCH = "$match";
     public static final String OPTIONS = "$options";
     public static final String OR = "$or";
+
+    public static final String NOT = "$not";
+    public static final String NE = "$ne";
+
+
     public static final String PROJECT = "$project";
     public static final String REGEX = "$regex";
     public static final String SET = "$set";
@@ -19,6 +24,7 @@ public class Mongo {
     public static final String SIZE = "$size";
     public static final String SKIP = "$skip";
     public static final String SORT = "$sort";
+    public static final String GROUP = "$group";
     public static final String LOOKUP = "$lookup";
     public static final String GRAPHLOOKUP = "$graphLookup";
     public static final String UNWIND = "$unwind";
@@ -39,4 +45,5 @@ public class Mongo {
     public static final String FIRSTBATCH = "firstBatch";
     public static final String ADD_FIELDS = "$addFields";
     public static final String INDEX_OF_ARRAY = "$indexOfArray";
+    public static final String ARRAYELEMAT = "$arrayElemAt";
 }

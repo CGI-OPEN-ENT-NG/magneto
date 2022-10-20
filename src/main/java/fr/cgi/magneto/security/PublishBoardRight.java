@@ -1,7 +1,6 @@
 package fr.cgi.magneto.security;
 
 import fr.cgi.magneto.core.constants.*;
-import fr.cgi.magneto.core.constants.Collections;
 import fr.cgi.magneto.helper.*;
 import fr.wseduc.webutils.http.*;
 import io.vertx.core.*;
@@ -21,7 +20,7 @@ public class PublishBoardRight implements ResourcesProvider {
                 .put(Field.DELETED, false)
                 .put(Field.OWNERID, user.getUserId());
 
-        MongoAppFilter.executeCountQuery(request, Collections.BOARD_COLLECTION, query, 1, res -> {
+        MongoAppFilter.executeCountQuery(request, CollectionsConstant.BOARD_COLLECTION, query, 1, res -> {
             handler.handle(Boolean.TRUE.equals(res) && WorkflowHelper.hasRight(user, Rights.PUBLISH_BOARD));
         });
     }

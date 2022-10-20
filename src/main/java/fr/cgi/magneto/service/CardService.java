@@ -1,6 +1,8 @@
 package fr.cgi.magneto.service;
 
 import fr.cgi.magneto.model.boards.Board;
+import fr.cgi.magneto.model.boards.BoardPayload;
+import fr.cgi.magneto.model.cards.Card;
 import fr.cgi.magneto.model.cards.CardPayload;
 import io.vertx.core.Future;
 import io.vertx.core.json.JsonObject;
@@ -15,9 +17,10 @@ public interface CardService {
      * Create a Card
      *
      * @param card Card to create {@link CardPayload}
+     * @param id Generated identifier for new card
      * @return Future {@link Future <JsonObject>} containing newly created card
      */
-    Future<JsonObject> create(CardPayload card);
+    Future<JsonObject> create(CardPayload card, String id);
 
     /**
      * Update a card
@@ -40,7 +43,6 @@ public interface CardService {
     /**
      * Get last card
      *
-     * @param user User Object containing user id and displayed name
      * @param card Card information
      * @return Future {@link Future <JsonObject>} containing last card created by the user
      */
@@ -50,6 +52,7 @@ public interface CardService {
      * Get all cards
      *
      * @param user       User Object containing user id and displayed name
+     * @param boardId
      * @param page       Page number
      * @param isPublic   fetch public boards if true
      * @param isShared   fetch shared boards if true
@@ -58,15 +61,16 @@ public interface CardService {
      * @return Future {@link Future <JsonObject>} containing all cards created by the user
      */
 
-    Future<JsonObject> getAllCards(UserInfos user, Integer page, boolean isPublic, boolean isShared, String searchText, String sortBy);
+    Future<JsonObject> getAllCards(UserInfos user, String boardId, Integer page, boolean isPublic, boolean isShared, String searchText, String sortBy);
 
     /**
-     * Get all cards
+     * Get cards by ids
      *
-     * @param cardId Identifier of the searching card
-     * @return Future {@link Future <JsonObject>} containing the card corresponding to the id
+     * @param cardIds Identifier list of the searching card
+     * @return Future {@link Future <JsonArray>} containing the card list corresponding to the ids
      */
-    Future<JsonObject> getCard(String cardId);
+    Future<List<Card>> getCards(List<String> cardIds);
+
 
     /**
      * Get all cards
@@ -87,4 +91,21 @@ public interface CardService {
      */
     Future<JsonObject> getAllCardsByBoard(UserInfos user, Board board, Integer page, boolean isSection);
 
+    /**
+     * Duplicate cards
+     *
+     * @param boardId Board identifiers
+     * @param cards   List of card
+     * @param user    {@link UserInfos} User info
+     * @return Future {@link Future <JsonObject>} containing status of duplicate
+     */
+    Future<JsonObject> duplicateCards(String boardId, List<Card> cards, UserInfos user);
+
+    /**
+     * Update board
+     *
+     * @param boardPayload Boards to update
+     * @return Future {@link Future <JsonObject>} containing status of update
+     */
+    Future<JsonObject> updateBoard(BoardPayload boardPayload);
 }

@@ -1,10 +1,10 @@
 import axios from 'axios';
 import MockAdapter from 'axios-mock-adapter';
 import {cardsService} from "../cards.service";
-import {CardForm, ICardsParamsRequest} from "../../models";
+import {CardForm, ICardsBoardParamsRequest, ICardsParamsRequest} from "../../models";
 
 describe('CardsService', () => {
-    it('returns data when getAllCards is correctly called', done => {
+    it('returns data when getAllCardsCollection is correctly called', done => {
         const mock = new MockAdapter(axios);
 
         const params: ICardsParamsRequest = {
@@ -18,11 +18,35 @@ describe('CardsService', () => {
             all: []
         }
 
-        mock.onGet(`/magneto/cards/${params.boardId}?page=${params.page}`)
+        let urlParams: string = `?boardId=${params.boardId}&searchText=${params.searchText}&sortBy=${params.sortBy}&isPublic=${params.isPublic}&isShared=${params.isShared}&page=${params.page}`;
+        mock.onGet(`/magneto/cards/collection${urlParams}`)
             .reply(200, data);
 
 
-        cardsService.getAllCards(params).then(res => {
+        cardsService.getAllCardsCollection(params).then(res => {
+            expect(res).toEqual(data);
+            done();
+        });
+    });
+
+    it('returns data when getAllCardsByBoard is correctly called', done => {
+        const mock = new MockAdapter(axios);
+
+        const params: ICardsParamsRequest = {
+            boardId: 'boardId'
+        }
+
+        const data = {
+                page: 0,
+                pageCount:  0,
+                all: []
+        }
+
+        mock.onGet(`/magneto/cards/boardId`)
+            .reply(200, data);
+
+
+        cardsService.getAllCardsByBoard(params).then(res => {
             expect(res).toEqual(data);
             done();
         });
@@ -68,9 +92,34 @@ describe('CardsService', () => {
             response: true
         }
 
-        mock.onDelete(`/magneto/cards/boardId`, {data: {cardIds: ['cardId']}})
+        const params: ICardsBoardParamsRequest = {
+            boardId: 'boardId',
+            cardIds: ["cardId"]
+        }
+
+        mock.onDelete(`/magneto/cards/${params.boardId}`, {data: {cardIds: params.cardIds}})
             .reply(200, data);
-        cardsService.deleteCard('boardId', ["cardId"]).then(res => {
+        cardsService.deleteCard(params).then(res => {
+            expect(res.data).toEqual(data);
+            done();
+        });
+    });
+
+    it('returns data when duplicateCard is correctly called', done => {
+        const mock = new MockAdapter(axios);
+        const data = {
+            number: 0
+        }
+
+        const params: ICardsBoardParamsRequest = {
+            boardId: 'boardId',
+            cardIds: ["cardId"]
+        }
+
+        let spy = jest.spyOn(axios, "post");
+        mock.onPost(`/magneto/card/duplicate`)
+            .reply(200, data);
+        cardsService.duplicateCard(params).then(res => {
             expect(res.data).toEqual(data);
             done();
         });

@@ -29,7 +29,7 @@ public class Magneto extends BaseServer {
 		ServiceFactory serviceFactory = new ServiceFactory(vertx, storage, magnetoConfig, Neo4j.getInstance(), Sql.getInstance(), MongoDb.getInstance());
 
 		final MongoDbConf conf = MongoDbConf.getInstance();
-		conf.setCollection(Collections.BOARD_COLLECTION);
+		conf.setCollection(CollectionsConstant.BOARD_COLLECTION);
 		conf.setResourceIdLabel(Field._ID);
 
 		setDefaultResourceFilter(new ShareAndOwner());
@@ -45,8 +45,8 @@ public class Magneto extends BaseServer {
 		ShareBoardController shareBoardController = new ShareBoardController();
 		addController(shareBoardController);
 		shareBoardController.setShareService(new MongoDbShareService(eb, MongoDb.getInstance(),
-				Collections.BOARD_COLLECTION, securedActions, null));
-		shareBoardController.setCrudService(new MongoDbCrudService(Collections.BOARD_COLLECTION));
+				CollectionsConstant.BOARD_COLLECTION, securedActions, null));
+		shareBoardController.setCrudService(new MongoDbCrudService(CollectionsConstant.BOARD_COLLECTION));
 
 		// TODO Websocket
 		// new RealTimeCollaboration(vertx, magnetoConfig).initRealTime();

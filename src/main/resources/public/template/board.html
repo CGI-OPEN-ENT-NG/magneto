@@ -13,7 +13,7 @@
                 <board-date date="vm.board.modificationDate"></board-date>
             </div>
         </div>
-        <div class="board-container-header-description">
+        <div ng-if="!!vm.board.description" class="board-container-header-description">
             [[vm.board.description]]
         </div>
     </div>
@@ -34,10 +34,15 @@
             </div>
             <card-list
                     is-draggable="vm.board.myRights.contrib !== undefined"
-                    has-options="vm.board.myRights.contrib !== undefined"
+                    has-caption="true"
                     cards="vm.cards"
+                    board-display="false"
+                    has-edit="vm.board.myRights.contrib !== undefined"
                     on-edit="vm.openEditResourceLightbox"
-                    on-delete="vm.openDeleteResourceLightbox">
+                    has-delete="vm.board.myRights.manager !== undefined"
+                    on-delete="vm.openDeleteResourceLightbox"
+                    has-preview="vm.board.myRights.read !== undefined"
+                    on-preview="vm.openPreviewResourceLightbox">
             </card-list>
         </div>
 
@@ -83,6 +88,17 @@
         <linker display="vm.displayLinkerLightbox"
                 on-submit="vm.onLinkSubmit">
         </linker>
+
+        <card-collection ng-if="vm.displayCollectionLightbox"
+                display="vm.displayCollectionLightbox"
+                board="vm.board"
+                on-submit="vm.onFormSubmit">
+        </card-collection>
+
+        <card-preview-lightbox
+                card="vm.selectedCard"
+                display="vm.displayPreviewCardLightbox">
+        </card-preview-lightbox>
 
         <infinite-scroll scrolled="vm.onScroll()"
                          loading-mode="true"

@@ -24,6 +24,7 @@ public class Card implements Model<Card> {
     private String caption;
     private String parentId;
     private String boardId;
+    private String boardTitle;
     private Metadata metadata;
 
 
@@ -39,6 +40,7 @@ public class Card implements Model<Card> {
         this.description = card.getString(Field.DESCRIPTION);
         this.parentId = card.getString(Field.PARENTID);
         this.boardId = card.getString(Field.BOARDID);
+        this.boardTitle = card.getString(Field.BOARDTITLE, null);
         this.creationDate = card.getString(Field.CREATIONDATE);
         this.modificationDate = card.getString(Field.MODIFICATIONDATE);
         this.metadata = null;
@@ -191,6 +193,15 @@ public class Card implements Model<Card> {
 
     public Card setResourceUrl(String resourceUrl) {
         this.resourceUrl = resourceUrl;
+        return this;
+    }
+
+    public String getBoardTitle() {
+        return boardTitle;
+    }
+
+    public Card setBoardTitle(String boardTitle) {
+        this.boardTitle = boardTitle;
         return this;
     }
 

@@ -44,6 +44,13 @@
                         <i18n>magneto.card.type.link</i18n>
                     </span>
                 </a>
+                <a role="menuitem" class="item"
+                   data-ng-click="vm.openCreateCard(vm.resourceTypes.CARD)">
+                    <i class="magneto-card" aria-hidden="true"></i>
+                    <span class="label-navbar">
+                        <i18n>magneto.card.type.card</i18n>
+                    </span>
+                </a>
                 <!-- Board properties button -->
                 <div ng-if="vm.hasProperties">
                     <hr class="items-divider">

@@ -32,7 +32,7 @@ public class ManageBoardRight implements ResourcesProvider {
                                         .put(String.format("%s.%s", Field.SHARED, "fr-cgi-magneto-controller-ShareBoardController|initManagerRight"), true))
                 );
 
-       MongoAppFilter.executeCountQuery(request, Collections.BOARD_COLLECTION, query, 1, res -> {
+       MongoAppFilter.executeCountQuery(request, CollectionsConstant.BOARD_COLLECTION, query, 1, res -> {
            handler.handle(Boolean.TRUE.equals(res) && WorkflowHelper.hasRight(user, Rights.MANAGE_BOARD));
        });
     }

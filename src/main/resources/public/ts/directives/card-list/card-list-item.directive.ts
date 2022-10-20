@@ -11,7 +11,9 @@ interface IViewModel extends ng.IController, ICardListItemProps {
 
     formatDateModification(date: string): string;
 
-    openCardOptions(): Promise<void>;
+    openCardOptions($event: MouseEvent): Promise<void>;
+
+    hasOptions(): boolean;
 
     openEdit?(card: Card): void;
 
@@ -21,14 +23,30 @@ interface IViewModel extends ng.IController, ICardListItemProps {
 
     openDelete?(card: Card): void;
 
+    openPreview?(card: Card): void;
+
     isDisplayedOptions: boolean;
+    isSelected: boolean;
+
 
 }
 
 interface ICardListItemProps {
     card: Card;
+
     isDraggable: boolean;
-    hasOptions: boolean;
+    hasCaption: boolean;
+
+    hasEdit: boolean;
+    onEdit?;
+    hasDuplicate: boolean;
+    onDuplicate?;
+    hasHide: boolean;
+    onHide?;
+    hasDelete: boolean;
+    onDelete?;
+    hasPreview: boolean;
+    onPreview?;
 }
 
 interface ICardListItemScope extends IScope, ICardListItemProps {
@@ -40,8 +58,16 @@ class Controller implements IViewModel {
     card: Card;
     isDisplayedOptions: boolean;
     isDraggable: boolean;
-    hasOptions: boolean;
 
+    hasCaption: boolean;
+
+    hasEdit: boolean;
+    hasDuplicate: boolean;
+    hasHide: boolean;
+    hasDelete: boolean;
+    hasPreview: boolean;
+
+    isSelected: boolean;
     RESOURCE_TYPES: typeof RESOURCE_TYPE;
 
 
@@ -50,6 +76,7 @@ class Controller implements IViewModel {
                 private $window: IWindowService) {
         this.RESOURCE_TYPES = RESOURCE_TYPE;
         this.isDisplayedOptions = false;
+        this.isSelected = false;
     }
 
     $onInit() {
@@ -75,10 +102,16 @@ class Controller implements IViewModel {
         return !!card.lastModifierName ? card.lastModifierName : card.ownerName;
     }
 
-    openCardOptions = async (): Promise<void> => {
+    openCardOptions = async ($event: MouseEvent): Promise<void> => {
+        $event.stopPropagation();
         this.isDisplayedOptions = !this.isDisplayedOptions;
         await safeApply(this.$scope);
     }
+
+    hasOptions = (): boolean => {
+        return this.hasDelete || this.hasPreview || this.hasEdit || this.hasHide || this.hasDuplicate;
+    }
+
 }
 
 function directive($parse: IParseService) {
@@ -88,12 +121,19 @@ function directive($parse: IParseService) {
         templateUrl: `${RootsConst.directive}card-list/card-list-item.html`,
         scope: {
             card: '=',
-            hasOptions: '=',
+            isSelected: '=',
             isDraggable: '=',
+            hasCaption: '=',
+            hasEdit: '=',
             onEdit: '&',
+            hasDuplicate: '=',
             onDuplicate: '&',
+            hasHide: '=',
             onHide: '&',
+            hasDelete: '=',
             onDelete: '&',
+            hasPreview: '=',
+            onPreview: '&'
         },
         controllerAs: 'vm',
         bindToController: true,
@@ -109,6 +149,7 @@ function directive($parse: IParseService) {
                     $scope.$apply();
                 }
             });
+
             vm.openEdit = (card: Card): void => {
                 $parse($scope.vm.onEdit())(card);
             }
@@ -123,6 +164,10 @@ function directive($parse: IParseService) {
 
             vm.openDelete = (card: Card): void => {
                 $parse($scope.vm.onDelete())(card);
+            }
+
+            vm.openPreview = (card: Card): void => {
+                $parse($scope.vm.onPreview())(card);
             }
         }
     }

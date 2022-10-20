@@ -1,23 +1,26 @@
 package fr.cgi.magneto.service.impl;
 
-import com.mongodb.*;
-import fr.cgi.magneto.core.constants.*;
-import fr.cgi.magneto.core.constants.Collections;
+import com.mongodb.QueryBuilder;
+import fr.cgi.magneto.core.constants.CollectionsConstant;
+import fr.cgi.magneto.core.constants.Field;
 import fr.cgi.magneto.core.constants.Mongo;
-import fr.cgi.magneto.helper.*;
-import fr.cgi.magneto.model.*;
-import fr.cgi.magneto.service.*;
-import fr.wseduc.mongodb.*;
-import io.vertx.core.*;
-import io.vertx.core.json.*;
-import org.entcore.common.mongodb.*;
-import org.entcore.common.user.*;
-
+import fr.cgi.magneto.helper.PromiseHelper;
+import fr.cgi.magneto.model.FolderPayload;
+import fr.cgi.magneto.model.MongoQuery;
+import fr.cgi.magneto.service.FolderService;
+import fr.wseduc.mongodb.MongoDb;
+import fr.wseduc.mongodb.MongoQueryBuilder;
+import io.vertx.core.Future;
+import io.vertx.core.Promise;
+import io.vertx.core.json.JsonArray;
+import io.vertx.core.json.JsonObject;
 import io.vertx.core.logging.Logger;
 import io.vertx.core.logging.LoggerFactory;
+import org.entcore.common.mongodb.MongoDbResult;
+import org.entcore.common.user.UserInfos;
 
-import java.util.*;
-import java.util.stream.*;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class DefaultFolderService implements FolderService {
 
@@ -34,11 +37,11 @@ public class DefaultFolderService implements FolderService {
     public Future<JsonArray> getFolders(UserInfos user, boolean isDeleted) {
         Promise<JsonArray> promise = Promise.promise();
         QueryBuilder matcher = QueryBuilder.start(Field.OWNERID).is(user.getUserId());
-                if (isDeleted) {
-                    matcher = matcher.and(Field.DELETED).is(true);
-                } else {
-                    matcher = matcher.and(Field.DELETED).notEquals(true);
-                }
+        if (isDeleted) {
+            matcher = matcher.and(Field.DELETED).is(true);
+        } else {
+            matcher = matcher.and(Field.DELETED).notEquals(true);
+        }
 
         mongoDb.find(this.collection, MongoQueryBuilder.build(matcher), MongoDbResult.validResultsHandler(results -> {
             if (results.isLeft()) {
@@ -145,8 +148,7 @@ public class DefaultFolderService implements FolderService {
                     JsonObject query = new JsonObject()
                             .put(Field.OWNERID, ownerId)
                             .put(Field._ID, new JsonObject().put(Mongo.IN, boardIds));
-
-                    mongoDb.delete(Collections.BOARD_COLLECTION, query,
+                    mongoDb.delete(CollectionsConstant.BOARD_COLLECTION, query,
                             MongoDbResult.validResultHandler(PromiseHelper.handler(promise,
                                     String.format("[Magneto@%s::deleteBoardsInFolder] Failed to delete boards",
                                             this.getClass().getSimpleName()))));
@@ -221,10 +223,10 @@ public class DefaultFolderService implements FolderService {
                 .put(Field.FOLDERID, new JsonObject().put(Mongo.IN, new JsonArray(folderIds)))
                 .put(Field.OWNERID, ownerId);
         JsonObject update = new JsonObject().put(Mongo.SET, new JsonObject().put(Field.DELETED, !restore));
-        mongoDb.update(Collections.BOARD_COLLECTION, query, update, false, true,
+        mongoDb.update(CollectionsConstant.BOARD_COLLECTION, query, update, false, true,
                 MongoDbResult.validResultHandler(PromiseHelper.handler(promise,
                         String.format("[Magneto@%s::preDeleteBoardsInFolder] Failed to pre-delete boards",
-                        this.getClass().getSimpleName()))));
+                                this.getClass().getSimpleName()))));
 
         return promise.future();
     }

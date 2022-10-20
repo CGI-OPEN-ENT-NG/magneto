@@ -1,5 +1,5 @@
 import {IScope} from "angular";
-import {ng} from "entcore";
+import {angular, ng} from "entcore";
 import {InfiniteScrollService} from "../shared/services";
 
 interface IViewModel extends ng.IController, IScrollProps {
@@ -10,7 +10,9 @@ interface IViewModel extends ng.IController, IScrollProps {
 
 interface IScrollProps {
     scrolled(): void;
+
     loadingMode: boolean;
+    querySelector: string;
     scrollEventer: InfiniteScrollService;
 }
 
@@ -21,6 +23,8 @@ interface IScrollScope extends IScope, IScrollProps {
 class Controller implements IViewModel {
     loading: boolean;
     loadingMode: boolean;
+    querySelector: string;
+
     scrollEventer: InfiniteScrollService;
 
     private currentscrollHeight: number = 0;
@@ -30,22 +34,32 @@ class Controller implements IViewModel {
     scrolled: () => void;
 
     constructor(private $scope: IScrollScope) {
+
     }
 
     $onInit = () => {
         this.loading = false;
-        $(window).on("scroll", async () => {
-            await this.scroll();
-        });
         // If somewhere in your controller you have to reinitialise anything that should "reset" your dom height
         // We reset currentscrollHeight
         this.scrollEventer.getInfiniteScroll().subscribe(() => this.currentscrollHeight = 0);
+        if (!!this.querySelector)
+            this.latestHeightBottom = 150;
         this.scroll();
     };
 
     scroll = async (): Promise<void> => {
-        const scrollHeight: number = $(document).height() as number;
-        const scrollPos: number = Math.floor($(window).height() + $(window).scrollTop());
+        let scrollHeight: number;
+        let scrollPos: number;
+
+        if (!!this.querySelector) {
+            scrollHeight = angular.element(document.querySelector(this.querySelector))[0].scrollHeight as number;
+            scrollPos = Math.floor(angular.element(document.querySelector(this.querySelector)).height() + angular.element(document.querySelector(this.querySelector)).scrollTop());
+        } else {
+            scrollHeight = $(document).height() as number;
+            scrollPos = Math.floor($(window).height() + $(window).scrollTop());
+        }
+
+
         const isBottom: boolean = scrollHeight - this.latestHeightBottom < scrollPos;
 
         if (isBottom && this.currentscrollHeight < scrollHeight) {
@@ -73,6 +87,7 @@ function directive() {
         `,
         scope: {
             scrolled: '&',
+            querySelector: '=?',
             loadingMode: '=?',
             scrollEventer: '='
         },
@@ -84,6 +99,17 @@ function directive() {
                         element: ng.IAugmentedJQuery,
                         attrs: ng.IAttributes,
                         vm: ng.IController) {
+                $(document).ready(function () {
+                    setScrollEvent(
+                        !!vm.querySelector ? $(angular.element(document.querySelector(vm.querySelector))) : $(window)
+                    );
+                });
+
+             function setScrollEvent (elem: JQuery): void {
+                    elem.on("scroll", async () => {
+                        await vm.scroll();
+                    });
+                }
         }
     }
 }

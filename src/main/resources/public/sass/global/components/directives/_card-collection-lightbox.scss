@@ -1,0 +1,36 @@
+.card-collection-lightbox {
+
+  section.lightbox {
+    .content {
+      width: 80% !important;
+    }
+  }
+
+  &-head {
+
+  }
+
+  &-board {
+    display: flex;
+    gap: 10px;
+    align-items: baseline;
+
+    &-title {
+      font-size: 24px;
+      font-weight: bold;
+      line-height: 45px;
+    }
+    &-cards {
+      font-size: 14px;
+      line-height: 45px;
+      text-decoration: underline;
+    }
+  }
+
+
+  &-body {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+}

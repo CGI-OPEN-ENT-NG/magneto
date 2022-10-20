@@ -1,13 +1,15 @@
 import {ng, toasts} from "entcore";
 import {ILocationService, IParseService, IScope, IWindowService} from "angular";
 import {RootsConst} from "../../core/constants/roots.const";
-import {cardsService, foldersService} from "../../services";
-import {AxiosResponse} from "axios";
+import {cardsService} from "../../services";
+import {ICardsBoardParamsRequest} from "../../models";
 
 interface IViewModel extends ng.IController, ICardDeleteProps {
     submitDelete?(): Promise<void>;
-
     closeForm(): void;
+
+    cardIds: Array<string>;
+    boardId: string;
 }
 
 interface ICardDeleteProps {
@@ -67,7 +69,11 @@ function directive($parse: IParseService) {
             vm.submitDelete = async (): Promise<void> => {
                 try {
                     if (vm.cardIds.length > 0) {
-                        await cardsService.deleteCard(vm.boardId, vm.cardIds);
+                        const params: ICardsBoardParamsRequest = {
+                            boardId: vm.boardId,
+                            cardIds: vm.cardIds
+                        };
+                        await cardsService.deleteCard(params);
                     }
                     toasts.confirm('magneto.delete.cards.confirm');
                     $parse($scope.vm.onSubmit())({});

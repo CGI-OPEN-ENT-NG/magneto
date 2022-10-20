@@ -1,6 +1,6 @@
 package fr.cgi.magneto.service;
 
-import fr.cgi.magneto.core.constants.Collections;
+import fr.cgi.magneto.core.constants.CollectionsConstant;
 import fr.cgi.magneto.service.impl.DefaultBoardService;
 import fr.cgi.magneto.service.impl.DefaultCardService;
 import fr.cgi.magneto.service.impl.DefaultFolderService;
@@ -41,15 +41,15 @@ public class ServiceFactory {
     }
 
     public BoardService boardService() {
-        return new DefaultBoardService(Collections.BOARD_COLLECTION, mongoDb, this);
+        return new DefaultBoardService(CollectionsConstant.BOARD_COLLECTION, mongoDb, this);
     }
 
     public CardService cardService() {
-        return new DefaultCardService(Collections.CARD_COLLECTION, mongoDb, this);
+        return new DefaultCardService(CollectionsConstant.CARD_COLLECTION, mongoDb, this);
     }
 
     public FolderService folderService() {
-        return new DefaultFolderService(Collections.FOLDER_COLLECTION, mongoDb);
+        return new DefaultFolderService(CollectionsConstant.FOLDER_COLLECTION, mongoDb);
     }
 
     public WorkspaceService workSpaceService() {

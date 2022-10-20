@@ -1,9 +1,11 @@
 package fr.cgi.magneto.model;
 
-import fr.cgi.magneto.core.constants.*;
-import io.vertx.core.json.*;
+import fr.cgi.magneto.core.constants.Field;
+import fr.cgi.magneto.core.constants.Mongo;
+import io.vertx.core.json.JsonArray;
+import io.vertx.core.json.JsonObject;
 
-import java.util.*;
+import java.util.List;
 
 import static fr.cgi.magneto.Magneto.PAGE_SIZE;
 
@@ -32,6 +34,14 @@ public class MongoQuery {
                 .put(Mongo.MATCH, parameters));
         return this;
     }
+
+    public JsonObject arrayElemAt(String field, int index) {
+        return new JsonObject()
+                .put(Mongo.ARRAYELEMAT, new JsonArray()
+                        .add(String.format("$%s", field))
+                        .add(index));
+    }
+
 
     public MongoQuery graphLookup(JsonObject parameters) {
         this.pipeline.add(new JsonObject()
@@ -65,6 +75,12 @@ public class MongoQuery {
     public MongoQuery sort(String field, Integer sortOrder) {
         this.pipeline.add(new JsonObject()
                 .put(Mongo.SORT, new JsonObject().put(field, sortOrder)));
+        return this;
+    }
+
+    public MongoQuery group(String field, Integer sortOrder) {
+        this.pipeline.add(new JsonObject()
+                .put(Mongo.GROUP, new JsonObject().put(field, sortOrder)));
         return this;
     }
 

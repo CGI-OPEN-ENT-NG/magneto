@@ -1,14 +1,18 @@
 <div class="flex-row">
-    <div class="card card-list-item flex-row f-column"
-         ng-class="{'active': vm.isSelected, 'draggable': vm.isDraggable}">
-        <div class="card-list-item-header">
+    <div id="card-list" class="card card-list-item flex-row f-column"
+         ng-class="{'active': vm.isSelected, 'draggable': vm.isDraggable, 'reduced-format': !vm.hasCaption}">
+        <div class="card-list-item-header" ng-class="{'reduced-format': !vm.hasCaption}">
             <img class="card-list-item-avatar" ng-src="/userbook/avatar/[[vm.getLastUserId(vm.card)]]?thumbnail=48x48"/>
-            <span ng-bind="vm.getLastUserName(vm.card)"></span>
-            <span tooltip="[[vm.formatDate(vm.card.modificationDate)]]" class="card-list-item-date"> [[vm.formatDateModification(vm.card.modificationDate)]] </span>
-            <i ng-if="vm.hasOptions" class="magneto-card-settings" data-ng-click="vm.openCardOptions()"></i>
+            <div class="card-list-item-header-creation">
+                <span class="card-list-item-header-creation-user" ng-bind="vm.getLastUserName(vm.card)"></span>
+                <span tooltip="[[vm.formatDate(vm.card.modificationDate)]]" class="card-list-item-header-creation-date card-list-item-date">
+                    [[vm.formatDateModification(vm.card.modificationDate)]]
+                </span>
+            </div>
+            <i ng-if="vm.hasOptions()" class="magneto-card-settings" data-ng-click="vm.openCardOptions($event)"></i>
         </div>
         <!--Card title-->
-        <div class="card-list-item-infos-title">
+        <div class="card-list-item-infos-title" ng-class="{'reduced-format': !vm.hasCaption}">
             <span class="card-list-item-infos-title-ellipsis"  ng-if="!!vm.card.title"> [[vm.card.title]] </span>
         </div>
 
@@ -17,7 +21,7 @@
                 card="vm.card">
         </card-list-item-preview>
         <!--Card infos-->
-        <div class="card-list-item-infos flex-row">
+        <div ng-if="vm.hasCaption" class="card-list-item-infos flex-row">
             <!-- Card caption -->
             <span tooltip="[[vm.card.caption]]" ng-if="!!vm.card.caption" class="card-list-item-caption">[[vm.card.caption]]</span>
         </div>
@@ -25,9 +29,15 @@
     <card-list-item-options
             card="vm.card"
             is-displayed="vm.isDisplayedOptions"
-            has-edit="true"
+            has-edit="vm.hasEdit"
             on-edit="vm.openEdit"
-            has-delete="true"
-            on-delete="vm.openDelete">
+            has-delete="vm.hasDelete"
+            on-delete="vm.openDelete"
+            has-hide="vm.hasHide"
+            on-hide="vm.openHide"
+            has-duplicate="vm.hasDuplicate"
+            on-duplicate="vm.openDuplicate"
+            has-preview="vm.hasPreview"
+            on-preview="vm.openPreview">
     </card-list-item-options>
 </div>

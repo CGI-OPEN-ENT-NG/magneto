@@ -31,10 +31,8 @@ public class WriteBoardRight implements ResourcesProvider {
                                     .add(new JsonObject()
                                             .put(String.format("%s.%s", Field.SHARED, Field.GROUPID),
                                                     new JsonObject().put(Mongo.IN, user.getGroupsIds()))
-                                            .put(String.format("%s.%s", Field.SHARED, "fr-cgi-magneto-controller-ShareBoardController|initPublishRight"), true)))
-                    ;
-
-            MongoAppFilter.executeCountQuery(request, Collections.BOARD_COLLECTION, query, 1, res -> {
+                                            .put(String.format("%s.%s", Field.SHARED, "fr-cgi-magneto-controller-ShareBoardController|initPublishRight"), true)));
+            MongoAppFilter.executeCountQuery(request, CollectionsConstant.BOARD_COLLECTION, query, 1, res -> {
                 handler.handle(Boolean.TRUE.equals(res) && WorkflowHelper.hasRight(user, Rights.MANAGE_BOARD));
             });
 

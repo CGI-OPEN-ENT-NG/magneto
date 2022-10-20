@@ -1,9 +1,21 @@
 <div id="card-list" class="card-list flex-row f-wrap">
     <card-list-item ng-repeat="card in vm.cards"
-                    card="card"
-                    has-options="vm.hasOptions"
+                    ng-click="vm.selectCard(card._id)"
+                    ng-dblclick="vm.hasEdit && vm.openEdit(card)"
+                    is-selected="vm.isCardSelected(card._id)"
                     is-draggable="vm.isDraggable"
+                    card="card"
+                    has-caption="vm.hasCaption"
+                    has-duplicate="vm.hasDuplicate"
+                    on-duplicate="vm.openDuplicate"
+                    has-hide="vm.hasHide"
+                    on-hide="vm.openHide"
+                    has-edit="vm.hasEdit"
                     on-edit="vm.openEdit"
-                    on-delete="vm.openDelete">
+                    has-delete="vm.hasDelete"
+                    on-delete="vm.openDelete"
+                    has-preview="vm.hasPreview"
+                    on-preview="vm.openPreview">
+        <h2>[[card.boardTitle]]</h2>
     </card-list-item>
 </div>

@@ -95,6 +95,14 @@ describe("BoardViewController", () => {
         done();
     });
 
+    it("test openPreviewResourceLightbox", (done) => {
+        boardViewControllerTest.displayPreviewCardLightbox = false;
+        boardViewControllerTest.openPreviewResourceLightbox(card);
+        expect(boardViewControllerTest.selectedCard).toEqual(card);
+        expect(boardViewControllerTest.displayPreviewCardLightbox).toEqual(true);
+        done();
+    });
+
     it("test openEditResourceLightbox", (done) => {
         boardViewControllerTest.cardForm = new CardForm();
         boardViewControllerTest.displayUpdateCardLightbox = false;

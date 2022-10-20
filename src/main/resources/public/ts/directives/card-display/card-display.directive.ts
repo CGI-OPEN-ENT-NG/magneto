@@ -6,7 +6,7 @@ import {DateUtils} from "../../utils/date.utils";
 import {RESOURCE_TYPE} from "../../core/enums/resource-type.enum";
 import {I18nUtils} from "../../utils/i18n.utils";
 
-interface IViewModel extends ng.IController, ICardListItemProps {
+interface IViewModel extends ng.IController, ICardDisplayProps {
     formatDate(date: string): string;
 
     formatDateModification(date: string): string;
@@ -21,11 +21,11 @@ interface IViewModel extends ng.IController, ICardListItemProps {
 
 }
 
-interface ICardListItemProps {
+interface ICardDisplayProps {
     card: Card;
 }
 
-interface ICardListItemScope extends IScope, ICardListItemProps {
+interface ICardListItemScope extends IScope, ICardDisplayProps {
     vm: IViewModel;
 }
 
@@ -66,7 +66,7 @@ class Controller implements IViewModel {
     }
 
     getDescriptionHTML = (description: string): string => {
-        return this.$sce.trustAsHtml(description.toString());
+        return !!description ? this.$sce.trustAsHtml(description.toString()) : null;
     }
 
     getOwnerText = (): string => {
@@ -75,7 +75,7 @@ class Controller implements IViewModel {
 
 }
 
-function directive($parse: IParseService) {
+function directive() {
     return {
         replace: true,
         restrict: 'E',
@@ -85,7 +85,7 @@ function directive($parse: IParseService) {
         },
         controllerAs: 'vm',
         bindToController: true,
-        controller: ['$scope', '$location', '$sce', '$window', '$parse', Controller],
+        controller: ['$scope', '$location', '$sce', '$window', Controller],
         /* interaction DOM/element */
         link: function ($scope: ICardListItemScope,
                         element: ng.IAugmentedJQuery,

@@ -19,7 +19,7 @@
   "magneto.save": "Save",
   "magneto.create.board.title": "My board title",
   "magneto.create.board.description": "Description",
-  "magneto.search.boards": "Search a board",
+  "magneto.search.placeholder": "Search ...",
   "magneto.open": "Open",
   "magneto.delete": "Delete",
   "magneto.properties": "Properties",
@@ -37,6 +37,7 @@
   "magneto.board.publish.title": "Share a board to the community",
   "magneto.board.unpublish.title": "Delete share of board to the community",
   "magneto.board.publish.description": "When sharing this board to the community, it will be visible in read-only to all users of the platform. The board magnets can be reused.",
+  "magneto.duplicate": "Duplicate",
   "magneto.restore": "Restore",
   "magneto.move": "Move",
   "magneto.create.folder:": "Create folder",
@@ -60,6 +61,7 @@
   "magneto.card.description": "Description",
   "magneto.card.options.edit": "Edit",
   "magneto.card.options.duplicate": "Duplicate",
+  "magneto.card.options.preview": "Preview",
   "magneto.card.options.hide": "Hide",
   "magneto.card.options.delete": "Delete",
   "magneto.create.link": "Create link",
@@ -68,7 +70,9 @@
   "magneto.delete.cards": "Delete the selected magnets",
   "magneto.delete.cards.message": "Are you sure you want to delete the selected cards ?",
   "magneto.delete.cards.error": "Error while deleting cards",
+  "magneto.duplicate.cards.error": "Error while duplicating cards",
   "magneto.delete.cards.confirm": "The selected cards have successfully been deleted.",
+  "magneto.duplicate.cards.confirm": "The selected cards have successfully been duplicated.",
   "magneto.board.saved.at": "Board saved on {0} at {1}",
   "magneto.read": "Read",
   "magneto.contrib": "Reutilization",
@@ -98,5 +102,9 @@
   "group.school.Teacher" : "All teachers of {0}.",
   "group.school.Guest": "All guests of {0}.",
   "magneto.return": "Return",
-  "magneto.card.saved.by": "Created by {0}, modified by {1}"
+  "magneto.card.saved.by": "Created by {0}, modified by {1}",
+  "magneto.cards.collection.board.view": "Order by board",
+  "magneto.cards.collection.board.cards.show": "See all magnets of the board",
+  "magneto.cards.collection.board.cards.hide": "Hide all linked magnets"
+
 }

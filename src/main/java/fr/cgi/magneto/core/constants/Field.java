@@ -64,6 +64,7 @@ public class Field {
     // CARD FIELD
 
     public static final String BOARDID = "boardId";
+    public static final String BOARDTITLE = "boardTitle";
     public static final String RESOURCEID = "resourceId";
     public static final String RESOURCETYPE = "resourceType";
     public static final String RESOURCEURL = "resourceUrl";

@@ -7,5 +7,6 @@ export enum RESOURCE_TYPE {
     SHEET = 'sheet',
     FILE = 'file',
     LINK = 'link',
+    CARD = 'card',
     DEFAULT = 'default'
 }

@@ -1,9 +1,12 @@
-.board-search-bar {
+.search-bar {
 
   display: flex;
-  border: solid 1px $magneto-grey;
-  border-radius: 5px;
-  height: 30px;
+  border: solid 1px $magneto-light-sky-blue;
+  border-radius: 25px;
+  height: 40px;
+  width: 50%;
+  margin-left: auto;
+  margin-right: auto;
 
   i.magneto-magnify {
     font-size: 20px;
@@ -14,6 +17,7 @@
 
   input {
     width: 100%;
+    height: inherit;
     border-bottom: none !important;
     box-shadow: none !important;
   }

@@ -2,21 +2,41 @@ import {ng} from "entcore";
 import {ILocationService, IParseService, IScope, IWindowService} from "angular";
 import {RootsConst} from "../../core/constants/roots.const";
 import {BoardForm, Card} from "../../models";
-import { create } from 'sortablejs';
+import {create} from 'sortablejs';
 import {boardsService} from "../../services";
 
 interface IViewModel extends ng.IController, ICardListProps {
-    cardIds: Array<string>;
     openEdit?(card: Card): void;
+
     openDuplicate?(card: Card): void;
+
     openHide?(card: Card): void;
+
     openDelete?(card: Card): void;
+
+    openPreview?(card: Card): void;
+
 }
 
 interface ICardListProps {
     cards: Array<Card>;
+    selectedCardIds: Array<string>;
+
     isDraggable: boolean;
-    hasOptions: boolean;
+    isScrollable: boolean;
+
+    hasCaption: boolean;
+
+    hasEdit: boolean;
+    onEdit?;
+    hasDuplicate: boolean;
+    onDuplicate?;
+    hasHide: boolean;
+    onHide?;
+    hasDelete: boolean;
+    onDelete?;
+    hasPreview: boolean;
+    onPreview?;
 }
 
 interface ICardListScope extends IScope, ICardListProps {
@@ -26,20 +46,47 @@ interface ICardListScope extends IScope, ICardListProps {
 class Controller implements IViewModel {
 
     cards: Array<Card>;
+    selectedCardIds: Array<string>;
     isDraggable: boolean;
-    hasOptions: boolean;
-    cardIds: Array<string>;
+    isScrollable: boolean;
+
+    hasCaption: boolean;
+
+    hasEdit: boolean;
+    hasDuplicate: boolean;
+    hasHide: boolean;
+    hasDelete: boolean;
+    hasPreview: boolean;
 
     constructor(private $scope: ICardListScope,
                 private $location: ILocationService,
                 private $window: IWindowService) {
-        this.cardIds = [];
+        this.selectedCardIds = [];
     }
 
     $onInit = (): void => {
     }
 
     $onDestroy() {
+    }
+
+    isCardSelected = (cardId: string): boolean => {
+        let isCardSelected: boolean = false;
+        if (!!this.selectedCardIds) {
+            isCardSelected = this.selectedCardIds.find((id: string) => id === cardId) !== undefined;
+        }
+        return isCardSelected;
+    }
+
+    selectCard = (cardId: string): void => {
+        if (!!this.selectedCardIds) {
+            if (!this.isCardSelected(cardId)) {
+                this.selectedCardIds.push(cardId);
+            } else {
+                // deselect card
+                this.selectedCardIds = this.selectedCardIds.filter((id: string) => id !== cardId);
+            }
+        }
     }
 
 }
@@ -50,12 +97,20 @@ function directive($parse: IParseService) {
         templateUrl: `${RootsConst.directive}card-list/card-list.html`,
         scope: {
             cards: '=',
-            hasOptions: '=',
+            selectedCardIds: '=',
             isDraggable: '=',
+            isScrollable: '=',
+            hasCaption: '=',
+            hasEdit: '=',
             onEdit: '&',
+            hasDuplicate: '=',
             onDuplicate: '&',
+            hasHide: '=',
             onHide: '&',
-            onDelete: '&'
+            hasDelete: '=',
+            onDelete: '&',
+            hasPreview: '=',
+            onPreview: '&'
         },
         controllerAs: 'vm',
         bindToController: true,
@@ -79,9 +134,8 @@ function directive($parse: IParseService) {
                             let newCardIndex: number = evt.newIndex;
                             vm.cardIds.splice(evt.oldIndex, 1);
                             vm.cardIds.splice(newCardIndex, 0, movedCardId);
-                            let form : BoardForm = new BoardForm();
+                            let form: BoardForm = new BoardForm();
                             form.cardIds = vm.cardIds;
-
                             await boardsService.updateBoard(vm.cards[0].boardId, form);
                         }
                     }
@@ -93,15 +147,19 @@ function directive($parse: IParseService) {
             }
 
             vm.openDuplicate = (card: Card): void => {
-                $parse($scope.vm.onDuplicate())(vm.card);
+                $parse($scope.vm.onDuplicate())(card);
             }
 
             vm.openHide = (card: Card): void => {
-                $parse($scope.vm.onHide())(vm.card);
+                $parse($scope.vm.onHide())(card);
             }
 
             vm.openDelete = (card: Card): void => {
                 $parse($scope.vm.onDelete())(card);
+            }
+
+            vm.openPreview= (card: Card): void => {
+                $parse($scope.vm.onPreview())(card);
             }
         }
     }

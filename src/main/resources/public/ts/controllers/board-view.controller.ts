@@ -14,8 +14,11 @@ interface IViewModel extends ng.IController {
     displayCardLightbox: boolean;
     displayUpdateCardLightbox: boolean;
     displayDeleteCardLightbox: boolean;
+    displayMoveCardLightbox: boolean;
+    displayPreviewCardLightbox: boolean;
     displayMediaLibraryLightbox: boolean;
     displayBoardPropertiesLightbox: boolean;
+    displayCollectionLightbox: boolean;
     displayLinkerLightbox: boolean;
 
     displayResourceLightbox : {
@@ -69,6 +72,8 @@ class Controller implements IViewModel {
     displayCardLightbox: boolean;
     displayUpdateCardLightbox: boolean;
     displayDeleteCardLightbox: boolean;
+    displayMoveCardLightbox: boolean;
+    displayPreviewCardLightbox: boolean;
 
     cards: Array<Card>;
     board: Board;
@@ -77,7 +82,7 @@ class Controller implements IViewModel {
     displayResourceLightbox : {
         video: boolean
     }
-
+    displayCollectionLightbox: boolean;
     displayBoardPropertiesLightbox: boolean;
     displayLinkerLightbox: boolean;
 
@@ -109,15 +114,17 @@ class Controller implements IViewModel {
     async $onInit(): Promise<void> {
         this.displayCardLightbox = false;
         this.displayDeleteCardLightbox = false;
-        this.displayDeleteCardLightbox = false;
+        this.displayMoveCardLightbox = false;
         this.displayMediaLibraryLightbox = false;
         this.displayResourceLightbox = {
             video: false
         }
+        this.displayCollectionLightbox = false;
         this.$window.scrollTo(0, 0);
 
         this.displayBoardPropertiesLightbox = false;
         this.displayLinkerLightbox = false;
+        this.displayPreviewCardLightbox = false;
 
         this.cards = [];
         this.board = new Board();
@@ -163,6 +170,9 @@ class Controller implements IViewModel {
             case RESOURCE_TYPE.LINK:
                 this.displayLinkerLightbox = true;
                 break;
+            case RESOURCE_TYPE.CARD:
+                this.displayCollectionLightbox = true;
+                break;
         }
     }
 
@@ -184,11 +194,27 @@ class Controller implements IViewModel {
     }
 
     /**
+     * Open card edition form.
+     */
+    openPreviewResourceLightbox = (card: Card): void => {
+        this.selectedCard = card;
+        this.displayPreviewCardLightbox = true;
+    }
+
+    /**
      * Open card deletion lightbox.
      */
     openDeleteResourceLightbox = (card: Card): void => {
         this.selectedCard = card;
         this.displayDeleteCardLightbox = true;
+    }
+
+    /**
+     * Open card move lightbox.
+     */
+    openMoveResourceLightbox = (card: Card): void => {
+        this.selectedCard = card;
+        this.displayMoveCardLightbox = true;
     }
 
     /**
@@ -219,7 +245,7 @@ class Controller implements IViewModel {
             page: this.filter.page,
             boardId: this.filter.boardId
         };
-        this.cardsService.getAllCards(params)
+        this.cardsService.getAllCardsByBoard(params)
             .then((res: Cards) => {
                 if (res.all && res.all.length > 0) {
                     this.cards.push(...res.all);

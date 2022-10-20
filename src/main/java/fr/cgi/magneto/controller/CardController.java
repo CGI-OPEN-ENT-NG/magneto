@@ -6,7 +6,9 @@ import fr.cgi.magneto.model.boards.Board;
 import fr.cgi.magneto.model.boards.BoardPayload;
 import fr.cgi.magneto.model.cards.Card;
 import fr.cgi.magneto.model.cards.CardPayload;
-import fr.cgi.magneto.security.*;
+import fr.cgi.magneto.security.DuplicateCardRight;
+import fr.cgi.magneto.security.ViewRight;
+import fr.cgi.magneto.security.WriteBoardRight;
 import fr.cgi.magneto.service.BoardService;
 import fr.cgi.magneto.service.CardService;
 import fr.cgi.magneto.service.ServiceFactory;
@@ -26,6 +28,7 @@ import org.entcore.common.user.UserUtils;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 public class CardController extends ControllerHelper {
@@ -38,19 +41,20 @@ public class CardController extends ControllerHelper {
         this.boardService = serviceFactory.boardService();
     }
 
-    @Get("/cards")
-    @ApiDoc("Get all cards")
+    @Get("/cards/collection")
+    @ApiDoc("Get all cards collection")
     @ResourceFilter(ViewRight.class)
     @SecuredAction(value = "", type = ActionType.RESOURCE)
-    public void getAllCards(HttpServerRequest request) {
+    public void getAllCardsCollection(HttpServerRequest request) {
         UserUtils.getUserInfos(eb, request, user -> {
             String searchText = (request.getParam(Field.SEARCHTEXT) != null) ?
                     request.getParam(Field.SEARCHTEXT) : "";
             String sortBy = request.getParam(Field.SORTBY);
+            String boardId = request.getParam(Field.BOARDID);
             boolean isPublic = Boolean.parseBoolean(request.getParam(Field.ISPUBLIC));
             boolean isShared = Boolean.parseBoolean(request.getParam(Field.ISSHARED));
             Integer page = request.getParam(Field.PAGE) != null ? Integer.parseInt(request.getParam(Field.PAGE)) : null;
-            cardService.getAllCards(user, page, isPublic, isShared, searchText, sortBy)
+            cardService.getAllCards(user, boardId, page, isPublic, isShared, searchText, sortBy)
                     .onSuccess(result -> renderJson(request, result))
                     .onFailure(fail -> {
                         String message = String.format("[Magneto@%s::getAllCards] Failed to get all cards : %s",
@@ -62,7 +66,7 @@ public class CardController extends ControllerHelper {
     }
 
     @Get("/cards/:boardId")
-    @ApiDoc("Get all cards")
+    @ApiDoc("Get all cards by board id")
     @ResourceFilter(ViewRight.class)
     @SecuredAction(value = "", type = ActionType.RESOURCE)
     public void getAllCardsByBoardId(HttpServerRequest request) {
@@ -87,8 +91,10 @@ public class CardController extends ControllerHelper {
     @SecuredAction(value = "", type = ActionType.RESOURCE)
     public void getCard(HttpServerRequest request) {
         String cardId = request.getParam(Field.ID);
-        cardService.getCard(cardId)
-                .onSuccess(result -> renderJson(request, result))
+        cardService.getCards(Collections.singletonList(cardId))
+                .onSuccess(result -> {
+                    renderJson(request, !result.isEmpty() ? result.get(0).toJson() : new JsonObject());
+                })
                 .onFailure(fail -> {
                     String message = String.format("[Magneto@%s::getCard] Failed to get card by id : %s",
                             this.getClass().getSimpleName(), fail.getMessage());
@@ -101,34 +107,26 @@ public class CardController extends ControllerHelper {
     @ApiDoc("Create a card")
     @ResourceFilter(WriteBoardRight.class)
     @SecuredAction(value = "", type = ActionType.RESOURCE)
-    public void create(HttpServerRequest request) {
+    public void createCard(HttpServerRequest request) {
         RequestUtils.bodyToJson(request, pathPrefix + "card", body ->
                 UserUtils.getUserInfos(eb, request, user -> {
                     CardPayload cardPayload = new CardPayload(body)
                             .setOwnerId(user.getUserId())
                             .setOwnerName(user.getUsername());
-
-                    Future<JsonObject> createCardFuture = cardService.create(cardPayload);
+                    String newId = UUID.randomUUID().toString();
+                    Future<JsonObject> createCardFuture = cardService.create(cardPayload, newId);
                     Future<List<Board>> getBoardFuture = boardService.getBoards(Collections.singletonList(cardPayload.getBoardId()));
                     CompositeFuture.all(createCardFuture, getBoardFuture)
                             .compose(result -> cardService.getLastCard(cardPayload))
                             .compose(result -> {
-                                if (getBoardFuture.result().isEmpty()) {
-                                    String message = String.format("[Magneto@%s::create] Failed to create card: No board found with id %s",
-                                            this.getClass().getSimpleName(), cardPayload.getBoardId());
-                                    return Future.failedFuture(message);
+                                if (!getBoardFuture.result().isEmpty()) {
+                                    BoardPayload boardPayload = new BoardPayload(getBoardFuture.result().get(0).toJson());
+                                    boardPayload.addCards(Collections.singletonList(result.getString(Field._ID)));
+                                    return cardService.updateBoard(boardPayload);
+                                } else {
+                                    return Future.failedFuture(String.format("[Magneto%s::createCard] " +
+                                            "No card found with id %s", this.getClass().getSimpleName(), newId));
                                 }
-                                Board currentBoard = getBoardFuture.result().get(0);
-                                BoardPayload boardToUpdate = new BoardPayload()
-                                        .setId(currentBoard.getId())
-                                        .setPublic(currentBoard.isPublic())
-                                        .setCardIds(currentBoard.cards()
-                                                .stream()
-                                                .map(Card::getId)
-                                                .collect(Collectors.toList()))
-                                        .addCard(result.getString(Field._ID))
-                                        .setModificationDate(DateHelper.getDateString(new Date(), DateHelper.MONGO_FORMAT));
-                                return boardService.update(boardToUpdate);
                             })
                             .onFailure(err -> renderError(request))
                             .onSuccess(res -> renderJson(request, res));
@@ -165,6 +163,26 @@ public class CardController extends ControllerHelper {
             });
         });
     }
+
+
+    @SuppressWarnings("unchecked")
+    @Post("/card/duplicate")
+    @ApiDoc("Duplicate a card")
+    @ResourceFilter(DuplicateCardRight.class)
+    @SecuredAction(value = "", type = ActionType.RESOURCE)
+    public void duplicate(HttpServerRequest request) {
+        RequestUtils.bodyToJson(request, pathPrefix + "cardDuplicate", duplicateCard -> {
+            UserUtils.getUserInfos(eb, request, user -> {
+                List<String> cardIds = duplicateCard.getJsonArray(Field.CARDIDS, new JsonArray()).getList();
+                String boardId = duplicateCard.getString(Field.BOARDID);
+                cardService.getCards(cardIds)
+                        .compose(cards -> cardService.duplicateCards(boardId, cards, user))
+                        .onSuccess(res -> renderJson(request, res))
+                        .onFailure(err -> renderError(request));
+            });
+        });
+    }
+
 
     @Delete("/cards/:boardId")
     @ApiDoc("Delete cards")
