@@ -58,7 +58,7 @@ interface IViewModel {
     openPropertiesForm(): void;
     openBoardOrFolder(): Promise<void>;
     openRenameFolderForm(): void;
-    onFormSubmit(): Promise<void>;
+    onFormSubmit(createdBoardId?: {id: string}): Promise<void>;
     initTrees(): void;
     updateTrees(): void;
     setFolderParentIds(): void;
@@ -110,6 +110,7 @@ class Controller implements ng.IController, IViewModel {
 
     constructor(private $scope: IBoardsScope,
                 private $location: ng.ILocationService,
+                private $timeout: ng.ITimeoutService,
                 private boardsService: IBoardsService,
                 private foldersService: IFoldersService) {
         this.$scope.vm = this;
@@ -372,11 +373,16 @@ class Controller implements ng.IController, IViewModel {
      * - refresh boards
      * - refresh folders / deleted folders
      */
-    onFormSubmit = async (): Promise<void> => {
-        this.resetBoards();
-        this.deletedFolders = await this.getDeletedFolders();
-        this.getFolders();
-        await this.getBoards();
+    onFormSubmit = async (createdBoardId?: {id: string}): Promise<void> => {
+        if (createdBoardId.id) {
+            this.$location.path(`/board/view/${createdBoardId.id}`);
+            safeApply(this.$scope);
+        } else {
+            this.resetBoards();
+            this.deletedFolders = await this.getDeletedFolders();
+            this.getFolders();
+            await this.getBoards();
+        }
     }
 
     /**
@@ -477,4 +483,4 @@ class Controller implements ng.IController, IViewModel {
 }
 
 export const boardsController = ng.controller('BoardsController',
-    ['$scope', '$location', 'BoardsService', 'FoldersService', Controller]);
+    ['$scope', '$location', '$timeout', 'BoardsService', 'FoldersService', Controller]);

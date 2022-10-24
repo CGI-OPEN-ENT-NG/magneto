@@ -45,7 +45,7 @@ public class DefaultBoardService implements BoardService {
         this.createBoard(createBoard, newId)
                 .compose(success -> this.updateFolderOnBoardCreate(user.getUserId(), createBoard, newId))
                 .onFailure(promise::fail)
-                .onSuccess(promise::complete);
+                .onSuccess(res -> promise.complete(new JsonObject().put(Field.ID, newId)));
         return promise.future();
     }
 

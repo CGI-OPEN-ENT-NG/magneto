@@ -86,17 +86,19 @@ function directive($parse: IParseService) {
 
                     if (vm.isUpdate) {
                         await boardsService.updateBoard(vm.form.id, form);
+                        $parse($scope.vm.onSubmit())({});
+                        vm.closeForm();
                     } else {
-                        await boardsService.createBoard(form);
+                        boardsService.createBoard(form)
+                            .then(res => {
+                                $parse($scope.vm.onSubmit())({id: res.data.id});
+                                vm.closeForm();
+                            });
                     }
 
                 } catch (e) {
                     throw e;
                 }
-
-                $parse($scope.vm.onSubmit())({});
-
-                vm.closeForm();
             };
         }
     }
