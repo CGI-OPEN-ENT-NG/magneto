@@ -159,4 +159,14 @@ i {
     font-family: 'magneto-mdi';
     content: '\F5E0';
   }
+
+  &.magneto-crown::before {
+    font-family: 'magneto-mdi';
+    content: '\F1A5';
+  }
+
+  &.magneto-earth::before {
+    font-family: 'magneto-mdi';
+    content: '\F1E7';
+  }
 }

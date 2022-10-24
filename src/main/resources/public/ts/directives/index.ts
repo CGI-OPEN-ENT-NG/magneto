@@ -26,3 +26,5 @@ export * from './media-library-lightbox/media-library-lightbox.directive';
 export * from './board-date/board-date.directive';
 export * from './linker/linker.directive';
 export * from './share-panel-lightbox/share-panel-lightbox.directive';
+export * from './board-publish-lightbox/board-publish-lightbox.directive';
+export * from './board-keywords-input/board-keywords-input.directive';

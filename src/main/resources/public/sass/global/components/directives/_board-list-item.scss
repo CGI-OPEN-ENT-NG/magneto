@@ -55,8 +55,12 @@
       font-size: 13px;
     }
 
-    &-date {
-      i.magneto-calendar::before {
+    &-date-icons {
+
+      display: flex;
+      justify-content: space-between;
+
+      i::before {
         font-size: 16px;
       }
 

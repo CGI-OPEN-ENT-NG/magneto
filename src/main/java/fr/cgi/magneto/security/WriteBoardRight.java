@@ -16,9 +16,10 @@ public class WriteBoardRight implements ResourcesProvider {
                           Handler<Boolean> handler) {
 
         RequestUtils.bodyToJson(request, body -> {
-            String boardId = body.getString(Field.BOARDID);
+            String boardId = body.getString(Field.BOARDID, request.getParam(Field.BOARDID));
             JsonObject query = new JsonObject()
                     .put(Field._ID, boardId)
+                    .put(Field.DELETED, false)
                     .put(Mongo.OR,
                             new JsonArray()
                                     .add(new JsonObject()

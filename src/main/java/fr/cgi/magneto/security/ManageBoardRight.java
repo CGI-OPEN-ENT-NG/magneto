@@ -17,6 +17,7 @@ public class ManageBoardRight implements ResourcesProvider {
         String boardId = request.getParam(Field.ID);
         JsonObject query = new JsonObject()
                 .put(Field._ID, boardId)
+                .put(Field.DELETED, false)
                 .put(Mongo.OR,
                         new JsonArray()
                                 .add(new JsonObject()

@@ -239,22 +239,26 @@ public class DefaultBoardService implements BoardService {
 
         MongoQuery query = new MongoQuery(this.collection)
                 .match(new JsonObject()
-                        .put(Field.DELETED, isDeleted)
-                        .put(Field.PUBLIC, isPublic));
+                        .put(Field.DELETED, isDeleted));
 
-        if (isShared) {
-            query.matchOr(new JsonArray()
-                    .add(new JsonObject().put(Field.OWNERID, user.getUserId()))
-                    .add(new JsonObject()
-                            .put(String.format("%s.%s", Field.SHARED, Field.USERID), new JsonObject().put(Mongo.IN,
-                                    new JsonArray().add(user.getUserId()))))
-                    .add(new JsonObject()
-                            .put(String.format("%s.%s", Field.SHARED, Field.GROUPID), new JsonObject().put(Mongo.IN, user.getGroupsIds()))));
+        if (isPublic) {
+            query.match(new JsonObject()
+                    .put(Field.PUBLIC, true));
         } else {
-            query.match(new JsonObject().put(Field.OWNERID, user.getUserId()));
+            if (isShared) {
+                query.matchOr(new JsonArray()
+                        .add(new JsonObject().put(Field.OWNERID, user.getUserId()))
+                        .add(new JsonObject()
+                                .put(String.format("%s.%s", Field.SHARED, Field.USERID), new JsonObject().put(Mongo.IN,
+                                        new JsonArray().add(user.getUserId()))))
+                        .add(new JsonObject()
+                                .put(String.format("%s.%s", Field.SHARED, Field.GROUPID), new JsonObject().put(Mongo.IN, user.getGroupsIds()))));
+            } else {
+                query.match(new JsonObject().put(Field.OWNERID, user.getUserId()));
+            }
         }
 
-        query.matchRegex(searchText, Arrays.asList(Field.TITLE, Field.DESCRIPTION))
+        query.matchRegex(searchText, Arrays.asList(Field.TITLE, Field.DESCRIPTION, Field.TAGS))
                 .sort(sortBy, -1)
                 .lookUp(Collections.FOLDER_COLLECTION, Field._ID, Field.BOARDIDS, Field.FOLDERS);
 
@@ -278,14 +282,16 @@ public class DefaultBoardService implements BoardService {
                             .put(Field.DESCRIPTION, 1)
                             .put(Field.OWNERID, 1)
                             .put(Field.OWNERNAME, 1)
-                            .put(Field.SHARED, 1))
+                            .put(Field.SHARED, 1)
+                            .put(Field.TAGS, 1)
+                            .put(Field.PUBLIC, 1))
                     .unwind(Field.FOLDERID, true);
 
-            if (folderId != null) {
-                query.match(new JsonObject().put(String.format("%s.%s", Field.FOLDERID, Field._ID), folderId));
-            } else if (!isDeleted){
-                query.match(new JsonObject().putNull(String.format("%s.%s", Field.FOLDERID, Field._ID)));
-            }
+        if (folderId != null) {
+            query.match(new JsonObject().put(String.format("%s.%s", Field.FOLDERID, Field._ID), folderId));
+        } else if (!isDeleted) {
+            query.match(new JsonObject().putNull(String.format("%s.%s", Field.FOLDERID, Field._ID)));
+        }
 
         query.project(new JsonObject()
                 .put(Field._ID, 1)
@@ -297,7 +303,9 @@ public class DefaultBoardService implements BoardService {
                 .put(Field.DESCRIPTION, 1)
                 .put(Field.OWNERID, 1)
                 .put(Field.OWNERNAME, 1)
-                .put(Field.SHARED, 1));
+                .put(Field.SHARED, 1)
+                .put(Field.TAGS, 1)
+                .put(Field.PUBLIC, 1));
         if (getCount) {
             query = query.count();
         }
@@ -319,7 +327,8 @@ public class DefaultBoardService implements BoardService {
                         .put(Field.DESCRIPTION, 1)
                         .put(Field.OWNERID, 1)
                         .put(Field.OWNERNAME, 1)
-                        .put(Field.SHARED, 1));
+                        .put(Field.SHARED, 1)
+                        .put(Field.PUBLIC, 1));
         return query.getAggregate();
     }
 }

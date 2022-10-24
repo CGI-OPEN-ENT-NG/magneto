@@ -1,0 +1,38 @@
+<lightbox class="board-publish-lightbox"
+          show="vm.display"
+          on-close="vm.closeForm()">
+
+    <section class="head board-publish-lightbox-head">
+        <h3 ng-if="!vm.isPublic">
+            <i18n>magneto.board.publish.title</i18n>
+        </h3>
+        <h3 ng-if="vm.isPublic">
+            <i18n>magneto.board.unpublish.title</i18n>
+        </h3>
+    </section>
+    <section class="body board-publish-lightbox-body">
+        <div class="row board-publish-lightbox-body-description">
+            <i18n>magneto.board.publish.description</i18n>
+        </div>
+        <board-keywords-input
+                ng-if="!vm.board.public"
+                board="vm.board">
+        </board-keywords-input>
+    </section>
+    <!-- Form submit/cancel buttons -->
+    <section>
+        <div class="row horizontal-spacing">
+            <div class="twelve cell">
+                <button class="right-magnet"
+                        data-ng-click="vm.submit()">
+                    <i18n>magneto.save</i18n>
+                </button>
+                <button class="right-magnet cancel"
+                        data-ng-click="vm.closeForm()">
+                    <i18n>magneto.cancel</i18n>
+                </button>
+            </div>
+        </div>
+    </section>
+
+</lightbox>

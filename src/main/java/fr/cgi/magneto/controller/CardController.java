@@ -121,6 +121,7 @@ public class CardController extends ControllerHelper {
                                 Board currentBoard = getBoardFuture.result().get(0);
                                 BoardPayload boardToUpdate = new BoardPayload()
                                         .setId(currentBoard.getId())
+                                        .setPublic(currentBoard.isPublic())
                                         .setCardIds(currentBoard.cards()
                                                 .stream()
                                                 .map(Card::getId)
@@ -151,6 +152,7 @@ public class CardController extends ControllerHelper {
                             Board currentBoard = getBoardFuture.result().get(0);
                             BoardPayload boardToUpdate = new BoardPayload()
                                     .setId(currentBoard.getId())
+                                    .setPublic(currentBoard.isPublic())
                                     .setCardIds(currentBoard.cards()
                                             .stream()
                                             .map(Card::getId)
@@ -182,6 +184,7 @@ public class CardController extends ControllerHelper {
                                             Board currentBoard = getBoardFuture.result().get(0);
                                             BoardPayload boardToUpdate = new BoardPayload()
                                                     .setId(currentBoard.getId())
+                                                    .setPublic(currentBoard.isPublic())
                                                     .setCardIds(currentBoard.cards()
                                                             .stream()
                                                             .map(Card::getId)

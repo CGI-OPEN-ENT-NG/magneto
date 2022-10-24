@@ -187,5 +187,4 @@ public class BoardController extends ControllerHelper {
                             .onSuccess(result -> renderJson(request, result));
                 }));
     }
-
 }

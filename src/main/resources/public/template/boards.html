@@ -118,6 +118,12 @@
             app-prefix="'magneto'">
     </share-panel-lightbox>
 
+    <board-publish-lightbox
+        display="vm.displayPublicShareBoardLightbox"
+        board="vm.selectedBoards[0]"
+        on-submit="vm.onFormSubmit">
+    </board-publish-lightbox>
+
     <infinite-scroll scrolled="vm.onScroll()"
                      loading-mode="true"
                      scroll-eventer="vm.infiniteScrollService">
@@ -125,7 +131,7 @@
 
     <toaster
             display="vm.selectedBoardIds.length > 0 || vm.selectedFolderIds.length > 0"
-            has-open="(vm.selectedFolderIds.length == 1 || vm.selectedBoardIds.length == 1) && vm.selectedFolderIds.length + vm.selectedBoardIds.length == 1"
+            has-open="!vm.filter.isTrash && (vm.selectedFolderIds.length == 1 || vm.selectedBoardIds.length == 1) && vm.selectedFolderIds.length + vm.selectedBoardIds.length == 1"
             on-open="vm.openBoardOrFolder"
             has-properties="vm.filter.isMyBoards && vm.selectedBoardIds.length == 1
                             && vm.selectedFolderIds.length == 0 && vm.selectedBoards[0].myRights.manager"
@@ -136,6 +142,11 @@
             on-delete="vm.openDeleteForm"
             has-share="vm.filter.isMyBoards && vm.selectedBoardIds.length == 1
                         && vm.selectedFolderIds.length == 0 && vm.selectedBoards[0].isMyBoard()"
+            has-public-share="vm.filter.isMyBoards && vm.selectedBoardIds.length == 1
+                        && vm.selectedFolderIds.length == 0 && vm.selectedBoards[0].isMyBoard() && !vm.selectedBoards[0].public"
+            has-public-unshare="vm.filter.isMyBoards && vm.selectedBoardIds.length == 1
+                        && vm.selectedFolderIds.length == 0 && vm.selectedBoards[0].isMyBoard() && vm.selectedBoards[0].public"
+            on-public-share="vm.openPublicShareForm"
             on-share="vm.openShareForm"
             has-restore="vm.filter.isTrash"
             on-restore="vm.restoreBoardsOrFolders"

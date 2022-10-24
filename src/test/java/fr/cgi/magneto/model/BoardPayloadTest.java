@@ -26,7 +26,8 @@ public class BoardPayloadTest {
             .put("title", "title")
             .put("imageUrl", "imageUrl")
             .put("description", "description")
-            .put("modificationDate", "modificationDate");
+            .put("modificationDate", "modificationDate")
+            .put("public", false);
 
     @Test
     public void testBoardPayloadHasBeenInstantiated(TestContext ctx) {

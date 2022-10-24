@@ -35,6 +35,7 @@ public class Board implements Model<Board> {
         this.description = board.getString(Field.DESCRIPTION);
         this.owner = new User(board.getString(Field.OWNERID), board.getString(Field.OWNERNAME));
         this.shared = board.getJsonArray(Field.SHARED, new JsonArray());
+        this.isPublic = board.getBoolean(Field.PUBLIC, false);
         this.folderId = board.getString(Field.FOLDERID);
         this.modificationDate = board.getString(Field.MODIFICATIONDATE);
         JsonArray cardsArray = new JsonArray(((List<String>) board.getJsonArray(Field.CARDIDS, new JsonArray()).getList())

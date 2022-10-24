@@ -14,7 +14,9 @@ describe('BoardModel', () => {
            folderId: 'folderId',
            shared: [],
            ownerId: 'ownerId',
-           ownerName: 'ownerName'
+           ownerName: 'ownerName',
+           tags: ['tag1', 'tag2'],
+           public: false
        }
 
         const board = new Board().build(boardResponse);
@@ -28,6 +30,8 @@ describe('BoardModel', () => {
         expect(board.modificationDate).toEqual(boardResponse.modificationDate);
         expect(board.creationDate).toEqual(boardResponse.creationDate);
         expect(board.folderId).toEqual(boardResponse.folderId);
+        expect(board.tags).toEqual(boardResponse.tags);
+        expect(board.public).toEqual(boardResponse.public);
         done();
     });
 
@@ -46,7 +50,9 @@ describe('BoardModel', () => {
                    folderId: 'folderId',
                    shared: [],
                    ownerId: 'ownerId',
-                   ownerName: 'ownerName'
+                   ownerName: 'ownerName',
+                   tags: ['tag1', 'tag2'],
+                   public: false
                }
            ],
            page: 1,
@@ -68,6 +74,8 @@ describe('BoardModel', () => {
         expect(form.description).toEqual(null);
         expect(form.imageUrl).toEqual(null);
         expect(form.folderId).toEqual(null);
+        expect(form.cardIds).toEqual(null);
+        expect(form.public).toEqual(false);
         done();
     });
 

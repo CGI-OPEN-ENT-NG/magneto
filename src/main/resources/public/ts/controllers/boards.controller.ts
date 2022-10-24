@@ -54,6 +54,7 @@ interface IViewModel {
     openCreateForm(): void;
     openDeleteForm(): void;
     openShareForm(): void;
+    openPublicShareForm(): void;
     openPropertiesForm(): void;
     openBoardOrFolder(): Promise<void>;
     openRenameFolderForm(): void;
@@ -96,6 +97,7 @@ class Controller implements ng.IController, IViewModel {
     folderMoveNavTrees: Array<FolderTreeNavItem>;
     displayDeleteBoardLightbox: boolean;
     displayShareBoardLightbox: boolean;
+    displayPublicShareBoardLightbox: boolean;
     displayUpdateBoardLightbox: boolean;
     displayUpdateFolderLightbox: boolean;
     displayFolderLightbox: boolean;
@@ -123,6 +125,7 @@ class Controller implements ng.IController, IViewModel {
         this.displayFolderLightbox = false;
         this.displayMoveBoardLightbox = false;
         this.displayShareBoardLightbox = false;
+        this.displayPublicShareBoardLightbox = false;
 
         this.filter = new BoardsFilter();
         this.boards = [];
@@ -200,6 +203,13 @@ class Controller implements ng.IController, IViewModel {
      */
     openShareForm = (): void => {
         this.displayShareBoardLightbox = true;
+    }
+
+    /**
+     * Open public share board form.
+     */
+    openPublicShareForm = (): void => {
+        this.displayPublicShareBoardLightbox = true;
     }
 
     /**
@@ -455,6 +465,7 @@ class Controller implements ng.IController, IViewModel {
         this.filter.page = 0;
         this.filter.searchText = '';
         this.boards = [];
+        this.selectedBoards = [];
         this.selectedBoardIds = [];
         this.selectedFolderIds = [];
         this.selectedUpdateBoardForm = new BoardForm();

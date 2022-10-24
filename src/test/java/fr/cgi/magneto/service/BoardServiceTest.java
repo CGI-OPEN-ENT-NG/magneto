@@ -39,8 +39,7 @@ public class BoardServiceTest {
                "\"pipeline\": [\n" +
                 "{\n" +
                "      \"$match\": {\n" +
-               "        \"deleted\": false,\n" +
-               "        \"public\": false\n" +
+               "        \"deleted\": false\n" +
                "      }\n" +
                "    },\n" +
                "    {\n" +
@@ -78,7 +77,13 @@ public class BoardServiceTest {
                "              \"$regex\": \"test\",\n" +
                "              \"$options\": \"i\"\n" +
                "            }\n" +
-               "          }\n" +
+               "          },\n" +
+               "          {\n" +
+               "            \"tags\": {\n" +
+                       "      \"$regex\": \"test\",\n" +
+                       "      \"$options\": \"i\"\n" +
+                       "    }\n" +
+                       "  }\n" +
                "        ]\n" +
                "      }\n" +
                "    },\n" +
@@ -111,7 +116,9 @@ public class BoardServiceTest {
                "        \"description\": 1,\n" +
                "        \"ownerId\": 1,\n" +
                "        \"ownerName\": 1,\n" +
-               "        \"shared\": 1\n" +
+               "        \"public\": 1,\n" +
+               "        \"shared\": 1,\n" +
+               "        \"tags\": 1\n" +
                "      }\n" +
                "    },\n" +
                "    {\n" +

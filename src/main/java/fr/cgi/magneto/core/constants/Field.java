@@ -47,6 +47,7 @@ public class Field {
     public static final String CHILDRENIDS = "childrenIds";
     public static final String FOLDER = "folder";
     public static final String FOLDERS = "folders";
+    public static final String TAGS = "tags";
 
     public static final String OWNER = "owner";
     public static final String USERID = "userId";

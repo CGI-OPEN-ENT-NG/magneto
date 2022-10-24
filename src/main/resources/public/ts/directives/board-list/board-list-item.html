@@ -16,9 +16,16 @@
             <span ng-if="vm.board.nbCards != 1"><b>[[vm.board.nbCards]]</b>&nbsp;<i18n>magneto.magnets</i18n></span>
             <span ng-if="vm.board.nbCards == 1"><b>[[vm.board.nbCards]]</b>&nbsp;<i18n>magneto.magnet</i18n></span>
         </div>
-        <span class="board-list-item-infos-date">
-            <i class="magneto-calendar"></i> [[vm.formatDate(vm.board.modificationDate)]]
-        </span>
+        <div class="board-list-item-infos-date-icons">
+            <div class="infos-date">
+                <i class="magneto-calendar"></i> [[vm.formatDate(vm.board.modificationDate)]]
+            </div>
+            <div class="infos-icons">
+                <i class="magneto-crown" tooltip="magneto.board.tooltip.my.board" ng-if="vm.board.isMyBoard()"></i>
+                <i class="magneto-share-variant" tooltip="magneto.board.tooltip.shared.board" ng-if="vm.board.shared !== undefined"></i>
+                <i class="magneto-earth" tooltip="magneto.board.tooltip.public.board" ng-if="vm.board.public"></i>
+            </div>
+        </div>
     </div>
 
 </div>

@@ -19,6 +19,8 @@ public class BoardPayload implements Model<BoardPayload> {
     private String modificationDate;
     private String folderId;
     private List<String> cardIds;
+    private List<String> tags;
+    private boolean isPublic;
 
     public BoardPayload() {
 
@@ -35,6 +37,9 @@ public class BoardPayload implements Model<BoardPayload> {
         this.folderId = board.getString(Field.FOLDERID);
         this.cardIds = !board.getJsonArray(Field.CARDIDS, new JsonArray()).isEmpty() ?
                 board.getJsonArray(Field.CARDIDS, new JsonArray()).getList() : null;
+        this.tags = !board.getJsonArray(Field.TAGS, new JsonArray()).isEmpty() ?
+                board.getJsonArray(Field.TAGS, new JsonArray()).getList() : null;
+        this.isPublic = board.getBoolean(Field.PUBLIC, false);
         if (this.getId() == null) {
             this.setCreationDate(DateHelper.getDateString(new Date(), DateHelper.MONGO_FORMAT));
         }
@@ -131,6 +136,15 @@ public class BoardPayload implements Model<BoardPayload> {
         return this;
     }
 
+    public List<String> getTags() {
+        return tags;
+    }
+
+    public BoardPayload setTags(List<String> tags) {
+        this.tags = tags;
+        return this;
+    }
+
     public BoardPayload addCard(String cardId) {
         this.cardIds.add(0, cardId);
         return this;
@@ -140,6 +154,15 @@ public class BoardPayload implements Model<BoardPayload> {
         if(cardIds != null) {
             cardIds.forEach((id) -> this.cardIds.remove(id));
         }
+        return this;
+    }
+
+    public boolean isPublic() {
+        return isPublic;
+    }
+
+    public BoardPayload setPublic(boolean isPublic) {
+        this.isPublic = isPublic;
         return this;
     }
 
@@ -161,13 +184,17 @@ public class BoardPayload implements Model<BoardPayload> {
             json.put(Field.CARDIDS, new JsonArray(this.getCardIds()));
         }
 
+        if (this.getTags() != null) {
+            json.put(Field.TAGS, new JsonArray(this.getTags()));
+        }
+
+        json.put(Field.PUBLIC, this.isPublic());
         json.put(Field.MODIFICATIONDATE, this.getModificationDate());
 
         // If create
         if (this.getId() == null) {
             json.put(Field.CREATIONDATE, this.getCreationDate())
                     .put(Field.DELETED, false)
-                    .put(Field.PUBLIC, false)
                     .put(Field.OWNERID, this.getOwnerId())
                     .put(Field.OWNERNAME, this.getOwnerName())
                     .put(Field.CARDIDS, new JsonArray());

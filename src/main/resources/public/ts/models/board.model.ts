@@ -7,11 +7,13 @@ export interface IBoardItemResponse {
     description: string;
     imageUrl: string;
     cardIds: Array<string>;
+    tags: Array<string>;
     nbCards: number;
     modificationDate: string;
     creationDate: string;
     folderId: string;
     shared: any[];
+    public: boolean;
     ownerId: string;
     ownerName: string;
 }
@@ -39,6 +41,8 @@ export interface IBoardPayload {
     imageUrl?: string;
     folderId?: string;
     cardIds?: Array<string>;
+    tags?: Array<string>;
+    public?: boolean;
 }
 
 export class BoardForm {
@@ -48,6 +52,9 @@ export class BoardForm {
     private _imageUrl: string;
     private _folderId: string;
     private _cardIds: Array<string>;
+    private _public: boolean;
+    private _tags: Array<string>;
+    private _tagsTextInput: string;
 
     constructor() {
         this._id = null;
@@ -56,6 +63,9 @@ export class BoardForm {
         this._imageUrl = null;
         this._folderId = null;
         this._cardIds = null;
+        this._public = false;
+        this._tags = null;
+        this._tagsTextInput = null;
     }
 
     build(board: Board): BoardForm {
@@ -64,6 +74,9 @@ export class BoardForm {
         this.description = board.description;
         this.imageUrl = board.imageUrl;
         this.folderId = board.folderId;
+        this.tags = board.tags;
+        this.tagsTextInput = board.tagsTextInput;
+        this.public = board.public;
 
         return this;
     }
@@ -117,6 +130,30 @@ export class BoardForm {
         this._cardIds = value;
     }
 
+    get tags(): Array<string> {
+        return this._tags;
+    }
+
+    set tags(value: Array<string>) {
+        this._tags = value;
+    }
+
+    get tagsTextInput(): string {
+        return this._tagsTextInput;
+    }
+
+    set tagsTextInput(value: string) {
+        this._tagsTextInput = value;
+    }
+
+    get public(): boolean {
+        return this._public;
+    }
+
+    set public(value: boolean) {
+        this._public = value;
+    }
+
     isValid(): boolean {
         return this.title !== null && this.title !== '' &&
             this.imageUrl != null && this.imageUrl !== ''
@@ -143,6 +180,14 @@ export class BoardForm {
             payload.cardIds = this.cardIds;
         }
 
+        if (this.tags) {
+            payload.tags = this.tags;
+        }
+
+        if (this.public) {
+            payload.public = this.public;
+        }
+
         if (this.id && this.id != '')  {
             payload.id = this.id;
         }
@@ -157,10 +202,13 @@ export class Board implements Shareable {
     private _imageUrl: string;
     private _description: string;
     private _cardIds: Array<string>;
+    private _tags: Array<string>;
+    private _tagsTextInput: string;
     private _nbCards: number;
     private _modificationDate: string;
     private _creationDate: string;
     private _folderId: string;
+    private _public: boolean;
 
     // Share resource properties
     public shared: any[];
@@ -174,10 +222,17 @@ export class Board implements Shareable {
         this._imageUrl = data.imageUrl;
         this._description = data.description;
         this._cardIds = data.cardIds;
+        this._tags = data.tags;
+        this._tagsTextInput = data.tags ? data.tags
+            .map((tag: string) => '#' + tag)
+            .toString()
+            .replace(/,/g, ' ') : '';
+
         this._nbCards = data.nbCards;
         this._modificationDate = data.modificationDate;
         this._creationDate = data.creationDate;
         this._folderId = data.folderId;
+        this._public = data.public;
         this.owner = {userId: data.ownerId, displayName: data.ownerName};
         this.shared = data.shared;
         return this;
@@ -219,8 +274,28 @@ export class Board implements Shareable {
         return this._folderId;
     }
 
+    get public(): boolean {
+        return this._public;
+    }
+
     set folderId(value: string) {
         this._folderId = value;
+    }
+
+    get tags(): Array<string> {
+        return this._tags;
+    }
+
+    get tagsTextInput(): string {
+        return this._tagsTextInput;
+    }
+
+    set tagsTextInput(value: string) {
+        this._tagsTextInput = value;
+    }
+
+    set tags(value: Array<string>) {
+        this._tags = value;
     }
 
     isMyBoard() {
