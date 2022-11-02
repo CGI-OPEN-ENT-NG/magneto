@@ -130,7 +130,7 @@ export class FolderTreeNavItem {
 
         childrenFolders.forEach((folder: IFolderTreeNavItem) => {
             let childMatch: FolderTreeNavItem =
-                this.children.find((f: FolderTreeNavItem) => f.id === folder.id);
+                this.children.find((f: FolderTreeNavItem) => f.id === folder.id && f.name === folder.title);
 
             if (childMatch === undefined) {
                 newChildren.push(new FolderTreeNavItem(folder).buildFolders(folders));
