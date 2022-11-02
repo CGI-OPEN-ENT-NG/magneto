@@ -44,6 +44,7 @@
     &-folder-button {
       width: 66%;
       margin: 14px auto auto;
+      display: flex;
 
       a {
         border: solid $magneto-blue 1px;
