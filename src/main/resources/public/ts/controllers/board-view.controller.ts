@@ -17,13 +17,11 @@ interface IViewModel extends ng.IController {
     displayMoveCardLightbox: boolean;
     displayPreviewCardLightbox: boolean;
     displayMediaLibraryLightbox: boolean;
+    displayAudioMediaLibraryLightbox: boolean;
     displayBoardPropertiesLightbox: boolean;
     displayCollectionLightbox: boolean;
     displayLinkerLightbox: boolean;
-
-    displayResourceLightbox : {
-        video: boolean
-    }
+    displayVideoResourceLightbox : boolean
 
     cardForm: CardForm;
     selectedCard: Card;
@@ -79,10 +77,10 @@ class Controller implements IViewModel {
     board: Board;
     boardForm: BoardForm;
     displayMediaLibraryLightbox: boolean;
-    displayResourceLightbox : {
-        video: boolean
-    }
     displayCollectionLightbox: boolean;
+    displayAudioMediaLibraryLightbox: boolean;
+    displayVideoResourceLightbox : boolean;
+
     displayBoardPropertiesLightbox: boolean;
     displayLinkerLightbox: boolean;
 
@@ -116,10 +114,8 @@ class Controller implements IViewModel {
         this.displayDeleteCardLightbox = false;
         this.displayMoveCardLightbox = false;
         this.displayMediaLibraryLightbox = false;
-        this.displayResourceLightbox = {
-            video: false
-        }
         this.displayCollectionLightbox = false;
+        this.displayVideoResourceLightbox = false;
         this.$window.scrollTo(0, 0);
 
         this.displayBoardPropertiesLightbox = false;
@@ -156,7 +152,7 @@ class Controller implements IViewModel {
                 this.displayMediaLibraryLightbox = true;
                 break;
             case RESOURCE_TYPE.VIDEO:
-                this.displayResourceLightbox.video = true;
+                this.displayVideoResourceLightbox = true;
                 break;
             case RESOURCE_TYPE.FILE:
                 this.displayMediaLibraryLightbox = true;
@@ -165,7 +161,7 @@ class Controller implements IViewModel {
                 this.displayCardLightbox = true;
                 break;
             case RESOURCE_TYPE.AUDIO:
-                this.displayMediaLibraryLightbox = true;
+                this.displayAudioMediaLibraryLightbox = true;
                 break;
             case RESOURCE_TYPE.LINK:
                 this.displayLinkerLightbox = true;
@@ -282,7 +278,7 @@ class Controller implements IViewModel {
     }
 
     onVideoSelected = () : void => {
-        this.displayResourceLightbox.video = false;
+        this.displayVideoResourceLightbox = false;
 
         // Video from workspace
         if (this.videoUrl.includes("workspace")) {
@@ -310,8 +306,6 @@ class Controller implements IViewModel {
         switch (this.cardForm.resourceType) {
             case RESOURCE_TYPE.IMAGE:
                 return 'img';
-            case RESOURCE_TYPE.AUDIO:
-                return 'audio';
             case RESOURCE_TYPE.FILE:
                 return 'any';
             default:

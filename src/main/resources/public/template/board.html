@@ -77,12 +77,19 @@
             on-submit="vm.onFileSelected">
         </media-library-lightbox>
 
+        <!-- Media Library for sound only -->
+        <media-library-lightbox
+                display="vm.displayAudioMediaLibraryLightbox"
+                file-format="'audio'"
+                on-submit="vm.onFileSelected">
+        </media-library-lightbox>
+
         <embedder file-format="'video'"
                   hidden-share-video-code="false"
                   ng-model="vm.videoUrl"
                   ng-change="vm.onVideoSelected()"
-                  ng-if="vm.displayResourceLightbox.video"
-                  show="vm.displayResourceLightbox.video">
+                  ng-if="vm.displayVideoResourceLightbox"
+                  show="vm.displayVideoResourceLightbox">
         </embedder>
 
         <linker display="vm.displayLinkerLightbox"
