@@ -152,6 +152,7 @@ class Controller implements ng.IController, IViewModel {
         this.filter.searchText = searchText;
         this.filter.page = 0;
         this.boards = [];
+        this.getCurrentFolderChildren();
         await this.getBoards();
     }
 
@@ -334,7 +335,8 @@ class Controller implements ng.IController, IViewModel {
                 folder.parentId == (this.openedFolder ? this.openedFolder.id : FOLDER_TYPE.DELETED_BOARDS));
         } else {
             this.currentFolderChildren = this.folders.filter((folder: Folder) =>
-                folder.parentId == (this.openedFolder ? this.openedFolder.id : FOLDER_TYPE.MY_BOARDS));
+                (folder.parentId == (this.openedFolder ? this.openedFolder.id : FOLDER_TYPE.MY_BOARDS))
+                && ((this.filter.searchText == '') || folder.title.includes(this.filter.searchText)));
         }
     }
 
