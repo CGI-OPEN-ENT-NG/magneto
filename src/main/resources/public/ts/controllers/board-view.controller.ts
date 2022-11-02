@@ -43,6 +43,8 @@ interface IViewModel extends ng.IController {
     getCards(): Promise<void>;
 
     openAddResourceLightbox(resourceType: RESOURCE_TYPE): void;
+    openEditResourceLightbox(card: Card): void;
+    openReading(): void;
     onFormSubmit(): Promise<void>;
     onBoardFormSubmit(): Promise<void>;
     onScroll(): void;
