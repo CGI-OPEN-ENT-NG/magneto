@@ -1,5 +1,5 @@
 import {ng, notify} from "entcore";
-import {IScope} from "angular";
+import {IScope, IWindowService} from "angular";
 import {IBoardsService, ICardsService} from "../services";
 import {Board, Boards, BoardForm, Card, CardForm, Cards, ICardsParamsRequest} from "../models";
 import {safeApply} from "../utils/safe-apply.utils";
@@ -99,6 +99,7 @@ class Controller implements IViewModel {
                 private $location: ng.ILocationService,
                 private $sce: ng.ISCEService,
                 private $timeout: ng.ITimeoutService,
+                private $window: IWindowService,
                 private boardsService: IBoardsService,
                 private cardsService: ICardsService) {
         this.$scope.vm = this;
@@ -113,6 +114,7 @@ class Controller implements IViewModel {
         this.displayResourceLightbox = {
             video: false
         }
+        this.$window.scrollTo(0, 0);
 
         this.displayBoardPropertiesLightbox = false;
         this.displayLinkerLightbox = false;
@@ -308,4 +310,4 @@ class Controller implements IViewModel {
 }
 
 export const boardViewController = ng.controller('BoardViewController',
-    ['$scope', '$route', '$location','$sce', '$timeout', 'BoardsService', 'CardsService', Controller]);
+    ['$scope', '$route', '$location','$sce', '$timeout', '$window', 'BoardsService', 'CardsService', Controller]);
