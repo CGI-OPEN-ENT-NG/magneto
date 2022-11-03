@@ -19,6 +19,8 @@ export interface ICardsService {
 
     deleteCard(params: ICardsBoardParamsRequest): Promise<AxiosResponse>;
 
+    moveCard(params: CardForm, boardId: string): Promise<AxiosResponse>
+
 }
 
 export const cardsService: ICardsService = {
@@ -53,8 +55,13 @@ export const cardsService: ICardsService = {
     },
 
     deleteCard: async (params: ICardsBoardParamsRequest): Promise<AxiosResponse> => {
-        return http.delete(`/magneto/cards/${params.boardId}`, {data : {cardIds: params.cardIds}});
+        return http.delete(`/magneto/cards/${params.boardId}`, {data: {cardIds: params.cardIds}});
+    },
+
+    moveCard: async (params: CardForm, boardId: string): Promise<AxiosResponse> => {
+        return http.post(`/magneto/card/move`, {card: params.toJSON(), boardId: boardId});
     }
+
 };
 
 export const CardsService = ng.service('CardsService', (): ICardsService => cardsService);

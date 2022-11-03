@@ -35,7 +35,8 @@ public class BoardPayload implements Model<BoardPayload> {
         this.ownerId = board.getString(Field.OWNERID);
         this.ownerName = board.getString(Field.OWNERNAME);
         this.folderId = board.getString(Field.FOLDERID);
-        this.cardIds = board.getJsonArray(Field.CARDIDS, new JsonArray()).getList();
+        this.cardIds = !board.getJsonArray(Field.CARDIDS, new JsonArray()).isEmpty() ?
+                board.getJsonArray(Field.CARDIDS, new JsonArray()).getList() : null;
         this.tags = !board.getJsonArray(Field.TAGS, new JsonArray()).isEmpty() ?
                 board.getJsonArray(Field.TAGS, new JsonArray()).getList() : null;
         this.isPublic = board.getBoolean(Field.PUBLIC, false);
@@ -145,6 +146,8 @@ public class BoardPayload implements Model<BoardPayload> {
     }
 
     public BoardPayload addCards(List<String> cardIds) {
+        if (this.cardIds == null)
+            this.cardIds = new ArrayList<>();
         if(cardIds != null) {
             cardIds.forEach((id) -> this.cardIds.add(0, id));
         }
@@ -181,7 +184,7 @@ public class BoardPayload implements Model<BoardPayload> {
             json.put(Field.DESCRIPTION, this.getDescription());
         }
 
-        if (this.getCardIds() != null && !this.getCardIds().isEmpty() && this.getId() != null) {
+        if (this.getCardIds() != null && this.getId() != null) {
             json.put(Field.CARDIDS, new JsonArray(this.getCardIds()));
         }
 

@@ -1,0 +1,37 @@
+<lightbox class="card-move-lightbox"
+          show="vm.display"
+          on-close="vm.display = false">
+    <section class="head card-move-lightbox-head">
+        <h3>
+            <i18n>magneto.move.cards</i18n>
+        </h3>
+    </section>
+
+    <section class="body card-move-lightbox-body">
+        <multi-combo title="[[vm.lang.translate('magneto.boards')]]"
+                     labels="vm.comboLabels"
+                     combo-model="vm.boards"
+                     search-on="_title"
+                     order-by="_title"
+                     filtered-model="vm.selectedBoards"
+                     max-selected="1"
+                     class="inline-block card-move-lightbox-combo no-border">
+        </multi-combo>
+    </section>
+    <!-- Form submit/cancel buttons -->
+    <section>
+        <div class="row horizontal-spacing">
+            <div class="twelve cell">
+                <button class="right-magnet card-move-lightbox-button"
+                        data-ng-click="vm.submitMove()"
+                        data-ng-disabled="!vm.isFormValid()">
+                    <i18n>magneto.move</i18n>
+                </button>
+                <button class="right-magnet cancel"
+                        data-ng-click="vm.closeForm()">
+                    <i18n>magneto.cancel</i18n>
+                </button>
+            </div>
+        </div>
+    </section>
+</lightbox>

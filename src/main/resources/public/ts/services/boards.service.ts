@@ -1,6 +1,6 @@
 import {ng} from 'entcore'
 import http, {AxiosResponse} from 'axios';
-import {IBoardsParamsRequest, Boards, BoardForm, Board} from "../models";
+import {BoardForm, Boards, IBoardsParamsRequest} from "../models";
 
 export interface IBoardsService {
     getAllBoards(params: IBoardsParamsRequest): Promise<Boards>;
@@ -23,10 +23,14 @@ export interface IBoardsService {
 export const boardsService: IBoardsService = {
     getAllBoards: async (params: IBoardsParamsRequest): Promise<Boards> => {
         let urlParams: string = `?isPublic=${params.isPublic}&isShared=${params.isShared}` +
-            `&isDeleted=${params.isDeleted}&sortBy=${params.sortBy}&page=${params.page}`;
+            `&isDeleted=${params.isDeleted}&sortBy=${params.sortBy}`;
 
         if (params.folderId) {
             urlParams += `&folderId=${params.folderId}`;
+        }
+
+        if (params.page != null) {
+            urlParams += `&page=${params.page}`;
         }
 
         if (params.searchText !== undefined && params.searchText !== null && params.searchText !== '') {

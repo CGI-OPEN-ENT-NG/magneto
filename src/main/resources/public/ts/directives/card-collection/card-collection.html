@@ -24,7 +24,8 @@
             </switch>
             <span><i18n>magneto.cards.collection.board.view</i18n></span>
         </div>
-        <div class="card-list-scrollable">
+        <div class="card-list-scrollable"
+             ng-show="vm.cards.length > 0">
             <div ng-show="vm.displayBoard" ng-repeat="collection in vm.displayedCard">
                 <div class="card-collection-lightbox-board">
                     <span class="card-collection-lightbox-board-title">[[collection.cards[0].boardTitle]]</span>
@@ -55,6 +56,11 @@
                        on-preview="vm.openPreview">
             </card-list>
         </div>
+        <div class="empty-state"
+             ng-show="vm.cards.length === 0">
+            <img data-ng-src="/magneto/public/img/empty-state-magneto.svg" alt="empty boards">
+            <i18n>magneto.cards.empty.text</i18n>
+        </div>
     </section>
 
     <card-preview-lightbox
@@ -70,7 +76,7 @@
     </infinite-scroll>
 
     <button class="right-magnet create-button"
-            data-ng-disabled="vm.selectedCardIds.length == 0"
+            data-ng-disabled="!vm.isFormValid()"
             ng-click="vm.submitDuplicate()">
         <i18n>magneto.duplicate</i18n>
     </button>

@@ -1,23 +1,30 @@
 package fr.cgi.magneto.service.impl;
 
-import fr.cgi.magneto.*;
-import fr.cgi.magneto.core.constants.*;
-import fr.cgi.magneto.helper.*;
-import fr.cgi.magneto.model.*;
+import fr.cgi.magneto.Magneto;
+import fr.cgi.magneto.core.constants.CollectionsConstant;
+import fr.cgi.magneto.core.constants.Field;
+import fr.cgi.magneto.core.constants.Mongo;
+import fr.cgi.magneto.helper.ModelHelper;
+import fr.cgi.magneto.model.MongoQuery;
 import fr.cgi.magneto.model.boards.Board;
 import fr.cgi.magneto.model.boards.BoardPayload;
-import fr.cgi.magneto.service.*;
-import io.vertx.core.*;
-import io.vertx.core.json.*;
+import fr.cgi.magneto.service.BoardService;
+import fr.cgi.magneto.service.FolderService;
+import fr.cgi.magneto.service.ServiceFactory;
 import fr.wseduc.mongodb.MongoDb;
-import io.vertx.core.json.JsonObject;
+import io.vertx.core.CompositeFuture;
+import io.vertx.core.Future;
 import io.vertx.core.Promise;
+import io.vertx.core.json.JsonArray;
+import io.vertx.core.json.JsonObject;
 import io.vertx.core.logging.Logger;
 import io.vertx.core.logging.LoggerFactory;
 import org.entcore.common.mongodb.MongoDbResult;
 import org.entcore.common.user.UserInfos;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.List;
+import java.util.UUID;
 
 public class DefaultBoardService implements BoardService {
 
@@ -262,10 +269,11 @@ public class DefaultBoardService implements BoardService {
                 .lookUp(CollectionsConstant.FOLDER_COLLECTION, Field._ID, Field.BOARDIDS, Field.FOLDERS);
 
 
-        if (!getCount)
-            query = query.page(page)
-
-                    .project(new JsonObject()
+        if (!getCount) {
+            if (page != null) {
+                query.page(page);
+            }
+            query.project(new JsonObject()
                             .put(Field._ID, 1)
                             .put(Field.TITLE, 1)
                             .put(Field.IMAGEURL, 1)
@@ -291,6 +299,7 @@ public class DefaultBoardService implements BoardService {
                             .put(Field.TAGS, 1)
                             .put(Field.PUBLIC, 1))
                     .unwind(Field.FOLDERID, true);
+        }
 
         if (folderId != null || isDeleted) {
             query.match(new JsonObject().put(String.format("%s.%s", Field.FOLDERID, Field._ID), folderId));

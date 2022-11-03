@@ -140,7 +140,6 @@ public class CardController extends ControllerHelper {
     public void update(HttpServerRequest request) {
         RequestUtils.bodyToJson(request, pathPrefix + "cardUpdate", card -> {
             CardPayload updateCard = new CardPayload(card)
-                    .setId(card.getString(Field.ID))
                     .setModificationDate(DateHelper.getDateString(new Date(), DateHelper.MONGO_FORMAT));
             UserUtils.getUserInfos(eb, request, user -> {
                 Future<JsonObject> updateCardFuture = cardService.update(user, updateCard);
@@ -164,7 +163,6 @@ public class CardController extends ControllerHelper {
         });
     }
 
-
     @SuppressWarnings("unchecked")
     @Post("/card/duplicate")
     @ApiDoc("Duplicate a card")
@@ -179,6 +177,51 @@ public class CardController extends ControllerHelper {
                         .compose(cards -> cardService.duplicateCards(boardId, cards, user))
                         .onSuccess(res -> renderJson(request, res))
                         .onFailure(err -> renderError(request));
+            });
+        });
+    }
+
+    @Post("/card/move")
+    @ApiDoc("Move a card to another board")
+    @ResourceFilter(WriteBoardRight.class)
+    @SecuredAction(value = "", type = ActionType.RESOURCE)
+    public void moveCard(HttpServerRequest request) {
+        RequestUtils.bodyToJson(request, pathPrefix + "moveCard", moveCard -> {
+            UserUtils.getUserInfos(eb, request, user -> {
+                CardPayload updateCard = new CardPayload(moveCard.getJsonObject(Field.CARD));
+                String oldBoardId = updateCard.getBoardId();
+                updateCard.setBoardId(moveCard.getString(Field.BOARDID));
+
+                Future<JsonObject> updateCardFuture = cardService.update(user, updateCard);
+                Future<List<Board>> getBoardFuture = boardService.getBoards(Collections.singletonList(moveCard.getString(Field.BOARDID)));
+                CompositeFuture.all(updateCardFuture, getBoardFuture)
+                        .compose(result -> {
+                            Board currentBoard = getBoardFuture.result().get(0);
+                            BoardPayload boardToUpdate = new BoardPayload()
+                                    .setId(currentBoard.getId())
+                                    .setPublic(currentBoard.isPublic())
+                                    .setCardIds(currentBoard.cards()
+                                            .stream()
+                                            .map(Card::getId)
+                                            .collect(Collectors.toList()))
+                                    .addCards(Collections.singletonList(updateCard.getId()))
+                                    .setModificationDate(DateHelper.getDateString(new Date(), DateHelper.MONGO_FORMAT));
+                            return boardService.update(boardToUpdate);
+                        })
+                        .compose(result -> boardService.getBoards(Collections.singletonList(oldBoardId)))
+                        .compose(board -> {
+                            if (!board.isEmpty()) {
+                                BoardPayload updateBoard = new BoardPayload(board.get(0).toJson());
+                                updateBoard.removeCardIds(Collections.singletonList(moveCard.getJsonObject(Field.CARD).getString(Field.ID)));
+                                return boardService.update(updateBoard);
+                            } else {
+                                return Future.failedFuture(String.format("[Magneto%s::moveCard] " +
+                                        "No board found with id %s", this.getClass().getSimpleName(), oldBoardId));
+                            }
+
+                        })
+                        .onFailure(err -> renderError(request))
+                        .onSuccess(res -> renderJson(request, res));
             });
         });
     }

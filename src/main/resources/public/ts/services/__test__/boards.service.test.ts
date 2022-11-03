@@ -23,9 +23,8 @@ describe('BoardsService', () => {
             all: []
         }
 
-        let spy = jest.spyOn(axios, "get");
         mock.onGet(`/magneto/boards?isPublic=${params.isPublic}&isShared=${params.isShared}&isDeleted=${params.isDeleted}` +
-        `&sortBy=${params.sortBy}&page=${params.page}&folderId=${params.folderId}&searchText=${params.searchText}`)
+        `&sortBy=${params.sortBy}&folderId=${params.folderId}&page=${params.page}&searchText=${params.searchText}`)
             .reply(200, data);
 
         boardsService.getAllBoards(params).then(res => {

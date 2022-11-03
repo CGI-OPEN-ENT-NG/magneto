@@ -43,7 +43,9 @@
                     has-delete="vm.board.myRights.manager !== undefined"
                     on-delete="vm.openDeleteResourceLightbox"
                     has-preview="vm.board.myRights.read !== undefined"
-                    on-preview="vm.openPreviewResourceLightbox">
+                    on-preview="vm.openPreviewResourceLightbox"
+                    has-transfer="vm.board.myRights.contrib != undefined"
+                    on-transfer="vm.openTransferResourceLightbox">
             </card-list>
         </div>
 
@@ -54,6 +56,13 @@
                 board-id="vm.filter.boardId"
                 on-submit="vm.onFormSubmit">
         </card-manage-lightbox>
+
+        <card-move-lightbox
+                display="vm.displayTransferCardLightbox"
+                form="vm.cardForm"
+                board-id="vm.filter.boardId"
+                on-submit="vm.onFormSubmit">
+        </card-move-lightbox>
 
         <!-- Card deletion modal -->
         <card-delete-lightbox

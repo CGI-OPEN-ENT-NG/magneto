@@ -26,7 +26,7 @@ public class CardPayload implements Model<CardPayload> {
     private String boardId;
 
     public CardPayload(JsonObject card) {
-        this.id = card.getString(Field._ID, null);
+        this.id = card.getString(Field.ID, null);
         this.title = card.getString(Field.TITLE);
         this.resourceId = card.getString(Field.RESOURCEID);
         this.resourceType = card.getString(Field.RESOURCETYPE);
@@ -191,6 +191,7 @@ public class CardPayload implements Model<CardPayload> {
                 .put(Field.RESOURCEURL, this.getResourceUrl())
                 .put(Field.DESCRIPTION, this.getDescription())
                 .put(Field.CAPTION, this.getCaption())
+                .put(Field.BOARDID, this.getBoardId())
                 .put(Field.MODIFICATIONDATE, this.getModificationDate())
                 .put(Field.LASTMODIFIERID, this.getLastModifierId())
                 .put(Field.LASTMODIFIERNAME, this.getLastModifierName());

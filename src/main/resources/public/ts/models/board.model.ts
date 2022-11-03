@@ -25,13 +25,13 @@ export interface IBoardsResponse {
 }
 
 export interface IBoardsParamsRequest {
-    folderId: string;
+    folderId?: string;
     isPublic: boolean;
     isShared: boolean;
     isDeleted: boolean;
-    searchText: string;
+    searchText?: string;
     sortBy: string;
-    page: number;
+    page?: number;
 }
 
 export interface IBoardPayload {

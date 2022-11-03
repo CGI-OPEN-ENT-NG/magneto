@@ -1,0 +1,19 @@
+.card-move-lightbox {
+  &-body {
+    padding: 25px 0 150px 0 !important;
+  }
+
+  &-combo {
+    width: 60%;
+    margin-right: auto;
+    margin-left: auto;
+  }
+
+  &-button {
+    color: white !important;
+  }
+
+  button {
+    color: black;
+  }
+}

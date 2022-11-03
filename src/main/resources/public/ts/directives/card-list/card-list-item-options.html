@@ -32,6 +32,12 @@
                         <i18n>magneto.card.options.preview</i18n>
                     </span>
                 </a>
+                <a class="item" ng-if="vm.hasTransfer" ng-click="vm.openTransfer()">
+                    <i class="magneto-card-move" aria-hidden="true"></i>
+                    <span>
+                        <i18n>magneto.card.options.move</i18n>
+                    </span>
+                </a>
             </div>
         </div>
     </nav>

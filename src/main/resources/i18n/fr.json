@@ -1,5 +1,6 @@
 {
   "magneto.title": "Magnéto",
+  "magneto.boards": "Tableaux",
   "magneto.my.boards": "Mes tableaux",
   "magneto.create.board": "Créer un tableau",
   "magneto.reading.board": "Lecture",
@@ -66,13 +67,17 @@
   "magneto.card.options.preview": "Aperçu",
   "magneto.card.options.hide": "Cacher",
   "magneto.card.options.delete": "Supprimer",
+  "magneto.card.options.move": "Déplacer",
   "magneto.create.link": "Créer un lien",
   "magneto.site.address": "Adresse du site",
   "magneto.add.content.from.menu": "Ajoutez du contenu grâce au menu de gauche",
+  "magneto.move.cards": "Déplacer l'aimant selectionné",
   "magneto.delete.cards": "Supprimer les aimants",
   "magneto.delete.cards.message": "Êtes-vous sûr(e) de vouloir supprimer définitivement les aimants selectionnés ?",
   "magneto.delete.cards.error": "Une erreur est survenue lors de la suppression des aimants selectionnés.",
+  "magneto.move.cards.error": "Une erreur est survenue lors du déplacement de l'aimant selectionné.",
   "magneto.duplicate.cards.error": "Une erreur est survenue lors de la duplication des aimants selectionnés.",
+  "magneto.move.cards.confirm": "L'aimant selectionné a été supprimé avec succès.",
   "magneto.delete.cards.confirm": "Les aimants selectionnés ont été supprimés avec succès.",
   "magneto.duplicate.cards.confirm": "Les aimants selectionnés ont été dupliqués avec succès.",
   "magneto.board.saved.at": "Tableau enregistré le {0} à {1}",
@@ -111,5 +116,9 @@
   "magneto.cards.collection.public": "Dans les tableaux lycée connecté",
   "magneto.cards.collection.board.view": "Ranger par tableau",
   "magneto.cards.collection.board.cards.show": "Voir tous les aimants du tableau",
-  "magneto.cards.collection.board.cards.hide": "Cacher les aimants liés"
+  "magneto.cards.collection.board.cards.hide": "Cacher les aimants liés",
+  "magneto.multi-combo.deselectAll": "Tout déselectionner",
+  "magneto.multi-combo.options": "Options",
+  "magneto.multi-combo.searchPlaceholder": "Chercher",
+  "magneto.multi-combo.selectAll": "Tout sélectionner"
 }

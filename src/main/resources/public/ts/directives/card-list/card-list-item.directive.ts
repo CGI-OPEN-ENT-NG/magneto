@@ -25,6 +25,8 @@ interface IViewModel extends ng.IController, ICardListItemProps {
 
     openPreview?(card: Card): void;
 
+    openTransfer?(card: Card): void;
+
     isDisplayedOptions: boolean;
     isSelected: boolean;
 
@@ -47,6 +49,8 @@ interface ICardListItemProps {
     onDelete?;
     hasPreview: boolean;
     onPreview?;
+    hasTransfer: boolean;
+    onTransfer?;
 }
 
 interface ICardListItemScope extends IScope, ICardListItemProps {
@@ -66,6 +70,8 @@ class Controller implements IViewModel {
     hasHide: boolean;
     hasDelete: boolean;
     hasPreview: boolean;
+    hasTransfer: boolean;
+
 
     isSelected: boolean;
     RESOURCE_TYPES: typeof RESOURCE_TYPE;
@@ -133,7 +139,9 @@ function directive($parse: IParseService) {
             hasDelete: '=',
             onDelete: '&',
             hasPreview: '=',
-            onPreview: '&'
+            onPreview: '&',
+            hasTransfer: '=',
+            onTransfer: '&'
         },
         controllerAs: 'vm',
         bindToController: true,
@@ -168,6 +176,10 @@ function directive($parse: IParseService) {
 
             vm.openPreview = (card: Card): void => {
                 $parse($scope.vm.onPreview())(card);
+            }
+
+            vm.openTransfer = (card: Card): void => {
+                $parse($scope.vm.onTransfer())(card);
             }
         }
     }

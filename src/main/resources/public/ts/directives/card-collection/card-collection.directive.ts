@@ -1,5 +1,5 @@
 import {_, ng, notify, toasts} from "entcore";
-import {ILocationService, IParseService, IScope, IWindowService} from "angular";
+import {IParseService, IScope} from "angular";
 import {RootsConst} from "../../core/constants/roots.const";
 import {Board, Card, CardCollection, Cards, ICardsBoardParamsRequest, ICardsParamsRequest} from "../../models";
 import {safeApply} from "../../utils/safe-apply.utils";
@@ -34,6 +34,8 @@ interface IViewModel extends ng.IController, ICardCollectionProps {
     changeView(): void;
 
     changeNav(navbarView: COLLECTION_NAVBAR_VIEWS): Promise<void>;
+
+    isFormValid (): boolean;
 
     onScroll(): Promise<void>;
 
@@ -108,6 +110,10 @@ class Controller implements IViewModel {
     }
 
     $onDestroy() {
+    }
+
+    isFormValid = (): boolean => {
+        return this.selectedCardIds.length > 0;
     }
 
     /**

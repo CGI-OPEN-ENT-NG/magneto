@@ -34,6 +34,7 @@ public class CardPayloadTest {
             .put("resourceType", "resourceType")
             .put("resourceUrl", "resourceUrl")
             .put("caption", "caption")
+            .put("boardId", n)
             .put("description", "description")
             .put("lastModifierId", "lastModifierId")
             .put("lastModifierName", "lastModifierName")

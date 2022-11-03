@@ -39,6 +39,7 @@ public class Field {
     public static final String MODIFICATIONDATE = "modificationDate";
     public static final String CREATIONDATE = "creationDate";
     public static final String DESCRIPTION = "description";
+    public static final String CARDID = "cardId";
     public static final String CARDIDS = "cardIds";
     public static final String BOARDIDS = "boardIds";
     public static final String PARENTID = "parentId";
@@ -98,4 +99,5 @@ public class Field {
     public static final String USERNAME = "username";
     public static final String BODY = "body";
     public static final String PUSHNOTIF = "pushNotif";
+    public static final String CARD = "card";
 }

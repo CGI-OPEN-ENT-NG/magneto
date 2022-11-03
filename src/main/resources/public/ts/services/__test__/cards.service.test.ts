@@ -42,7 +42,7 @@ describe('CardsService', () => {
                 all: []
         }
 
-        mock.onGet(`/magneto/cards/boardId`)
+        mock.onGet(`/magneto/cards/${params.boardId}`)
             .reply(200, data);
 
 

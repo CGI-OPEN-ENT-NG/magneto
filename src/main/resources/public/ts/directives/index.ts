@@ -9,6 +9,7 @@ export * from './card-list/card-list-item-preview.directive';
 export * from './card-list/card-preview-image.directive';
 export * from './card-list/card-list-item-options.directive';
 export * from './card-collection/card-collection.directive';
+export * from './card-move-lightbox/card-move-lightbox.directive';
 export * from './card-navbar/card-navbar.directive';
 export * from './card-navbar/navbar-item/navbar-item.directive';
 export * from './card-delete-lightbox/card-delete-lightbox.directive';

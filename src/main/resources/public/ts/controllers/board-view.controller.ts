@@ -14,7 +14,7 @@ interface IViewModel extends ng.IController {
     displayCardLightbox: boolean;
     displayUpdateCardLightbox: boolean;
     displayDeleteCardLightbox: boolean;
-    displayMoveCardLightbox: boolean;
+    displayTransferCardLightbox: boolean;
     displayPreviewCardLightbox: boolean;
     displayMediaLibraryLightbox: boolean;
     displayAudioMediaLibraryLightbox: boolean;
@@ -70,7 +70,7 @@ class Controller implements IViewModel {
     displayCardLightbox: boolean;
     displayUpdateCardLightbox: boolean;
     displayDeleteCardLightbox: boolean;
-    displayMoveCardLightbox: boolean;
+    displayTransferCardLightbox: boolean;
     displayPreviewCardLightbox: boolean;
 
     cards: Array<Card>;
@@ -112,7 +112,7 @@ class Controller implements IViewModel {
     async $onInit(): Promise<void> {
         this.displayCardLightbox = false;
         this.displayDeleteCardLightbox = false;
-        this.displayMoveCardLightbox = false;
+        this.displayTransferCardLightbox = false;
         this.displayMediaLibraryLightbox = false;
         this.displayCollectionLightbox = false;
         this.displayVideoResourceLightbox = false;
@@ -208,9 +208,9 @@ class Controller implements IViewModel {
     /**
      * Open card move lightbox.
      */
-    openMoveResourceLightbox = (card: Card): void => {
-        this.selectedCard = card;
-        this.displayMoveCardLightbox = true;
+    openTransferResourceLightbox = (card: Card): void => {
+        this.cardForm = new CardForm().build(card);
+        this.displayTransferCardLightbox = true;
     }
 
     /**

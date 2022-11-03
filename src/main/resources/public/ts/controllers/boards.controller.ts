@@ -401,7 +401,7 @@ class Controller implements ng.IController, IViewModel {
             .buildFolders(this.folders));
         this.folderNavTrees.push(new FolderTreeNavItem(
                 {id: FOLDER_TYPE.PUBLIC_BOARDS, title: lang.translate('magneto.lycee.connecte.boards'),
-                    parentId: null}, null, "magneto-book-variant-multiple"));
+                    parentId: null}, null, "magneto-earth"));
         this.folderNavTrees.push(new FolderTreeNavItem(
             {id: FOLDER_TYPE.DELETED_BOARDS, title: lang.translate('magneto.trash'),
                     parentId: null}, null, "magneto-delete-forever")

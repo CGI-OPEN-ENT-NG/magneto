@@ -45,6 +45,11 @@ export interface ICardsObjectBoardParamsRequest {
     cards: Array<Card>;
 }
 
+export interface ICardBoardParamsRequest {
+    card: Card,
+    boardId: string;
+}
+
 
 export interface ICardPayload {
     id?: string;

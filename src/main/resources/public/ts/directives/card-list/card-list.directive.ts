@@ -16,6 +16,9 @@ interface IViewModel extends ng.IController, ICardListProps {
 
     openPreview?(card: Card): void;
 
+    openTransfer?(card: Card): void;
+
+
 }
 
 interface ICardListProps {
@@ -23,20 +26,23 @@ interface ICardListProps {
     selectedCardIds: Array<string>;
 
     isDraggable: boolean;
-    hasOptions: boolean;
-    onEdit?;
-    onDuplicate?;
-    onHide?;
-    onDelete?;
-    onMove?;
     isScrollable: boolean;
+
     hasCaption: boolean;
+
     hasEdit: boolean;
+    onEdit?;
     hasDuplicate: boolean;
+    onDuplicate?;
     hasHide: boolean;
+    onHide?;
     hasDelete: boolean;
+    onDelete?;
     hasPreview: boolean;
     onPreview?;
+    hasTransfer: boolean;
+    onTransfer?;
+    onMove?;
 }
 
 interface ICardListScope extends IScope, ICardListProps {
@@ -48,14 +54,17 @@ class Controller implements IViewModel {
     cards: Array<Card>;
     selectedCardIds: Array<string>;
     isDraggable: boolean;
-    hasOptions: boolean;
     isScrollable: boolean;
+
     hasCaption: boolean;
+
     hasEdit: boolean;
     hasDuplicate: boolean;
     hasHide: boolean;
     hasDelete: boolean;
     hasPreview: boolean;
+    hasTransfer: boolean;
+
 
     constructor(private $scope: ICardListScope,
                 private $location: ILocationService,
@@ -107,9 +116,11 @@ function directive($parse: IParseService) {
             hasHide: '=',
             onHide: '&',
             hasDelete: '=',
+            onDelete: '&',
             hasPreview: '=',
             onPreview: '&',
-            onDelete: '&',
+            hasTransfer: '=',
+            onTransfer: '&',
             onMove: '&'
         },
         controllerAs: 'vm',
@@ -161,6 +172,10 @@ function directive($parse: IParseService) {
 
             vm.openPreview= (card: Card): void => {
                 $parse($scope.vm.onPreview())(card);
+            }
+
+            vm.openTransfer= (card: Card): void => {
+                $parse($scope.vm.onTransfer())(card);
             }
         }
     }

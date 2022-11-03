@@ -1,5 +1,20 @@
 .card-collection-lightbox {
 
+  .empty-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    img {
+      width: 26%;
+    }
+
+    i18n {
+      padding: $spacing-L;
+    }
+
+  }
+
   section.lightbox {
     .content {
       width: 80% !important;
