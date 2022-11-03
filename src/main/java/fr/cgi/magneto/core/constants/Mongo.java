@@ -4,6 +4,7 @@ public class Mongo {
     public static final String COUNT = "$count";
     public static final String IN = "$in";
     public static final String EQ = "$eq";
+    public static final String AND = "$and";
     public static final String LIMIT = "$limit";
     public static final String FILTER = "$filter";
     public static final String MATCH = "$match";

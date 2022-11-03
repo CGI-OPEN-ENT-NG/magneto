@@ -6,7 +6,6 @@ import fr.cgi.magneto.service.impl.DefaultCardService;
 import fr.cgi.magneto.service.impl.DefaultFolderService;
 import fr.cgi.magneto.service.impl.DefaultMagnetoService;
 import fr.cgi.magneto.config.MagnetoConfig;
-import fr.cgi.magneto.core.constants.*;
 import fr.cgi.magneto.service.impl.*;
 import fr.wseduc.mongodb.MongoDb;
 import io.vertx.core.Vertx;
@@ -23,6 +22,9 @@ public class ServiceFactory {
     private final MongoDb mongoDb;
     private final MagnetoConfig magnetoConfig;
 
+    private final FolderService folderService;
+    private final BoardService boardService;
+
     public ServiceFactory(Vertx vertx, Storage storage, MagnetoConfig magnetoConfig, Neo4j neo4j, Sql sql, MongoDb mongoDb) {
         this.vertx = vertx;
         this.storage = storage;
@@ -30,6 +32,9 @@ public class ServiceFactory {
         this.neo4j = neo4j;
         this.sql = sql;
         this.mongoDb = mongoDb;
+
+        this.folderService = new DefaultFolderService(CollectionsConstant.FOLDER_COLLECTION, mongoDb, this);
+        this.boardService = new DefaultBoardService(CollectionsConstant.BOARD_COLLECTION, mongoDb, this);
     }
 
     public MagnetoService magnetoServiceExample() {
@@ -41,7 +46,7 @@ public class ServiceFactory {
     }
 
     public BoardService boardService() {
-        return new DefaultBoardService(CollectionsConstant.BOARD_COLLECTION, mongoDb, this);
+        return this.boardService;
     }
 
     public CardService cardService() {
@@ -49,7 +54,7 @@ public class ServiceFactory {
     }
 
     public FolderService folderService() {
-        return new DefaultFolderService(CollectionsConstant.FOLDER_COLLECTION, mongoDb);
+        return this.folderService;
     }
 
     public WorkspaceService workSpaceService() {

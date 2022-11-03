@@ -275,9 +275,15 @@ public class DefaultBoardService implements BoardService {
                                     new JsonObject()
                                             .put(Mongo.INPUT, String.format("$%s", Field.FOLDERS))
                                             .put(Mongo.AS, Field.FOLDER)
-                                            .put(Mongo.COND, new JsonObject().put(Mongo.EQ, new JsonArray()
-                                                    .add(String.format("$$%s.%s", Field.FOLDER, Field.OWNERID))
-                                                    .add(user.getUserId())))))
+                                            .put(Mongo.COND,
+                                                    new JsonObject().put(Mongo.AND, new JsonArray()
+                                                            .add(new JsonObject().put(Mongo.EQ, new JsonArray()
+                                                                    .add(String.format("$$%s.%s", Field.FOLDER, Field.OWNERID))
+                                                                    .add(user.getUserId())))
+                                                            .add(new JsonObject().put(Mongo.EQ, new JsonArray()
+                                                                    .add(String.format("$$%s.%s", Field.FOLDER, Field.DELETED))
+                                                                    .add(String.format("$%s", Field.DELETED))))))
+                            ))
                             .put(Field.DESCRIPTION, 1)
                             .put(Field.OWNERID, 1)
                             .put(Field.OWNERNAME, 1)
@@ -286,9 +292,9 @@ public class DefaultBoardService implements BoardService {
                             .put(Field.PUBLIC, 1))
                     .unwind(Field.FOLDERID, true);
 
-        if (folderId != null) {
+        if (folderId != null || isDeleted) {
             query.match(new JsonObject().put(String.format("%s.%s", Field.FOLDERID, Field._ID), folderId));
-        } else if (!isDeleted) {
+        } else {
             query.match(new JsonObject().putNull(String.format("%s.%s", Field.FOLDERID, Field._ID)));
         }
 

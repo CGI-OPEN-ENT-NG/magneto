@@ -1,13 +1,12 @@
 package fr.cgi.magneto.service.impl;
 
-import com.mongodb.QueryBuilder;
-import fr.cgi.magneto.core.constants.CollectionsConstant;
 import fr.cgi.magneto.core.constants.Field;
+import com.mongodb.*;
 import fr.cgi.magneto.core.constants.Mongo;
 import fr.cgi.magneto.helper.PromiseHelper;
 import fr.cgi.magneto.model.FolderPayload;
 import fr.cgi.magneto.model.MongoQuery;
-import fr.cgi.magneto.service.FolderService;
+import fr.cgi.magneto.service.*;
 import fr.wseduc.mongodb.MongoDb;
 import fr.wseduc.mongodb.MongoQueryBuilder;
 import io.vertx.core.Future;
@@ -26,11 +25,14 @@ public class DefaultFolderService implements FolderService {
 
     public final MongoDb mongoDb;
     public final String collection;
+    private final ServiceFactory serviceFactory;
+
     protected static final Logger log = LoggerFactory.getLogger(DefaultFolderService.class);
 
-    public DefaultFolderService(String collection, MongoDb mongo) {
+    public DefaultFolderService(String collection, MongoDb mongo, ServiceFactory serviceFactory) {
         this.collection = collection;
         this.mongoDb = mongo;
+        this.serviceFactory = serviceFactory;
     }
 
     @Override
@@ -130,30 +132,10 @@ public class DefaultFolderService implements FolderService {
     private Future<JsonObject> deleteBoardsInFolderWithChildren(List<String> folderIds, String ownerId) {
         Promise<JsonObject> promise = Promise.promise();
         this.getFolderChildrenIds(folderIds)
-                .compose(childrenIds -> {
-                    folderIds.addAll(childrenIds);
-                    return this.deleteBoardsInFolder(folderIds, ownerId);
-                })
+                .compose(this::getBoardIdsInFolders)
+                .compose(childrenIds -> this.serviceFactory.boardService().delete(ownerId, childrenIds))
                 .onFailure(promise::fail)
                 .onSuccess(res -> promise.complete());
-        return promise.future();
-    }
-
-    private Future<JsonObject> deleteBoardsInFolder(List<String> folderIds, String ownerId) {
-        Promise<JsonObject> promise = Promise.promise();
-
-        this.getBoardIdsInFolders(folderIds)
-                .onFailure(promise::fail)
-                .onSuccess(boardIds -> {
-                    JsonObject query = new JsonObject()
-                            .put(Field.OWNERID, ownerId)
-                            .put(Field._ID, new JsonObject().put(Mongo.IN, boardIds));
-                    mongoDb.delete(CollectionsConstant.BOARD_COLLECTION, query,
-                            MongoDbResult.validResultHandler(PromiseHelper.handler(promise,
-                                    String.format("[Magneto@%s::deleteBoardsInFolder] Failed to delete boards",
-                                            this.getClass().getSimpleName()))));
-
-                });
         return promise.future();
     }
 
@@ -206,27 +188,10 @@ public class DefaultFolderService implements FolderService {
         Promise<JsonObject> promise = Promise.promise();
 
         this.getFolderChildrenIds(folderIds)
-                .compose(childrenIds -> {
-                    folderIds.addAll(childrenIds);
-                    return this.preDeleteBoardsInFolder(folderIds, restore, ownerId);
-                })
+                .compose(this::getBoardIdsInFolders)
+                .compose(childrenIds -> this.serviceFactory.boardService().preDeleteBoards(ownerId, childrenIds, restore))
                 .onFailure(promise::fail)
                 .onSuccess(promise::complete);
-
-        return promise.future();
-    }
-
-    private Future<JsonObject> preDeleteBoardsInFolder(List<String> folderIds, boolean restore, String ownerId) {
-        Promise<JsonObject> promise = Promise.promise();
-
-        JsonObject query = new JsonObject()
-                .put(Field.FOLDERID, new JsonObject().put(Mongo.IN, new JsonArray(folderIds)))
-                .put(Field.OWNERID, ownerId);
-        JsonObject update = new JsonObject().put(Mongo.SET, new JsonObject().put(Field.DELETED, !restore));
-        mongoDb.update(CollectionsConstant.BOARD_COLLECTION, query, update, false, true,
-                MongoDbResult.validResultHandler(PromiseHelper.handler(promise,
-                        String.format("[Magneto@%s::preDeleteBoardsInFolder] Failed to pre-delete boards",
-                                this.getClass().getSimpleName()))));
 
         return promise.future();
     }
