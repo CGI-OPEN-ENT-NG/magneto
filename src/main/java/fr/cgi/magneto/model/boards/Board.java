@@ -26,6 +26,7 @@ public class Board implements Model<Board> {
     private boolean isPublic;
     private String folderId;
     private List<Card> cards;
+    private List<String> tags;
 
     @SuppressWarnings("unchecked")
     public Board(JsonObject board) {
@@ -43,6 +44,7 @@ public class Board implements Model<Board> {
                 .map(id -> new JsonObject().put(Field._ID, id))
                 .collect(Collectors.toList()));
         this.cards = ModelHelper.toList(cardsArray, Card.class);
+        this.tags = board.getJsonArray(Field.TAGS, new JsonArray()).getList();
         if (this.getId() == null) {
             this.setCreationDate(DateHelper.getDateString(new Date(), DateHelper.MONGO_FORMAT));
             this.setModificationDate(DateHelper.getDateString(new Date(), DateHelper.MONGO_FORMAT));
@@ -154,6 +156,20 @@ public class Board implements Model<Board> {
         return this.cards;
     }
 
+    public Board setCards(List<Card> cards) {
+        this.cards = cards;
+        return this;
+    }
+
+    public List<String> tags() {
+        return this.tags;
+    }
+
+    public Board setTags(List<String> tags) {
+        this.tags = tags;
+        return this;
+    }
+
     @Override
     public JsonObject toJson() {
         JsonArray cardsArray =
@@ -171,7 +187,8 @@ public class Board implements Model<Board> {
                 .put(Field.FOLDERID, this.getFolderId())
                 .put(Field.OWNERID, this.getOwnerId())
                 .put(Field.OWNERNAME, this.getOwnerName())
-                .put(Field.SHARED, this.shared);
+                .put(Field.SHARED, this.shared)
+                .put(Field.TAGS, this.tags());
 }
 
     @Override

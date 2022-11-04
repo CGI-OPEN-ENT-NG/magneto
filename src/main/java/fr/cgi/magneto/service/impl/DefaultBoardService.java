@@ -333,6 +333,7 @@ public class DefaultBoardService implements BoardService {
                         .put(Field.OWNERID, 1)
                         .put(Field.OWNERNAME, 1)
                         .put(Field.SHARED, 1)
+                        .put(Field.TAGS, 1)
                         .put(Field.PUBLIC, 1));
         return query.getAggregate();
     }

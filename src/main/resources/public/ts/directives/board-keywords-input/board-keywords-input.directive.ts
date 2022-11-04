@@ -53,7 +53,11 @@ class Controller implements IViewModel {
         }
 
 
-        this.board.tags = this.board.tagsTextInput.split(" ").filter((keyword: string) => keyword != '').map((keyword: string) => keyword.substring(1).toLowerCase());
+        this.board.tags = this.board.tagsTextInput.split(" ")
+            .filter((keyword: string) => keyword != '')
+            .map((keyword: string) => {
+                return (keyword[0] === "#") ? keyword.substring(1).toLowerCase() : keyword.toLowerCase();
+            });
     }
 
 }
