@@ -96,9 +96,10 @@
     }
 
     &-text {
-      @include noTextOverflow(4);
+      @include noTextOverflow(999);
       margin-left: auto;
       margin-right: auto;
+      height: 100%;
     }
   }
 

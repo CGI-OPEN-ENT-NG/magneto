@@ -55,6 +55,7 @@
   "magneto.card.type.audio": "Son",
   "magneto.card.type.link": "Lien",
   "magneto.card.type.card": "Aimant",
+  "magneto.cards.empty.text": "Il n'y a pas encore d'aimant ici...",
   "magneto.new.card": "Nouvel aimant",
   "magneto.edit.card": "Modifier l'aimant",
   "magneto.card.title": "Titre",
@@ -62,9 +63,11 @@
   "magneto.card.description": "Description",
   "magneto.card.options.edit": "Éditer",
   "magneto.card.options.duplicate": "Dupliquer",
-  "magneto.card.options.hide": "Cacher",
   "magneto.card.options.preview": "Aperçu",
+  "magneto.card.options.hide": "Cacher",
   "magneto.card.options.delete": "Supprimer",
+  "magneto.create.link": "Créer un lien",
+  "magneto.site.address": "Adresse du site",
   "magneto.add.content.from.menu": "Ajoutez du contenu grâce au menu de gauche",
   "magneto.delete.cards": "Supprimer les aimants",
   "magneto.delete.cards.message": "Êtes-vous sûr(e) de vouloir supprimer définitivement les aimants selectionnés ?",
@@ -73,8 +76,6 @@
   "magneto.delete.cards.confirm": "Les aimants selectionnés ont été supprimés avec succès.",
   "magneto.duplicate.cards.confirm": "Les aimants selectionnés ont été dupliqués avec succès.",
   "magneto.board.saved.at": "Tableau enregistré le {0} à {1}",
-  "magneto.create.link": "Créer un lien",
-  "magneto.site.address": "Adresse du site",
   "magneto.read": "Lecture",
   "magneto.contrib": "Réutilisation",
   "magneto.manager": "Gestion",
@@ -111,5 +112,4 @@
   "magneto.cards.collection.board.view": "Ranger par tableau",
   "magneto.cards.collection.board.cards.show": "Voir tous les aimants du tableau",
   "magneto.cards.collection.board.cards.hide": "Cacher les aimants liés"
-
 }

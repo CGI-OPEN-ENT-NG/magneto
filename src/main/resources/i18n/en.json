@@ -54,6 +54,8 @@
   "magneto.card.type.video" : "Video",
   "magneto.card.type.audio" : "Sound",
   "magneto.card.type.link": "Link",
+  "magneto.card.type.card": "Magnet",
+  "magneto.cards.empty.text": "Il n'y a pas encore d'aimant ici...",
   "magneto.new.card": "New magnet",
   "magneto.edit.card": "Update magnet",
   "magneto.card.title": "Title",
@@ -103,8 +105,11 @@
   "group.school.Guest": "All guests of {0}.",
   "magneto.return": "Return",
   "magneto.card.saved.by": "Created by {0}, modified by {1}",
+  "magneto.cards.collection": "Magnets collection",
+  "magneto.cards.collection.mine": "My Boards",
+  "magneto.cards.collection.shared": "My shared boards",
+  "magneto.cards.collection.public": "My Lycée Connecté boards",
   "magneto.cards.collection.board.view": "Order by board",
   "magneto.cards.collection.board.cards.show": "See all magnets of the board",
   "magneto.cards.collection.board.cards.hide": "Hide all linked magnets"
-
 }

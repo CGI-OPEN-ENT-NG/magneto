@@ -42,7 +42,7 @@
     "sortablejs": "1.13.0"
   },
   "devDependencies": {
-    "@mdi/font": "^4.5.95",
+    "@mdi/font": "^7.0.96",
     "@types/angular": "1.7.4",
     "@types/angular-mocks": "^1.7.1",
     "@types/core-js": "0.9.42",
