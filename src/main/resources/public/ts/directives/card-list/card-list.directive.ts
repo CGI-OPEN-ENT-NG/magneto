@@ -23,18 +23,18 @@ interface ICardListProps {
     selectedCardIds: Array<string>;
 
     isDraggable: boolean;
-    isScrollable: boolean;
-
-    hasCaption: boolean;
-
-    hasEdit: boolean;
+    hasOptions: boolean;
     onEdit?;
-    hasDuplicate: boolean;
     onDuplicate?;
-    hasHide: boolean;
     onHide?;
-    hasDelete: boolean;
     onDelete?;
+    onMove?;
+    isScrollable: boolean;
+    hasCaption: boolean;
+    hasEdit: boolean;
+    hasDuplicate: boolean;
+    hasHide: boolean;
+    hasDelete: boolean;
     hasPreview: boolean;
     onPreview?;
 }
@@ -48,10 +48,9 @@ class Controller implements IViewModel {
     cards: Array<Card>;
     selectedCardIds: Array<string>;
     isDraggable: boolean;
+    hasOptions: boolean;
     isScrollable: boolean;
-
     hasCaption: boolean;
-
     hasEdit: boolean;
     hasDuplicate: boolean;
     hasHide: boolean;
@@ -108,9 +107,10 @@ function directive($parse: IParseService) {
             hasHide: '=',
             onHide: '&',
             hasDelete: '=',
-            onDelete: '&',
             hasPreview: '=',
-            onPreview: '&'
+            onPreview: '&',
+            onDelete: '&',
+            onMove: '&'
         },
         controllerAs: 'vm',
         bindToController: true,
@@ -137,6 +137,7 @@ function directive($parse: IParseService) {
                             let form: BoardForm = new BoardForm();
                             form.cardIds = vm.cardIds;
                             await boardsService.updateBoard(vm.cards[0].boardId, form);
+                            $parse($scope.vm.onMove())({});
                         }
                     }
                 })

@@ -220,7 +220,7 @@ class Controller implements IViewModel {
     onFormSubmit = async (): Promise<void> => {
         this.displayMediaLibraryLightbox = false;
         this.resetCards();
-        await this.getCards();
+        await Promise.all([this.getCards(), this.getBoard()]);
     }
 
     getBoard = async (): Promise<void> => {

@@ -38,6 +38,7 @@
                     cards="vm.cards"
                     board-display="false"
                     has-edit="vm.board.myRights.contrib !== undefined"
+                    on-move="vm.getBoard"
                     on-edit="vm.openEditResourceLightbox"
                     has-delete="vm.board.myRights.manager !== undefined"
                     on-delete="vm.openDeleteResourceLightbox"
