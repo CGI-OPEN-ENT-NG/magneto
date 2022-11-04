@@ -2,6 +2,7 @@
   "magneto.title": "Magneto",
   "magneto.my.boards": "My boards",
   "magneto.create.board": "Create board",
+  "magneto.create": "Create",
   "magneto.reading.board": "Reading",
   "magneto.delete.elements": "Delete the selected boards/folders",
   "magneto.delete.elements.message": "Are you sure you want to delete the selected boards/folders ?",

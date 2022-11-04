@@ -2,6 +2,7 @@
   "magneto.title": "Magnéto",
   "magneto.my.boards": "Mes tableaux",
   "magneto.create.board": "Créer un tableau",
+  "magneto.create": "Créer",
   "magneto.reading.board": "Lecture",
   "magneto.delete.elements": "Supprimer les tableaux/dossiers",
   "magneto.delete.elements.message": "Êtes-vous sûr(e) de vouloir supprimer définitivement les tableaux/dossiers selectionnés ?",

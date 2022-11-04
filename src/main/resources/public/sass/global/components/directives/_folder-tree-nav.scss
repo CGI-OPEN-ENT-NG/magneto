@@ -12,7 +12,6 @@
 
       display: flex;
 
-
       &.selected {
         background-color: $magneto-lighter-blue;
         color: $magneto-sky-blue;
@@ -25,6 +24,11 @@
       i {
         align-self: center;
         margin-left: 24px;
+
+        @media screen and (max-width: $magneto-screen-mobile) {
+          margin-left: 0 !important;
+        }
+
       }
 
       i.magneto-chevron-down + i {

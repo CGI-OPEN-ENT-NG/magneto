@@ -1,8 +1,8 @@
 <div ng-controller="BoardsController as vm" class="boards-container">
 <!--    <card-profile name="'test'" job="'test'"></card-profile>-->
 
-    
-    <div class="row boards-container-header">
+    <!-- Header desktop -->
+    <div class="row boards-container-header zero-mobile">
         <h1 class="cell paddingRight">
             <img class="application-logo" ng-src="/magneto/public/img/uni-magneto.png"
                  alt="" src="/magneto/public/img/uni-magneto.png">
@@ -13,8 +13,27 @@
             <i18n>magneto.create.board</i18n>
         </button>
     </div>
+
+    <!-- Header mobile -->
+    <div class="boards-container-header-mobile zero-desktop">
+        <!-- Go to navigation mobile -->
+        <i class="magneto-card-settings" ng-click="vm.openSideNavFolders()"></i>
+        <h1 class="cell paddingRight">
+            <i18n>magneto.title</i18n>
+            /
+            <i18n>magneto.my.boards</i18n>
+        </h1>
+        <button ng-if="vm.filter.isMyBoards"
+                class="right-magnet create-button" ng-click="vm.openCreateForm()">
+            <i18n>magneto.create.board</i18n>
+        </button>
+    </div>
+
+
     <div class="twelve cell boards-container-body">
-        <div class="three cell boards-container-body-nav">
+
+        <!-- Navigation desktop -->
+        <div class="three cell boards-container-body-nav zero-mobile">
             <folder-tree-nav
                     folder-trees="vm.folderNavTrees"
                     folder-tree-eventer="vm.folderNavTreeSubject"
@@ -73,6 +92,18 @@
                 <i18n>magneto.boards.empty.text</i18n>
             </div>
         </div>
+    </div>
+
+    <!-- Navigation mobile -->
+    <div id="sideNavMobile" class="side-nav-mobile zero-desktop ellipsis">
+        <div class="vertical-spacing row">
+            <a class="closebtn" ng-click="vm.closeSideNavFolders()">&times;</a>
+        </div>
+        <folder-tree-nav
+                folder-trees="vm.folderNavTrees"
+                folder-tree-eventer="vm.folderNavTreeSubject"
+                on-select-folder="vm.switchFolder">
+        </folder-tree-nav>
     </div>
 
     <!-- Board deletion modal -->

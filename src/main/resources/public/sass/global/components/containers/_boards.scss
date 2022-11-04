@@ -8,10 +8,48 @@
       color: $magneto-yellow-ochre;
       margin-bottom: 0;
 
+      @media screen and (max-width: $magneto-screen-mobile) {
+        font-size:$spacing-M;
+      }
+
       .application-logo {
         width: 36px;
         margin-right: $spacing-XLXS;
+
+        @media screen and (max-width: $magneto-screen-mobile) {
+          width: $spacing-M;
+        }
       }
+    }
+
+
+  }
+
+  &-header-mobile {
+    background: $magneto-white;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    h1 {
+      font-family: $magneto-font-secondary;
+      color: $magneto-yellow-ochre;
+      margin-bottom: 0;
+      font-size:$spacing-M;
+    }
+
+    i {
+      margin: $spacing-LXS;
+      font-size: 24px;
+    }
+
+    button {
+      margin: $spacing-LXS;
+    }
+  }
+
+  .nine {
+    @media screen and (max-width: $magneto-screen-mobile) {
+      width: 100% !important;
     }
   }
 
@@ -67,6 +105,35 @@
         padding: $spacing-L;
       }
 
+    }
+
+  }
+
+  #sideNavMobile {
+    height: 100%;
+    width: 0;
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    background-color: #F0F0F0;
+    overflow-x: hidden;
+    transition: 0.5s;
+    top: 52px;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.26);
+    border-radius: 3px;
+
+    .vertical-spacing {
+      display: flex;
+      height: 24px;
+
+      .closebtn {
+        position: absolute;
+        top: 0;
+        right: 25px;
+        font-size: 36px;
+        margin-left: 50px;
+        cursor: pointer;
+      }
     }
 
   }

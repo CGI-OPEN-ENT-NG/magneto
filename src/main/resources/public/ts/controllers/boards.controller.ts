@@ -69,6 +69,8 @@ interface IViewModel {
     resetBoards(): void;
     restoreBoardsOrFolders(): Promise<void>;
     moveBoards(): Promise<void>;
+    closeSideNavFolders(): void;
+    openSideNavFolders(): void;
 
     areSelectedBoardsMine(): boolean;
 }
@@ -479,6 +481,14 @@ class Controller implements ng.IController, IViewModel {
         this.selectedUpdateBoardForm = new BoardForm();
         this.selectedUpdateFolderForm = {id: null, title: ''};
     }
+
+    openSideNavFolders = () : void => {
+        document.getElementById("sideNavMobile").style.width = "200px";
+    };
+
+    closeSideNavFolders = () : void => {
+        document.getElementById("sideNavMobile").style.width = "0";
+    };
 
     $onDestroy() {
     }

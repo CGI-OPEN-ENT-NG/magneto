@@ -38,7 +38,8 @@
         align-items: center;
         justify-content: space-between;
         flex-direction: column;
-        margin-top: 160px;
+        margin-top: 200px;
+        height: 72%;
 
         .item {
           display: block;
@@ -47,10 +48,13 @@
           margin: 3px 0;
           text-align: center;
           font-size: 24px;
+          @media screen and (max-width: $magneto-screen-mobile) {
+            height: 40px !important;
+            font-size: 20px;
+          }
           position: relative;
           width: 100%;
           box-sizing: border-box;
-          height: 55px;
 
           &:hover {
             color: $magneto-yellow-ochre !important;
@@ -58,6 +62,9 @@
 
           i.magneto-settings {
             font-size: 40px;
+            @media screen and (max-width: $magneto-screen-mobile) {
+              font-size: 36px !important;
+            }
           }
         }
 
@@ -71,6 +78,9 @@
 
       .label-navbar {
         font-size: 12px;
+        @media screen and (max-width: $magneto-screen-mobile) {
+          font-size: 10px !important;
+        }
         padding: 5px 0;
         display: block;
         line-height: 16px;

@@ -6,7 +6,7 @@
          data-ng-click="vm.selectFolder(vm.folderTree)">
 
         <!-- Folder open button -->
-        <i ng-if="vm.folderTree.children.length > 0"
+        <i class="zero-mobile" ng-if="vm.folderTree.children.length > 0"
            ng-class="{'magneto-chevron-right': !vm.folderTree.isOpened, 'magneto-chevron-down': vm.folderTree.isOpened}"
            data-ng-click="vm.toggleOpenFolder($event)"></i>
 
@@ -18,7 +18,7 @@
     </div>
 
     <!-- List of children folders -->
-    <ul ng-if="vm.folderTree.isOpened">
+    <ul class="zero-mobile" ng-if="vm.folderTree.isOpened">
         <li ng-repeat="folder in vm.folderTree.children">
             <folder-tree-nav-item
                     folder-tree="folder"
