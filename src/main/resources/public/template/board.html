@@ -33,6 +33,7 @@
                 <i class="magneto-arrow-left"></i>
             </div>
             <card-list
+                    ng-if="vm.board.id"
                     is-draggable="vm.board.myRights.contrib !== undefined"
                     has-caption="true"
                     cards="vm.cards"

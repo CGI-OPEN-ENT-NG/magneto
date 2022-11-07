@@ -133,7 +133,7 @@ function directive($parse: IParseService) {
                         vm: IViewModel) {
 
             const cardList: Element = document.getElementById("card-list");
-            if (cardList) {
+            if (cardList && vm.isDraggable) {
                 create(cardList, {
                     animation: 150,
                     delay: 150,
@@ -151,7 +151,7 @@ function directive($parse: IParseService) {
                             $parse($scope.vm.onMove())({});
                         }
                     }
-                })
+                });
             }
 
             vm.openEdit = (card: Card): void => {
