@@ -138,10 +138,17 @@ class Controller implements IViewModel {
         await this.getCards();
     }
 
+    /**
+     * Go to boards page (Magneto main page)
+     */
     goToBoards(): void {
         this.$location.path(`/boards`);
     }
 
+    /**
+     * Open the add resource lightbox
+     * @param resourceType the type of resource to add
+     */
     openAddResourceLightbox = (resourceType: RESOURCE_TYPE): void => {
         this.cardForm = new CardForm();
         this.cardForm.resourceType = resourceType;
@@ -223,6 +230,9 @@ class Controller implements IViewModel {
         await Promise.all([this.getCards(), this.getBoard()]);
     }
 
+    /**
+     * Fetch board infos.
+     */
     getBoard = async (): Promise<void> => {
         return this.boardsService.getBoardsByIds([this.filter.boardId])
             .then((res: Boards) => {
@@ -236,6 +246,9 @@ class Controller implements IViewModel {
             });
     }
 
+    /**
+     * Fetch board cards.
+     */
     getCards = async (): Promise<void> => {
         const params: ICardsParamsRequest = {
             page: this.filter.page,
@@ -253,17 +266,27 @@ class Controller implements IViewModel {
             });
     }
 
+    /**
+     * Callback on board properties form submit
+     */
     onBoardFormSubmit = async (): Promise<void> => {
         this.displayBoardPropertiesLightbox = false;
         await this.getBoard();
         safeApply(this.$scope);
     }
 
+    /**
+     * Reset cards filter
+     */
     resetCards = (): void => {
         this.filter.page = 0;
         this.cards = [];
     }
 
+    /**
+     * Callback on media library form submit
+     * @param file the card file
+     */
     onFileSelected = async (file: any): Promise<void> => {
         this.displayMediaLibraryLightbox = false;
         this.cardForm.title = "";
@@ -277,6 +300,9 @@ class Controller implements IViewModel {
         }, 100);
     }
 
+    /**
+     * Callback on video form submit
+     */
     onVideoSelected = () : void => {
         this.displayVideoResourceLightbox = false;
 
@@ -294,6 +320,10 @@ class Controller implements IViewModel {
         safeApply(this.$scope);
     }
 
+    /**
+     * Callback on link form submit
+     * @param form
+     */
     onLinkSubmit = (form: {url: "", title: ""}) : void => {
         this.cardForm.resourceUrl = this.$sce.trustAsResourceUrl(form.url).toString();
         this.cardForm.title = form.title;
@@ -302,6 +332,9 @@ class Controller implements IViewModel {
         }, 100);
     }
 
+    /**
+     * Get cardForm file format for media library
+     */
     getMediaLibraryFileFormat = (): string => {
         switch (this.cardForm.resourceType) {
             case RESOURCE_TYPE.IMAGE:
@@ -313,6 +346,9 @@ class Controller implements IViewModel {
         }
     }
 
+    /**
+     * Open board properties form.
+     */
     openBoardPropertiesForm = (): void => {
         this.boardForm = new BoardForm().build(this.board);
         this.displayBoardPropertiesLightbox = true;
@@ -321,6 +357,9 @@ class Controller implements IViewModel {
     $onDestroy() {
     }
 
+    /**
+     * Callback on infinite scroll
+     */
     onScroll = async (): Promise<void> => {
         if (this.cards.length > 0) {
             this.filter.page++;

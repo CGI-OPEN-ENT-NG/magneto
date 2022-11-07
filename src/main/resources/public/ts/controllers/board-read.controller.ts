@@ -7,7 +7,6 @@ import {AxiosError} from "axios";
 
 interface IViewModel {
 
-
     card: Card;
     board: Board;
 
@@ -70,18 +69,27 @@ class Controller implements ng.IController, IViewModel {
         safeApply(this.$scope);
     }
 
+    /**
+     * Reading mode : go to the next page
+     */
     async nextPage(): Promise<void> {
         this.filter.page++;
         await this.getCard();
         safeApply(this.$scope);
     }
 
+    /**
+     * Reading mode : go to the previous page
+     */
     async previousPage(): Promise<void> {
         this.filter.page--;
         await this.getCard();
         safeApply(this.$scope);
     }
 
+    /**
+     * Get board infos
+     */
     getBoard = async (): Promise<void> => {
         return this.boardsService.getBoardsByIds([this.filter.boardId])
             .then((res: Boards) => {
@@ -95,6 +103,9 @@ class Controller implements ng.IController, IViewModel {
             });
     }
 
+    /**
+     * Get card infos
+     */
     getCard = async (): Promise<void> => {
         return this.cardsService.getCardById(this.board.cardIds[this.filter.page])
             .then((res: Card) => {
@@ -108,10 +119,16 @@ class Controller implements ng.IController, IViewModel {
             });
     }
 
+    /**
+     * Check if the current page is the last one
+     */
     isLastPage = (): boolean => {
         return this.filter.count == this.filter.page + 1;
     }
 
+    /**
+     * Go to the board page
+     */
     goToBoard(): void {
         this.$location.path(`/board/view/${this.board.id}`);
     }

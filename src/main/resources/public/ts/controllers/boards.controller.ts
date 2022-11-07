@@ -22,6 +22,7 @@ interface IViewModel {
 
     isLoading: boolean;
 
+    /* Lightbox display conditions */
     displayBoardLightbox: boolean;
     displayDeleteBoardLightbox: boolean;
     displayShareBoardLightbox: boolean;
@@ -482,10 +483,16 @@ class Controller implements ng.IController, IViewModel {
         this.selectedUpdateFolderForm = {id: null, title: ''};
     }
 
+    /**
+     * Open folders side nav (for mobile view)
+     */
     openSideNavFolders = () : void => {
         document.getElementById("sideNavMobile").style.width = "200px";
-    };
+    }
 
+    /**
+     * Close folders side nav (for mobile view)
+     */
     closeSideNavFolders = () : void => {
         document.getElementById("sideNavMobile").style.width = "0";
     };
