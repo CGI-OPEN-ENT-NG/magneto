@@ -101,11 +101,6 @@ public class BoardServiceTest {
                "      }\n" +
                "    },\n" +
                "    {\n" +
-               "      \"$match\": {\n" +
-               "        \"folderId._id\": \"folderId\"\n" +
-               "      }\n" +
-               "    },\n" +
-               "    {\n" +
                "      \"$project\": {\n" +
                "        \"_id\": 1,\n" +
                "        \"title\": 1,\n" +

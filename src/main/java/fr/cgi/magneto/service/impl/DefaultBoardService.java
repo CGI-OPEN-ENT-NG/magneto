@@ -22,9 +22,7 @@ import io.vertx.core.logging.LoggerFactory;
 import org.entcore.common.mongodb.MongoDbResult;
 import org.entcore.common.user.UserInfos;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 public class DefaultBoardService implements BoardService {
 
@@ -301,10 +299,13 @@ public class DefaultBoardService implements BoardService {
                     .unwind(Field.FOLDERID, true);
         }
 
-        if (folderId != null || isDeleted) {
-            query.match(new JsonObject().put(String.format("%s.%s", Field.FOLDERID, Field._ID), folderId));
-        } else {
-            query.match(new JsonObject().putNull(String.format("%s.%s", Field.FOLDERID, Field._ID)));
+        // If user searches a term, remove folder filter
+        if (searchText == null || searchText.isEmpty()) {
+            if (folderId != null || isDeleted) {
+                query.match(new JsonObject().put(String.format("%s.%s", Field.FOLDERID, Field._ID), folderId));
+            } else {
+                query.match(new JsonObject().putNull(String.format("%s.%s", Field.FOLDERID, Field._ID)));
+            }
         }
 
         query.project(new JsonObject()
