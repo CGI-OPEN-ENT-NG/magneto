@@ -53,7 +53,7 @@
             <div class="row boards-container-body-search">
                     <search-bar
                             search-text="vm.filter.searchText"
-                            on-search="vm.onSearchBoard">
+                            on-search="vm.onSearchBoard()">
                     </search-bar>
             </div>
 
@@ -76,6 +76,7 @@
             </div>
 
             <board-list
+                    ng-if="!vm.isLoading"
                     boards="vm.boards"
                     folders="vm.currentFolderChildren"
                     categories-eventer="vm.boardCategoriesService"
@@ -84,6 +85,9 @@
                     selected-folder-ids="vm.selectedFolderIds"
                     on-open="vm.openBoardOrFolder">
             </board-list>
+            <div ng-show="vm.isLoading" class="centered-text">
+                <loader min-height="'250px'"></loader>
+            </div>
 
             <div class="empty-state"
                  data-ng-show="!vm.isLoading"
@@ -155,7 +159,7 @@
     </board-publish-lightbox>
 
     <infinite-scroll scrolled="vm.onScroll()"
-                     loading-mode="true"
+                     loading-mode="false"
                      scroll-eventer="vm.infiniteScrollService">
     </infinite-scroll>
 

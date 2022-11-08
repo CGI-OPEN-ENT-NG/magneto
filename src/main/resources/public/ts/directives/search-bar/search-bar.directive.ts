@@ -1,28 +1,33 @@
 import {ng} from "entcore";
-import {ILocationService, IParseService, IScope, IWindowService} from "angular";
+import {IScope} from "angular";
 import {RootsConst} from "../../core/constants/roots.const";
 
-interface IViewModel extends ng.IController, ISearchBarProps {
-    search?(): void;
+interface IViewModel {
+
+    typing(): void;
+
+    pausedTyping(): void;
+
 }
 
-interface ISearchBarProps {
+interface IDirectiveProperties {
+    onSearch(): void;
     searchText: string;
-    onSearch?;
+
 }
 
-interface ISearchBarScope extends IScope, ISearchBarProps {
-    vm: IViewModel;
+interface ISearchBarScope extends IScope {
+    vm: IDirectiveProperties;
 }
 
-class Controller implements IViewModel {
+class Controller implements ng.IController, IViewModel {
 
     searchText: string;
+    private token: number;
+    private typingTimeout: number;
 
     constructor(private $scope: ISearchBarScope,
-                private $location: ILocationService,
-                private $window: IWindowService,
-                private $parse: IParseService) {
+                private $timeout: ng.ITimeoutService) {
     }
 
     $onInit() {
@@ -31,9 +36,24 @@ class Controller implements IViewModel {
     $onDestroy() {
     }
 
+    private endTyping = (): void => {
+        this.$scope.vm.onSearch();
+        cancelAnimationFrame(this.token);
+    }
+
+    typing = (): void => {
+        clearTimeout(this.typingTimeout);
+        cancelAnimationFrame(this.token);
+    }
+
+    pausedTyping = (): void => {
+        clearTimeout(this.typingTimeout);
+        this.typingTimeout = setTimeout(this.endTyping, 750);
+    }
+
 }
 
-function directive($parse: IParseService) {
+function directive() {
     return {
         replace: true,
         restrict: 'E',
@@ -44,16 +64,12 @@ function directive($parse: IParseService) {
         },
         controllerAs: 'vm',
         bindToController: true,
-        controller: ['$scope', '$location', '$window', '$parse', Controller],
+        controller: ['$scope', '$timeout', Controller],
         /* interaction DOM/element */
         link: function ($scope: ISearchBarScope,
                         element: ng.IAugmentedJQuery,
                         attrs: ng.IAttributes,
                         vm: IViewModel) {
-
-            vm.search = (): void => {
-                $parse($scope.vm.onSearch())(vm.searchText)
-            }
         }
     }
 }

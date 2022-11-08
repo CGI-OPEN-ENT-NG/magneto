@@ -52,6 +52,7 @@ interface IViewModel extends ng.IController, ICardCollectionProps {
     filter: CardsFilter;
 
     navbarViewSelected: COLLECTION_NAVBAR_VIEWS;
+    isLoading: boolean;
 
     infiniteScrollService: InfiniteScrollService;
 
@@ -85,6 +86,7 @@ class Controller implements IViewModel {
     filter: CardsFilter;
 
     navbarViewSelected: COLLECTION_NAVBAR_VIEWS;
+    isLoading: boolean;
 
     infiniteScrollService: InfiniteScrollService;
 
@@ -96,6 +98,7 @@ class Controller implements IViewModel {
         this.selectedCard = new Card();
         this.displayBoard = false;
         this.displayPreview = false;
+        this.isLoading = true;
         this.filter = new CardsFilter();
         this.infiniteScrollService = new InfiniteScrollService;
         this.navbarViewSelected = COLLECTION_NAVBAR_VIEWS.MY_CARDS;
@@ -158,6 +161,7 @@ class Controller implements IViewModel {
     }
 
     getCardsByBoardId = async (boardId: string): Promise<void> => {
+        this.isLoading = true;
         const params: ICardsParamsRequest = {
             boardId: boardId
         };
@@ -168,9 +172,11 @@ class Controller implements IViewModel {
                     this.findCardCollection(boardId).cards = [...this.findCardCollection(boardId).cards, ...res.all.filter(card => !ids.has(card.id))];
                     this.findCardCollection(boardId).isLinkedCardsDisplay = true;
                 }
+                this.isLoading = false;
                 safeApply(this.$scope);
             })
             .catch((err: AxiosError) => {
+                this.isLoading = false;
                 notify.error(err.message)
             });
     }
@@ -200,6 +206,7 @@ class Controller implements IViewModel {
     }
 
     getCards = async (): Promise<void> => {
+        this.isLoading = true;
         const params: ICardsParamsRequest = {
             page: this.filter.page,
             sortBy: this.filter.sortBy,
@@ -217,19 +224,19 @@ class Controller implements IViewModel {
                     }
                     this.infiniteScrollService.updateScroll();
                 }
+                this.isLoading = false;
                 safeApply(this.$scope);
             })
             .catch((err: AxiosError) => {
+                this.isLoading = false;
                 notify.error(err.message)
             });
     }
 
     /**
      * Callback on card search.
-     * @param searchText search text input
      */
-    onSearchCard = async (searchText: string): Promise<void> => {
-        this.filter.searchText = searchText;
+    onSearchCard = async (): Promise<void> => {
         await this.resetCards();
         safeApply(this.$scope);
     }

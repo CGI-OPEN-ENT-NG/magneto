@@ -28,12 +28,12 @@
         </div>
 
         <div class="cell board-container-body-list">
-            <div class="empty-state" ng-if="vm.cards.length == 0">
+            <div class="empty-state" ng-if="vm.cards.length == 0" ng-show="!vm.isLoading">
                 <i18n>magneto.add.content.from.menu</i18n>
                 <i class="magneto-arrow-left"></i>
             </div>
             <card-list
-                    ng-if="vm.board.id"
+                    ng-if="vm.board.id && !vm.isLoading"
                     is-draggable="vm.board.myRights.contrib !== undefined"
                     has-caption="true"
                     cards="vm.cards"
@@ -43,11 +43,14 @@
                     on-edit="vm.openEditResourceLightbox"
                     has-delete="vm.board.myRights.manager !== undefined"
                     on-delete="vm.openDeleteResourceLightbox"
-                    has-preview="vm.board.myRights.read !== undefined"
+                    has-preview="vm.board.myRights.read !== undefined || vm.board.isPublic"
                     on-preview="vm.openPreviewResourceLightbox"
                     has-transfer="vm.board.myRights.contrib != undefined"
                     on-transfer="vm.openTransferResourceLightbox">
             </card-list>
+            <div ng-show="vm.isLoading" class="centered-text">
+                <loader min-height="'250px'"></loader>
+            </div>
         </div>
 
         <card-manage-lightbox

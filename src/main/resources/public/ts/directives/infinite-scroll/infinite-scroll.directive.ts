@@ -1,6 +1,7 @@
 import {IScope} from "angular";
 import {angular, ng} from "entcore";
-import {InfiniteScrollService} from "../shared/services";
+import {InfiniteScrollService} from "../../shared/services";
+import {RootsConst} from "../../core/constants/roots.const";
 
 interface IViewModel extends ng.IController, IScrollProps {
     scroll(): Promise<void>;
@@ -80,11 +81,7 @@ class Controller implements IViewModel {
 function directive() {
     return {
         restrict: 'E',
-        template: `
-            <div ng-show="vm.loading" style="text-align: center">
-              <loader min-height="'50px'"></loader>
-            </div>
-        `,
+        templateUrl: `${RootsConst.directive}infinite-scroll/infinite-scroll.html`,
         scope: {
             scrolled: '&',
             querySelector: '=?',

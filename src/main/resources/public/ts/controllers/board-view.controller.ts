@@ -37,6 +37,8 @@ interface IViewModel extends ng.IController {
         boardId: string
     };
 
+    isLoading: boolean;
+
     infiniteScrollService: InfiniteScrollService;
 
     goToBoards(): void;
@@ -89,6 +91,7 @@ class Controller implements IViewModel {
 
     videoUrl: string;
 
+    isLoading: boolean;
 
     filter: {
         page: number,
@@ -133,6 +136,8 @@ class Controller implements IViewModel {
             page: 0,
             boardId: (this.$route.current && this.$route.current.params) ? this.$route.current.params.boardId : null
         };
+
+        this.isLoading = true;
 
         await this.getBoard();
         await this.getCards();
@@ -234,14 +239,17 @@ class Controller implements IViewModel {
      * Fetch board infos.
      */
     getBoard = async (): Promise<void> => {
+        this.isLoading = true;
         return this.boardsService.getBoardsByIds([this.filter.boardId])
             .then((res: Boards) => {
                 if (!!res) {
                     this.board = res.all[0];
                 }
+                this.isLoading = false;
                 safeApply(this.$scope);
             })
             .catch((err: AxiosError) => {
+                this.isLoading = false;
                 notify.error(err.message)
             });
     }
@@ -250,6 +258,7 @@ class Controller implements IViewModel {
      * Fetch board cards.
      */
     getCards = async (): Promise<void> => {
+        this.isLoading = true;
         const params: ICardsParamsRequest = {
             page: this.filter.page,
             boardId: this.filter.boardId
@@ -259,9 +268,11 @@ class Controller implements IViewModel {
                 if (res.all && res.all.length > 0) {
                     this.cards.push(...res.all);
                 }
+                this.isLoading = false;
                 safeApply(this.$scope);
             })
             .catch((err: AxiosError) => {
+                this.isLoading = false;
                 notify.error(err.message)
             });
     }

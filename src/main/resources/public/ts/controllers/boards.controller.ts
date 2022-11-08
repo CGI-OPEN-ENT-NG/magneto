@@ -149,10 +149,8 @@ class Controller implements ng.IController, IViewModel {
 
     /**
      * Callback on board search.
-     * @param searchText search text input
      */
-    onSearchBoard = async (searchText: string): Promise<void> => {
-        this.filter.searchText = searchText;
+    onSearchBoard = async (): Promise<void> => {
         this.filter.page = 0;
         this.boards = [];
         this.getCurrentFolderChildren();

@@ -11,7 +11,8 @@
         <div class="row card-collection-lightbox-body-search">
             <search-bar
                     search-text="vm.filter.searchText"
-                    on-search="vm.onSearchCard">
+                    is-loading="vm.isLoading"
+                    on-search="vm.onSearchCard()">
             </search-bar>
         </div>
         <card-navbar
@@ -25,7 +26,7 @@
             <span><i18n>magneto.cards.collection.board.view</i18n></span>
         </div>
         <div class="card-list-scrollable"
-             ng-show="vm.cards.length > 0">
+             ng-show="vm.cards.length > 0 && !vm.isLoading">
             <div ng-show="vm.displayBoard" ng-repeat="collection in vm.displayedCard">
                 <div class="card-collection-lightbox-board">
                     <span class="card-collection-lightbox-board-title">[[collection.cards[0].boardTitle]]</span>
@@ -57,9 +58,13 @@
             </card-list>
         </div>
         <div class="empty-state"
-             ng-show="vm.cards.length === 0">
+             ng-show="!vm.isLoading"
+             ng-if="vm.cards.length === 0">
             <img data-ng-src="/magneto/public/img/empty-state-magneto.svg" alt="empty boards">
             <i18n>magneto.cards.empty.text</i18n>
+        </div>
+        <div ng-show="vm.isLoading" class="centered-text">
+            <loader min-height="'250px'"></loader>
         </div>
     </section>
 
