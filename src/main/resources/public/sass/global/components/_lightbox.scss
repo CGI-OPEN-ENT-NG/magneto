@@ -4,7 +4,10 @@
 
   .content {
     padding-top: 0;
-    width: 80%;
+    overflow-y: scroll !important;
+    @include mobile {
+      width: 80% !important;
+    }
   }
 
   section.head {

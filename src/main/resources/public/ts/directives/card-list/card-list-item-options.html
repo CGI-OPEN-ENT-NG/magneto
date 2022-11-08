@@ -1,6 +1,6 @@
-<div ng-hide="!vm.isDisplayed" class="card-list-item-options">
+<div class="card-list-item-options">
     <nav role="navigation" aria-label="main navigation">
-        <div class="nav">
+        <div id="options" class="nav">
             <div class="items">
                 <a class="item" ng-if="vm.hasEdit" ng-click="vm.openEdit()">
                     <i class="magneto-edit" aria-hidden="true"></i>
@@ -27,7 +27,7 @@
                     </span>
                 </a>
                 <a class="item" ng-if="vm.hasPreview" ng-click="vm.openPreview()">
-                    <i class="magneto-card-preview" aria-hidden="true"></i>
+                    <i class="magneto-play" aria-hidden="true"></i>
                     <span>
                         <i18n>magneto.card.options.preview</i18n>
                     </span>

@@ -1,9 +1,18 @@
-import {ng, notify} from "entcore";
+import {ng, notify, toasts} from "entcore";
 import {IScope, IWindowService} from "angular";
-import {IBoardsService, ICardsService} from "../services";
-import {Board, Boards, BoardForm, Card, CardForm, Cards, ICardsParamsRequest} from "../models";
+import {cardsService, IBoardsService, ICardsService} from "../services";
+import {
+    Board,
+    Boards,
+    BoardForm,
+    Card,
+    CardForm,
+    Cards,
+    ICardsParamsRequest,
+    ICardsBoardParamsRequest
+} from "../models";
 import {safeApply} from "../utils/safe-apply.utils";
-import {AxiosError} from "axios";
+import {AxiosError, AxiosResponse} from "axios";
 import {InfiniteScrollService} from "../shared/services";
 import {EventBusService} from "../shared/event-bus-service/event-bus-sockjs.service";
 import * as SockJS from "sockjs-client";
@@ -47,6 +56,7 @@ interface IViewModel extends ng.IController {
 
     openAddResourceLightbox(resourceType: RESOURCE_TYPE): void;
     openEditResourceLightbox(card: Card): void;
+    openDuplicateCard(card: Card): Promise<void>
     openReading(): void;
     onFormSubmit(): Promise<void>;
     onBoardFormSubmit(): Promise<void>;
@@ -275,6 +285,29 @@ class Controller implements IViewModel {
                 this.isLoading = false;
                 notify.error(err.message)
             });
+    }
+
+    openDuplicateCard = async (card?: Card): Promise<void> => {
+        try {
+            const params: ICardsBoardParamsRequest = {
+                boardId: this.board.id,
+                cardIds: [card.id]
+            };
+            await this.cardsService.duplicateCard(params)
+                .then(async (response: AxiosResponse) => {
+                    if (response.status === 200 || response.status === 201) {
+                        toasts.confirm('magneto.duplicate.cards.confirm');
+                        await this.onFormSubmit()
+                        await this.resetCards();
+                    }
+                })
+                .catch((err: AxiosError) => {
+                    notify.error(err.message)
+                });
+        } catch (e) {
+            toasts.warning('magneto.duplicate.cards.error');
+            console.error(e);
+        }
     }
 
     /**

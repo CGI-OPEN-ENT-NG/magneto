@@ -1,4 +1,6 @@
 .card-display {
+  @include lightboxWidth(80%);
+
   display: flex;
   flex-direction: column;
   padding: $spacing-L;

@@ -1,5 +1,7 @@
 .card-manage-lightbox {
 
+  @include lightboxWidth(80%);
+
   .content {
 
     .card-manage-lightbox-head {
@@ -52,10 +54,13 @@
       }
 
       &-description {
+        &-padding {
+          padding-top: 91px !important;
+        }
+
         i18n {
           font-weight: bold;
         }
-
 
         .drawing-zone {
           overflow-y: scroll;

@@ -1,5 +1,5 @@
-import {ng} from "entcore";
-import {ILocationService, IParseService, IScope, IWindowService} from "angular";
+import {angular, ng} from "entcore";
+import {IAugmentedJQuery, ILocationService, IParseService, IScope, IWindowService} from "angular";
 import {RootsConst} from "../../core/constants/roots.const";
 import {Card} from "../../models";
 import {DateUtils} from "../../utils/date.utils";
@@ -10,8 +10,6 @@ interface IViewModel extends ng.IController, ICardListItemProps {
     formatDate(date: string): string;
 
     formatDateModification(date: string): string;
-
-    openCardOptions($event: MouseEvent): Promise<void>;
 
     hasOptions(): boolean;
 
@@ -26,6 +24,8 @@ interface IViewModel extends ng.IController, ICardListItemProps {
     openPreview?(card: Card): void;
 
     openTransfer?(card: Card): void;
+
+    openCardOptions?(): Promise<void>;
 
     isDisplayedOptions: boolean;
     isSelected: boolean;
@@ -108,12 +108,6 @@ class Controller implements IViewModel {
         return !!card.lastModifierName ? card.lastModifierName : card.ownerName;
     }
 
-    openCardOptions = async ($event: MouseEvent): Promise<void> => {
-        $event.stopPropagation();
-        this.isDisplayedOptions = !this.isDisplayedOptions;
-        await safeApply(this.$scope);
-    }
-
     hasOptions = (): boolean => {
         return this.hasDelete || this.hasPreview || this.hasEdit || this.hasHide || this.hasDuplicate;
     }
@@ -157,6 +151,36 @@ function directive($parse: IParseService) {
                     $scope.$apply();
                 }
             });
+
+            let repositionActionOptions = (): void => {
+                let windowElem: JQuery = vm.hasCaption ? $(window) : $(".card-list-scrollable");
+                let actionOptionsElem: JQuery =
+                    $("#options");
+                let repositionClass: string = 'reposition';
+                // if element position element is left sided, we want to check right sided position to see if it goes
+                // out of the screen, so we add 2 times the element width.
+                if(actionOptionsElem.length > 0) {
+                    let actionOptionX: number =
+                        actionOptionsElem.offset().left +
+                        (actionOptionsElem.width() * (actionOptionsElem.hasClass(repositionClass) ? 2 : 1));
+
+                    if (actionOptionX >= windowElem.width() && !actionOptionsElem.hasClass(repositionClass))
+                        actionOptionsElem.addClass(repositionClass);
+                    else if (actionOptionX < windowElem.width() && actionOptionsElem.hasClass(repositionClass))
+                        actionOptionsElem.removeClass(repositionClass)
+                }
+            }
+
+            angular.element(window).bind('resize', async (): Promise<void> => {
+                await safeApply($scope); // waiting dom recalculate
+                repositionActionOptions();
+            });
+
+            vm.openCardOptions = async (): Promise<void> => {
+                vm.isDisplayedOptions = !vm.isDisplayedOptions;
+                await safeApply($scope); // waiting dom recalculate
+                if (vm.isDisplayedOptions) repositionActionOptions();
+            }
 
             vm.openEdit = (card: Card): void => {
                 $parse($scope.vm.onEdit())(card);

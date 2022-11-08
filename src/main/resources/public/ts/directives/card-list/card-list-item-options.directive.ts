@@ -86,6 +86,8 @@ function directive($parse: IParseService) {
                         element: ng.IAugmentedJQuery,
                         attrs: ng.IAttributes,
                         vm: IViewModel) {
+
+
             vm.openEdit = (): void => {
                 element.click(function (event) {
                     event.stopPropagation();

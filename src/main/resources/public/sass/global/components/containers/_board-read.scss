@@ -3,6 +3,10 @@
   background: $magneto-white;
   min-height: calc(100vh - 124px);
   width: 70%;
+  @include mobile {
+    width: 100% ! important;
+  }
+
   margin-left: auto;
   margin-right: auto;
 

@@ -422,7 +422,8 @@ public class DefaultCardService implements CardService {
                         .put(Field.BOARDID, new JsonObject()
                                 .put(Mongo.NE, boardId)))
                 .lookUp(CollectionsConstant.BOARD_COLLECTION, Field.BOARDID, Field._ID, Field.RESULT)
-                .matchRegex(searchText, Arrays.asList(Field.TITLE, Field.DESCRIPTION, Field.CAPTION, String.format("%s.%s", Field.RESULT, Field.TAGS)));
+                .matchRegex(searchText, Arrays.asList(Field.TITLE, Field.DESCRIPTION, Field.CAPTION,
+                        String.format("%s.%s", Field.RESULT, Field.TAGS), String.format("%s.%s", Field.RESULT, Field.TITLE)));
         if (isShared) {
             query.matchOr(new JsonArray()
                     .add(new JsonObject()
@@ -439,8 +440,13 @@ public class DefaultCardService implements CardService {
         } else {
             query.match(new JsonObject().put(String.format("%s.%s", Field.RESULT, Field.OWNERID), user.getUserId()));
         }
+        List<String> groupField = Arrays.asList(Field.TITLE, Field.DESCRIPTION, Field.CAPTION, Field.RESOURCEID, Field.RESOURCETYPE, Field.RESOURCEURL);
+        List<String> externalGroupField = Arrays.asList(Field.PARENTID, Field._ID, Field.CREATIONDATE, Field.BOARDID,
+                Field.MODIFICATIONDATE, Field.OWNERID, Field.OWNERNAME, Field.LASTMODIFIERID, Field.LASTMODIFIERNAME, Field.RESULT);
         query
                 .match(new JsonObject().put(String.format("%s.%s", Field.RESULT, Field.DELETED), false))
+                .sort(Field.PARENTID, 1)
+                .group(groupField, externalGroupField)
                 .sort(String.format("%s.%s", Field.RESULT, Field.MODIFICATIONDATE), -1);
 
         if (getCount) {
@@ -449,13 +455,13 @@ public class DefaultCardService implements CardService {
             query
                     .page(page)
                     .project(new JsonObject()
-                            .put(Field._ID, 1)
-                            .put(Field.TITLE, 1)
-                            .put(Field.CAPTION, 1)
-                            .put(Field.DESCRIPTION, 1)
-                            .put(Field.RESOURCETYPE, 1)
-                            .put(Field.RESOURCEID, 1)
-                            .put(Field.RESOURCEURL, 1)
+                            .put(Field._ID, String.format("$%s", Field.ID))
+                            .put(Field.TITLE, String.format("$%s.%s", Field._ID, Field.TITLE))
+                            .put(Field.CAPTION, String.format("$%s.%s", Field._ID, Field.CAPTION))
+                            .put(Field.DESCRIPTION, String.format("$%s.%s", Field._ID, Field.DESCRIPTION))
+                            .put(Field.RESOURCETYPE, String.format("$%s.%s", Field._ID, Field.RESOURCETYPE))
+                            .put(Field.RESOURCEID, String.format("$%s.%s", Field._ID, Field.RESOURCEID))
+                            .put(Field.RESOURCEURL, String.format("$%s.%s", Field._ID, Field.RESOURCEURL))
                             .put(Field.CREATIONDATE, 1)
                             .put(Field.MODIFICATIONDATE, 1)
                             .put(Field.OWNERID, 1)

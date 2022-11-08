@@ -1,10 +1,6 @@
 .board-manage-lightbox {
 
-  section.lightbox {
-    .content {
-      width: 850px;
-    }
-  }
+  @include lightboxWidth(80%);
 
   &-head {
 

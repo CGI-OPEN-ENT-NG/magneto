@@ -174,4 +174,9 @@ i {
     font-family: 'magneto-mdi';
     content: '\F1682';
   }
+
+  &.magneto-play::before {
+    font-family: 'magneto-mdi';
+    content: '\F040A';
+  }
 }

@@ -78,9 +78,20 @@ public class MongoQuery {
         return this;
     }
 
-    public MongoQuery group(String field, Integer sortOrder) {
+    public MongoQuery group(List<String> fields, List<String> externalFields) {
+        JsonObject group = new JsonObject().put(Mongo._ID, new JsonObject());
+        fields.forEach(field -> group.getJsonObject(Mongo._ID).put(field, String.format("$%s", field)));
+        if (!externalFields.isEmpty()) {
+            externalFields.forEach(field -> {
+                if(field.equals(Field._ID)) {
+                    group.put(Field.ID, new JsonObject().put(Mongo.FIRST, String.format("$%s", field)));
+                } else {
+                    group.put(field, new JsonObject().put(Mongo.FIRST, String.format("$%s", field)));
+                }
+            });
+        }
         this.pipeline.add(new JsonObject()
-                .put(Mongo.GROUP, new JsonObject().put(field, sortOrder)));
+                .put(Mongo.GROUP, group));
         return this;
     }
 

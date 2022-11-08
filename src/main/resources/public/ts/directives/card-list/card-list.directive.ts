@@ -170,11 +170,11 @@ function directive($parse: IParseService) {
                 $parse($scope.vm.onDelete())(card);
             }
 
-            vm.openPreview= (card: Card): void => {
+            vm.openPreview = (card: Card): void => {
                 $parse($scope.vm.onPreview())(card);
             }
 
-            vm.openTransfer= (card: Card): void => {
+            vm.openTransfer = (card: Card): void => {
                 $parse($scope.vm.onTransfer())(card);
             }
         }

@@ -14,7 +14,7 @@
             <image-select ng-model="vm.form.imageUrl"
                           default="/img/illustrations/collaborativeeditor-default.png">
             </image-select>
-            <span ng-if="vm.form.imageUrl === ''"
+            <span ng-if="!vm.form.imageUrl"
                   class="board-manage-lightbox-body-image-select-choose">
                 <i18n>magneto.board.manage.ask.image</i18n>
             </span>

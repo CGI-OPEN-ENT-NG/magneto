@@ -39,18 +39,16 @@
       height: 20% !important;
     }
     &-creation {
+      margin-right: 20px;
       display: flex;
-      align-items: center;
-      gap: 5px;
-      width: 100%;
-      margin-right: 15px;
+      flex-direction: column;
       &-user {
-        width: inherit !important;
         @include noTextOverflow(1);
       }
       &-date {
-        width: inherit !important;
-        @include noTextOverflow(1);
+        color: $magneto-light-grey;
+        font-size: 12px;
+        line-height: 12px;
       }
     }
   }
@@ -163,14 +161,9 @@
     align-items: center;
   }
 
-  &-date {
-    color: $magneto-light-grey;
-  }
-
   i.magneto-card-settings {
     font-size: 25px;
     position: absolute;
     right: 5px;
-    top: 10px;
   }
 }

@@ -47,4 +47,6 @@ public class Mongo {
     public static final String ADD_FIELDS = "$addFields";
     public static final String INDEX_OF_ARRAY = "$indexOfArray";
     public static final String ARRAYELEMAT = "$arrayElemAt";
+    public static final String _ID = "_id";
+    public static final String FIRST = "$first";
 }

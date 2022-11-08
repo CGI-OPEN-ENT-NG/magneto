@@ -26,18 +26,19 @@
     background: $magneto-grey-blue;
     border-radius: 10px 10px 0 0;
     flex: 1;
+    height: 60%;
 
     img {
-      max-height: 150px;
-      max-width: 100%;
-      object-fit: contain;
+      height: 100%;
+      width: 100%;
+      object-fit: cover;
       margin: 5px;
     }
   }
 
   &-infos {
-    height: 70px;
-    margin: 15px;
+    height: 40%;
+    margin: 4%;
     flex-direction: column;
 
     &-title {

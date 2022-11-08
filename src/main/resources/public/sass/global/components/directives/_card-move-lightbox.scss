@@ -1,12 +1,9 @@
 .card-move-lightbox {
   &-body {
-    padding: 25px 0 150px 0 !important;
-  }
-
-  &-combo {
-    width: 60%;
-    margin-right: auto;
-    margin-left: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    padding: 10px 15px 150px 15px !important;
   }
 
   &-button {
@@ -15,5 +12,9 @@
 
   button {
     color: black;
+  }
+
+  .multi-combo-root-panel>ul {
+    max-height: 120px !important;
   }
 }

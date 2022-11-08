@@ -19,12 +19,12 @@ $magneto-red: #e61610;
 
 $magneto-font-secondary: 'Comfortaa', cursive;
 
-$magneto-screen-mobile: 500px;
+$magneto-screen-mobile: 768px;
 
 
 
 @mixin mobile {
-  @media (max-width: 768px) {
+  @media (max-width: $magneto-screen-mobile) {
     @content;
   }
 }
@@ -53,6 +53,14 @@ $magneto-screen-mobile: 500px;
 @mixin marginY($size) {
   margin-bottom: $size;
   margin-top: $size;
+}
+
+@mixin lightboxWidth($width) {
+  section.lightbox {
+    .content {
+      width: $width !important;
+    }
+  }
 }
 
 @mixin noTextOverflow($nbLines) {

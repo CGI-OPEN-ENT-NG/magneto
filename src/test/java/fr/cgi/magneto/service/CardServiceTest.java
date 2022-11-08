@@ -29,7 +29,6 @@ public class CardServiceTest {
         this.serviceFactory = new ServiceFactory(vertx, null, null, null, null, null);
         this.cardService = new DefaultCardService("card", mongoDb, serviceFactory);
     }
-
     @Test
     public void testGetAllCardsQuery(TestContext ctx) throws Exception {
         JsonObject expected = new JsonObject("{\n" +
@@ -78,6 +77,12 @@ public class CardServiceTest {
                 "                     \"$regex\":\"test\",\n" +
                 "                     \"$options\":\"i\"\n" +
                 "                  }\n" +
+                "               },\n" +
+                "               {\n" +
+                "                  \"result.title\":{\n" +
+                "                     \"$regex\":\"test\",\n" +
+                "                     \"$options\":\"i\"\n" +
+                "                  }\n" +
                 "               }\n" +
                 "            ]\n" +
                 "         }\n" +
@@ -90,6 +95,39 @@ public class CardServiceTest {
                 "      {\n" +
                 "         \"$match\":{\n" +
                 "            \"result.deleted\":false\n" +
+                "         }\n" +
+                "      },\n" +
+                "      {\n" +
+                "         \"$sort\":{\n" +
+                "            \"parentId\":1\n" +
+                "         }\n" +
+                "      },\n" +
+                "      {\n" +
+                "         \"$group\":{\n" +
+                "            \"_id\":{\n" +
+                "                \"title\":\"$title\", \"description\":\"$description\", \"caption\":\"$caption\", \"resourceId\":\n" +
+                "                \"$resourceId\", \"resourceType\":\"$resourceType\", \"resourceUrl\":\"$resourceUrl\"\n" +
+                "            },\"parentId\":{\n" +
+                "                \"$first\":\"$parentId\"\n" +
+                "            },\"boardId\":{\n" +
+                "                \"$first\":\"$boardId\"\n" +
+                "            },\"id\":{\n" +
+                "                \"$first\":\"$_id\"\n" +
+                "            },\"creationDate\":{\n" +
+                "                \"$first\":\"$creationDate\"\n" +
+                "            },\"modificationDate\":{\n" +
+                "                \"$first\":\"$modificationDate\"\n" +
+                "            },\"ownerId\":{\n" +
+                "                \"$first\":\"$ownerId\"\n" +
+                "            },\"ownerName\":{\n" +
+                "                \"$first\":\"$ownerName\"\n" +
+                "            },\"lastModifierId\":{\n" +
+                "                \"$first\":\"$lastModifierId\"\n" +
+                "            },\"lastModifierName\":{\n" +
+                "                \"$first\":\"$lastModifierName\"\n" +
+                "            },\"result\":{\n" +
+                "                \"$first\":\"$result\"\n" +
+                "            }\n" +
                 "         }\n" +
                 "      },\n" +
                 "      {\n" +
