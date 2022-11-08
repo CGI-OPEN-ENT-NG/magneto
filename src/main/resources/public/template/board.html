@@ -6,7 +6,7 @@
                      alt="" src="/magneto/public/img/uni-magneto.png">
                 <i18n>magneto.title</i18n> / [[vm.board.title]]
             </h1>
-            <button class="right-magnet create-button" ng-click="vm.openReading()">
+            <button ng-if="vm.cards.length > 0" class="right-magnet create-button" ng-click="vm.openReading()">
                 <i18n>magneto.reading.board</i18n>
             </button>
             <div class="cell right-magnet board-container-header-date">
@@ -20,7 +20,7 @@
     <div class="twelve cell board-container-body">
         <div class="cell board-container-body-nav">
             <board-nav
-                    ng-if="vm.board.myRights.contrib"
+                    ng-if="vm.board.myRights.publish"
                     on-create="vm.openAddResourceLightbox"
                     on-properties="vm.openBoardPropertiesForm"
                     has-properties="vm.board.myRights.manager">

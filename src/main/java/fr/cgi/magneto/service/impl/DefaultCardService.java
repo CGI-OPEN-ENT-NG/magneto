@@ -146,9 +146,7 @@ public class DefaultCardService implements CardService {
     public Future<JsonObject> getAllCards(UserInfos user, String boardId, Integer page, boolean isPublic, boolean isShared, String searchText, String sortBy) {
         Promise<JsonObject> promise = Promise.promise();
 
-
         Future<JsonArray> fetchAllCardsCountFuture = fetchAllCardsCount(user, boardId, page, isPublic, isShared, searchText, sortBy, true);
-
         Future<List<Card>> fetchAllCardsFuture = fetchAllCards(user, boardId, page, isPublic, isShared, searchText, sortBy);
 
 
@@ -428,10 +426,14 @@ public class DefaultCardService implements CardService {
         if (isShared) {
             query.matchOr(new JsonArray()
                     .add(new JsonObject()
-                            .put(String.format("%s.%s.%s", Field.RESULT, Field.SHARED, Field.USERID), new JsonObject().put(Mongo.IN,
-                                    new JsonArray().add(user.getUserId()))))
+                            .put(String.format("%s.%s.%s", Field.RESULT, Field.SHARED, Field.USERID),
+                                    new JsonObject().put(Mongo.IN, new JsonArray().add(user.getUserId())))
+                            .put(String.format("%s.%s.%s", Field.RESULT, Field.SHARED, "fr-cgi-magneto-controller-ShareBoardController|initContribRight"), true))
                     .add(new JsonObject()
-                            .put(String.format("%s.%s.%s", Field.RESULT, Field.SHARED, Field.GROUPID), new JsonObject().put(Mongo.IN, user.getGroupsIds()))));
+                            .put(String.format("%s.%s.%s", Field.RESULT, Field.SHARED, Field.GROUPID),
+                                    new JsonObject().put(Mongo.IN, user.getGroupsIds()))
+                            .put(String.format("%s.%s.%s", Field.RESULT, Field.SHARED, "fr-cgi-magneto-controller-ShareBoardController|initContribRight"), true))
+            );
         } else if (isPublic) {
             query.match(new JsonObject().put(String.format("%s.%s", Field.RESULT, Field.PUBLIC), true));
         } else {
