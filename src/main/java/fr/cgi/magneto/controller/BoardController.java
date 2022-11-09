@@ -1,7 +1,6 @@
 package fr.cgi.magneto.controller;
 
-import fr.cgi.magneto.core.constants.Field;
-import fr.cgi.magneto.core.constants.Rights;
+import fr.cgi.magneto.core.constants.*;
 import fr.cgi.magneto.helper.DateHelper;
 import fr.cgi.magneto.model.boards.Board;
 import fr.cgi.magneto.model.boards.BoardPayload;
@@ -17,7 +16,7 @@ import io.vertx.core.http.HttpServerRequest;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 import org.entcore.common.controller.ControllerHelper;
-import org.entcore.common.http.filter.ResourceFilter;
+import org.entcore.common.http.filter.*;
 import org.entcore.common.user.UserUtils;
 
 import java.util.Date;
@@ -92,6 +91,7 @@ public class BoardController extends ControllerHelper {
     @Post("/board")
     @ApiDoc("Create a board")
     @SecuredAction(Rights.MANAGE_BOARD)
+    @Trace(Actions.BOARD_CREATION)
     public void create(HttpServerRequest request) {
         RequestUtils.bodyToJson(request, pathPrefix + "board", board ->
                 UserUtils.getUserInfos(eb, request, user ->
@@ -104,6 +104,7 @@ public class BoardController extends ControllerHelper {
     @ApiDoc("Update a board")
     @ResourceFilter(ManageBoardRight.class)
     @SecuredAction(value = "", type = ActionType.RESOURCE)
+    @Trace(Actions.BOARD_UPDATE)
     public void update(HttpServerRequest request) {
         RequestUtils.bodyToJson(request, pathPrefix + "boardUpdate", board -> {
             String boardId = request.getParam(Field.ID);
@@ -156,6 +157,7 @@ public class BoardController extends ControllerHelper {
     @ApiDoc("Delete boards")
     @ResourceFilter(DeleteBoardRight.class)
     @SecuredAction(value = "", type = ActionType.RESOURCE)
+    @Trace(Actions.BOARD_DELETION)
     @SuppressWarnings("unchecked")
     public void deleteBoards(HttpServerRequest request) {
         RequestUtils.bodyToJson(request, pathPrefix + "boardList", boards ->

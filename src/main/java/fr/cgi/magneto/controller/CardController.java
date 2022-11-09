@@ -1,6 +1,6 @@
 package fr.cgi.magneto.controller;
 
-import fr.cgi.magneto.core.constants.Field;
+import fr.cgi.magneto.core.constants.*;
 import fr.cgi.magneto.helper.DateHelper;
 import fr.cgi.magneto.model.boards.Board;
 import fr.cgi.magneto.model.boards.BoardPayload;
@@ -22,7 +22,7 @@ import io.vertx.core.http.HttpServerRequest;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 import org.entcore.common.controller.ControllerHelper;
-import org.entcore.common.http.filter.ResourceFilter;
+import org.entcore.common.http.filter.*;
 import org.entcore.common.user.UserUtils;
 
 import java.util.Collections;
@@ -107,6 +107,7 @@ public class CardController extends ControllerHelper {
     @ApiDoc("Create a card")
     @ResourceFilter(WriteBoardRight.class)
     @SecuredAction(value = "", type = ActionType.RESOURCE)
+    @Trace(Actions.CARD_CREATION)
     public void createCard(HttpServerRequest request) {
         RequestUtils.bodyToJson(request, pathPrefix + "card", body ->
                 UserUtils.getUserInfos(eb, request, user -> {
@@ -137,6 +138,7 @@ public class CardController extends ControllerHelper {
     @ApiDoc("Update a card")
     @ResourceFilter(WriteBoardRight.class)
     @SecuredAction(value = "", type = ActionType.RESOURCE)
+    @Trace(Actions.CARD_UPDATE)
     public void update(HttpServerRequest request) {
         RequestUtils.bodyToJson(request, pathPrefix + "cardUpdate", card -> {
             CardPayload updateCard = new CardPayload(card)
@@ -168,6 +170,7 @@ public class CardController extends ControllerHelper {
     @ApiDoc("Duplicate a card")
     @ResourceFilter(DuplicateCardRight.class)
     @SecuredAction(value = "", type = ActionType.RESOURCE)
+    @Trace(Actions.CARD_CREATION)
     public void duplicate(HttpServerRequest request) {
         RequestUtils.bodyToJson(request, pathPrefix + "cardDuplicate", duplicateCard -> {
             UserUtils.getUserInfos(eb, request, user -> {
@@ -231,6 +234,7 @@ public class CardController extends ControllerHelper {
     @ApiDoc("Delete cards")
     @ResourceFilter(WriteBoardRight.class)
     @SecuredAction(value = "", type = ActionType.RESOURCE)
+    @Trace(Actions.CARD_DELETION)
     @SuppressWarnings("unchecked")
     public void deleteCards(HttpServerRequest request) {
         RequestUtils.bodyToJson(request, pathPrefix + "cardList", cards ->
