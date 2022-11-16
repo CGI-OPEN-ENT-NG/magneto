@@ -1,6 +1,7 @@
 package fr.cgi.magneto.controller;
 
-import fr.cgi.magneto.core.constants.*;
+import fr.cgi.magneto.core.constants.Actions;
+import fr.cgi.magneto.core.constants.Field;
 import fr.cgi.magneto.helper.DateHelper;
 import fr.cgi.magneto.model.boards.Board;
 import fr.cgi.magneto.model.boards.BoardPayload;
@@ -22,13 +23,11 @@ import io.vertx.core.http.HttpServerRequest;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 import org.entcore.common.controller.ControllerHelper;
-import org.entcore.common.http.filter.*;
+import org.entcore.common.http.filter.ResourceFilter;
+import org.entcore.common.http.filter.Trace;
 import org.entcore.common.user.UserUtils;
 
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class CardController extends ControllerHelper {
@@ -134,7 +133,7 @@ public class CardController extends ControllerHelper {
                 }));
     }
 
-    @Put("/card/:id")
+    @Put("/card")
     @ApiDoc("Update a card")
     @ResourceFilter(WriteBoardRight.class)
     @SecuredAction(value = "", type = ActionType.RESOURCE)
@@ -183,7 +182,6 @@ public class CardController extends ControllerHelper {
             });
         });
     }
-
     @Post("/card/move")
     @ApiDoc("Move a card to another board")
     @ResourceFilter(WriteBoardRight.class)

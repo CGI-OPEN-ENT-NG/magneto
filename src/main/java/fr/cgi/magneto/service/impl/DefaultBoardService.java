@@ -22,7 +22,9 @@ import io.vertx.core.logging.LoggerFactory;
 import org.entcore.common.mongodb.MongoDbResult;
 import org.entcore.common.user.UserInfos;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.List;
+import java.util.UUID;
 
 public class DefaultBoardService implements BoardService {
 
@@ -103,7 +105,7 @@ public class DefaultBoardService implements BoardService {
                 promise.fail(message);
                 return;
             }
-            promise.complete(results.right().getValue());
+            promise.complete(results.right().getValue().put(Field.CARDIDS, board.getCardIds()));
         }));
         return promise.future();
     }

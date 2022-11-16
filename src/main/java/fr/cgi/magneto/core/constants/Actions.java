@@ -4,6 +4,9 @@ public class Actions {
     // A user creates a board
     public static final String BOARD_CREATION = "BOARD_CREATION";
 
+    // A user duplicate a board
+    public static final String BOARD_DUPLICATE = "BOARD_DUPLICATE";
+
     // A user updates a board
     public static final String BOARD_UPDATE = "BOARD_UPDATE";
 

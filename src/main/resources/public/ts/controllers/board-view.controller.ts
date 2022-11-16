@@ -24,6 +24,7 @@ interface IViewModel extends ng.IController {
     displayUpdateCardLightbox: boolean;
     displayDeleteCardLightbox: boolean;
     displayTransferCardLightbox: boolean;
+    displayTransferDuplicateCardLightbox: boolean;
     displayPreviewCardLightbox: boolean;
     displayMediaLibraryLightbox: boolean;
     displayAudioMediaLibraryLightbox: boolean;
@@ -56,7 +57,6 @@ interface IViewModel extends ng.IController {
 
     openAddResourceLightbox(resourceType: RESOURCE_TYPE): void;
     openEditResourceLightbox(card: Card): void;
-    openDuplicateCard(card: Card): Promise<void>
     openReading(): void;
     onFormSubmit(): Promise<void>;
     onBoardFormSubmit(): Promise<void>;
@@ -83,6 +83,7 @@ class Controller implements IViewModel {
     displayUpdateCardLightbox: boolean;
     displayDeleteCardLightbox: boolean;
     displayTransferCardLightbox: boolean;
+    displayTransferDuplicateCardLightbox: boolean;
     displayPreviewCardLightbox: boolean;
 
     cards: Array<Card>;
@@ -126,6 +127,7 @@ class Controller implements IViewModel {
         this.displayCardLightbox = false;
         this.displayDeleteCardLightbox = false;
         this.displayTransferCardLightbox = false;
+        this.displayTransferDuplicateCardLightbox = false;
         this.displayMediaLibraryLightbox = false;
         this.displayCollectionLightbox = false;
         this.displayVideoResourceLightbox = false;
@@ -236,6 +238,14 @@ class Controller implements IViewModel {
     }
 
     /**
+     * Open card duplicate and move lightbox.
+     */
+    openTransferDuplicateResourceLightbox = (card: Card): void => {
+        this.cardForm = new CardForm().build(card);
+        this.displayTransferDuplicateCardLightbox = true;
+    }
+
+    /**
      * Callback on form submit:
      * - refresh cards
      */
@@ -285,29 +295,6 @@ class Controller implements IViewModel {
                 this.isLoading = false;
                 notify.error(err.message)
             });
-    }
-
-    openDuplicateCard = async (card?: Card): Promise<void> => {
-        try {
-            const params: ICardsBoardParamsRequest = {
-                boardId: this.board.id,
-                cardIds: [card.id]
-            };
-            await this.cardsService.duplicateCard(params)
-                .then(async (response: AxiosResponse) => {
-                    if (response.status === 200 || response.status === 201) {
-                        toasts.confirm('magneto.duplicate.cards.confirm');
-                        await this.onFormSubmit()
-                        await this.resetCards();
-                    }
-                })
-                .catch((err: AxiosError) => {
-                    notify.error(err.message)
-                });
-        } catch (e) {
-            toasts.warning('magneto.duplicate.cards.error');
-            console.error(e);
-        }
     }
 
     /**

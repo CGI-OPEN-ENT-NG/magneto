@@ -99,5 +99,6 @@ public class Field {
     public static final String USERNAME = "username";
     public static final String BODY = "body";
     public static final String PUSHNOTIF = "pushNotif";
+
     public static final String CARD = "card";
 }

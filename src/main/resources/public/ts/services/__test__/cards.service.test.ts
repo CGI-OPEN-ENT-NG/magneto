@@ -79,7 +79,7 @@ describe('CardsService', () => {
         form.id = 'id';
 
         let spy = jest.spyOn(axios, "put");
-        mock.onPut(`/magneto/card/id`, form.toJSON()).reply(200, data);
+        mock.onPut(`/magneto/card`, form.toJSON()).reply(200, data);
         cardsService.updateCard(form).then(res => {
             expect(res.data).toEqual(data);
             done();

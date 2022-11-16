@@ -47,7 +47,7 @@ export const cardsService: ICardsService = {
     },
 
     updateCard: async (params: CardForm): Promise<AxiosResponse> => {
-        return http.put(`/magneto/card/${params.id}`, params.toJSON());
+        return http.put(`/magneto/card`, params.toJSON());
     },
 
     duplicateCard: async (params: ICardsBoardParamsRequest): Promise<AxiosResponse> => {

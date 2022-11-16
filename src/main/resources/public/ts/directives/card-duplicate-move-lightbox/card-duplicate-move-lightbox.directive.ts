@@ -2,13 +2,13 @@ import {idiom as lang, ng, notify, toasts} from "entcore";
 import {IParseService, IScope} from "angular";
 import {RootsConst} from "../../core/constants/roots.const";
 import {boardsService, cardsService} from "../../services";
-import {Board, Boards, Card, CardForm, IBoardsParamsRequest} from "../../models";
+import {Board, Boards, Card, CardForm, IBoardsParamsRequest, ICardsBoardParamsRequest} from "../../models";
 import {safeApply} from "../../utils/safe-apply.utils";
 import {AxiosError} from "axios";
 import {COMBO_LABELS} from "../../core/enums/comboLabel";
 
-interface IViewModel extends ng.IController, ICardMoveProps {
-    submitMove?(card: Card): Promise<void>;
+interface IViewModel extends ng.IController, ICardDuplicateMoveProps {
+    submitDuplicateMove?(card: Card): Promise<void>;
 
     closeForm(): void;
 
@@ -27,14 +27,14 @@ interface IViewModel extends ng.IController, ICardMoveProps {
     lang: typeof lang;
 }
 
-interface ICardMoveProps {
+interface ICardDuplicateMoveProps {
     onSubmit?;
     display: boolean;
     boardId: string
     form: CardForm;
 }
 
-interface ICardMoveScope extends IScope, ICardMoveProps {
+interface ICardDuplicateMoveScope extends IScope, ICardDuplicateMoveProps {
     vm: IViewModel;
 }
 
@@ -48,7 +48,7 @@ class Controller implements IViewModel {
     comboLabels: typeof COMBO_LABELS;
     lang: typeof lang;
 
-    constructor(private $scope: ICardMoveScope) {
+    constructor(private $scope: ICardDuplicateMoveScope) {
         this.boards = [];
         this.selectedBoards = [];
         this.comboLabels = COMBO_LABELS;
@@ -94,9 +94,7 @@ class Controller implements IViewModel {
             .then((res: Boards) => {
                 if (res.all && res.all.length > 0) {
                     this.boards.push(...res.all);
-                    this.boards = this.boards.filter(board => {
-                        return board.id != this.boardId;
-                    })
+                    this.selectedBoards.push(this.boards.find(board => board.id == this.boardId));
                     this.boards.forEach(board => {
                         board.toString = () => board.title;
                     });
@@ -113,7 +111,7 @@ class Controller implements IViewModel {
 function directive($parse: IParseService) {
     return {
         restrict: 'E',
-        templateUrl: `${RootsConst.directive}card-move-lightbox/card-move-lightbox.html`,
+        templateUrl: `${RootsConst.directive}card-duplicate-move-lightbox/card-duplicate-move-lightbox.html`,
         scope: {
             display: '=',
             onSubmit: '&',
@@ -124,23 +122,32 @@ function directive($parse: IParseService) {
         bindToController: true,
         controller: ['$scope', Controller],
         /* interaction DOM/element */
-        link: function ($scope: ICardMoveScope,
+        link: function ($scope: ICardDuplicateMoveScope,
                         element: ng.IAugmentedJQuery,
                         attrs: ng.IAttributes,
                         vm: IViewModel) {
 
-            vm.submitMove = async (): Promise<void> => {
+            vm.submitDuplicateMove = async (): Promise<void> => {
                 try {
                     if (vm.isFormValid()) {
-                        await cardsService.moveCard(vm.form, vm.selectedBoards[0].id);
-                        toasts.confirm('magneto.move.cards.confirm');
+                        const params: ICardsBoardParamsRequest = {
+                            boardId: vm.selectedBoards[0].id,
+                            cardIds: [vm.form.id]
+                        };
+                        if (vm.selectedBoards[0].id == vm.boardId) {
+                            params.boardId = vm.boardId;
+                            await cardsService.duplicateCard(params);
+                        } else {
+                            await cardsService.duplicateCard(params);
+                        }
+                        toasts.confirm('magneto.duplicate.cards.confirm');
                         $parse($scope.vm.onSubmit())({});
                         vm.closeForm();
                     } else {
                         toasts.warning('magneto.boards.empty.text');
                     }
                 } catch (e) {
-                    toasts.warning('magneto.move.cards.error');
+                    toasts.warning('magneto.duplicate.cards.error');
                     console.error(e);
                 }
             }
@@ -148,4 +155,4 @@ function directive($parse: IParseService) {
     }
 }
 
-export const cardMoveLightbox = ng.directive('cardMoveLightbox', directive)
+export const cardDuplicateMoveLightbox = ng.directive('cardDuplicateMoveLightbox', directive)

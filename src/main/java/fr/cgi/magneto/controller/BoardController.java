@@ -1,11 +1,19 @@
 package fr.cgi.magneto.controller;
 
-import fr.cgi.magneto.core.constants.*;
+import fr.cgi.magneto.core.constants.Actions;
+import fr.cgi.magneto.core.constants.Field;
+import fr.cgi.magneto.core.constants.Rights;
 import fr.cgi.magneto.helper.DateHelper;
 import fr.cgi.magneto.model.boards.Board;
 import fr.cgi.magneto.model.boards.BoardPayload;
-import fr.cgi.magneto.security.*;
-import fr.cgi.magneto.service.*;
+import fr.cgi.magneto.security.DeleteBoardRight;
+import fr.cgi.magneto.security.ManageBoardRight;
+import fr.cgi.magneto.security.MoveBoardRight;
+import fr.cgi.magneto.security.ViewRight;
+import fr.cgi.magneto.service.BoardService;
+import fr.cgi.magneto.service.CardService;
+import fr.cgi.magneto.service.FolderService;
+import fr.cgi.magneto.service.ServiceFactory;
 import fr.wseduc.rs.*;
 import fr.wseduc.security.ActionType;
 import fr.wseduc.security.SecuredAction;
@@ -16,7 +24,8 @@ import io.vertx.core.http.HttpServerRequest;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 import org.entcore.common.controller.ControllerHelper;
-import org.entcore.common.http.filter.*;
+import org.entcore.common.http.filter.ResourceFilter;
+import org.entcore.common.http.filter.Trace;
 import org.entcore.common.user.UserUtils;
 
 import java.util.Date;

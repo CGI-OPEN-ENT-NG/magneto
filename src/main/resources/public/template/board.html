@@ -64,12 +64,12 @@
                     is-draggable="vm.board.myRights.publish !== undefined"
                     has-caption="true"
                     cards="vm.cards"
+                    on-move="vm.getBoard"
                     board-display="false"
                     has-edit="vm.board.myRights.publish !== undefined"
-                    has-duplicate="vm.board.myRights.publish !== undefined"
-                    on-duplicate="vm.openDuplicateCard"
-                    on-move="vm.getBoard"
                     on-edit="vm.openEditResourceLightbox"
+                    has-duplicate="vm.board.myRights.publish !== undefined"
+                    on-duplicate="vm.openTransferDuplicateResourceLightbox"
                     has-delete="vm.board.myRights.manager !== undefined"
                     on-delete="vm.openDeleteResourceLightbox"
                     has-preview="vm.board.myRights.read !== undefined || vm.board.public"
@@ -96,6 +96,14 @@
                 board-id="vm.filter.boardId"
                 on-submit="vm.onFormSubmit">
         </card-move-lightbox>
+
+        <card-duplicate-move-lightbox
+                ng-if="vm.displayTransferDuplicateCardLightbox"
+                display="vm.displayTransferDuplicateCardLightbox"
+                form="vm.cardForm"
+                board-id="vm.filter.boardId"
+                on-submit="vm.onFormSubmit">
+        </card-duplicate-move-lightbox>
 
         <!-- Card deletion modal -->
         <card-delete-lightbox
@@ -139,7 +147,8 @@
                 on-submit="vm.onLinkSubmit">
         </linker>
 
-        <card-collection ng-if="vm.displayCollectionLightbox"
+        <card-collection
+                ng-if="vm.displayCollectionLightbox"
                 display="vm.displayCollectionLightbox"
                 board="vm.board"
                 on-submit="vm.onFormSubmit">

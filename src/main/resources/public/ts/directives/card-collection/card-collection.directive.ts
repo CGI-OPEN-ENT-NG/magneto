@@ -116,7 +116,7 @@ class Controller implements IViewModel {
     }
 
     isFormValid = (): boolean => {
-        return this.selectedCardIds.length > 0;
+        return this.selectedCardIds && this.selectedCardIds.length > 0;
     }
 
     /**
