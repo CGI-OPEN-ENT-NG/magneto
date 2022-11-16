@@ -3,16 +3,19 @@
           on-close="vm.closeForm()">
 
     <section class="head board-publish-lightbox-head">
-        <h3 ng-if="!vm.isPublic">
+        <h3 ng-if="!vm.board.public">
             <i18n>magneto.board.publish.title</i18n>
         </h3>
-        <h3 ng-if="vm.isPublic">
+        <h3 ng-if="vm.board.public">
             <i18n>magneto.board.unpublish.title</i18n>
         </h3>
     </section>
     <section class="body board-publish-lightbox-body">
-        <div class="row board-publish-lightbox-body-description">
+        <div ng-if="!vm.board.public" class="row board-publish-lightbox-body-description">
             <i18n>magneto.board.publish.description</i18n>
+        </div>
+        <div ng-if="vm.board.public" class="row board-publish-lightbox-body-description">
+            <i18n>magneto.board.unpublish.description</i18n>
         </div>
         <board-keywords-input
                 ng-if="!vm.board.public"

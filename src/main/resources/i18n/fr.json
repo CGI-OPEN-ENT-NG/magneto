@@ -40,6 +40,7 @@
   "magneto.board.publish.title": "Partager un tableau à toute la plateforme",
   "magneto.board.unpublish.title": "Supprimer le partage du tableau de la plateforme",
   "magneto.board.publish.description": "En partageant ce tableau à toute la plateforme, il sera accessible pour tous les utilisateurs de la plateforme en lecture et ses aimants pourront être réutilisés.",
+  "magneto.board.unpublish.description": "Voulez-vous supprimer le partage du tableau de la plateforme ?",
   "magneto.duplicate": "Dupliquer",
   "magneto.restore": "Restaurer",
   "magneto.move": "Déplacer",
