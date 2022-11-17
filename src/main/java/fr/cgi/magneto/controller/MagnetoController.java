@@ -13,6 +13,8 @@ import org.entcore.common.controller.ControllerHelper;
 import org.entcore.common.events.EventStore;
 import org.entcore.common.events.EventStoreFactory;
 
+import static fr.cgi.magneto.core.enums.Events.ACCESS;
+
 public class MagnetoController extends ControllerHelper {
 
     private final EventStore eventStore;
@@ -33,6 +35,6 @@ public class MagnetoController extends ControllerHelper {
         JsonObject param = new JsonObject()
                 .put(Field.WEBSOCKETENDPOINT, websocketEndpoint);
         renderView(request, param);
-        eventStore.createAndStoreEvent("ACCESS", request);
+        eventStore.createAndStoreEvent(ACCESS.name(), request);
     }
 }

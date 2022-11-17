@@ -1,5 +1,6 @@
 package fr.cgi.magneto.controller;
 
+import fr.cgi.magneto.Magneto;
 import fr.cgi.magneto.core.constants.Actions;
 import fr.cgi.magneto.core.constants.Field;
 import fr.cgi.magneto.helper.DateHelper;
@@ -23,6 +24,8 @@ import io.vertx.core.http.HttpServerRequest;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 import org.entcore.common.controller.ControllerHelper;
+import org.entcore.common.events.EventStore;
+import org.entcore.common.events.EventStoreFactory;
 import org.entcore.common.http.filter.ResourceFilter;
 import org.entcore.common.http.filter.Trace;
 import org.entcore.common.user.UserUtils;
@@ -30,14 +33,18 @@ import org.entcore.common.user.UserUtils;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static fr.cgi.magneto.core.enums.Events.CREATE_MAGNET;
+
 public class CardController extends ControllerHelper {
 
+    private final EventStore eventStore;
     private final CardService cardService;
     private final BoardService boardService;
 
     public CardController(ServiceFactory serviceFactory) {
         this.cardService = serviceFactory.cardService();
         this.boardService = serviceFactory.boardService();
+        this.eventStore = EventStoreFactory.getFactory().getEventStore(Magneto.class.getSimpleName());
     }
 
     @Get("/cards/collection")
@@ -129,7 +136,10 @@ public class CardController extends ControllerHelper {
                                 }
                             })
                             .onFailure(err -> renderError(request))
-                            .onSuccess(res -> renderJson(request, res));
+                            .onSuccess(res -> {
+                                eventStore.createAndStoreEvent(CREATE_MAGNET.name(), request);
+                                renderJson(request, res);
+                            });
                 }));
     }
 
@@ -177,7 +187,10 @@ public class CardController extends ControllerHelper {
                 String boardId = duplicateCard.getString(Field.BOARDID);
                 cardService.getCards(cardIds)
                         .compose(cards -> cardService.duplicateCards(boardId, cards, user))
-                        .onSuccess(res -> renderJson(request, res))
+                        .onSuccess(res -> {
+                            eventStore.createAndStoreEvent(CREATE_MAGNET.name(), request);
+                            renderJson(request, res);
+                        })
                         .onFailure(err -> renderError(request));
             });
         });

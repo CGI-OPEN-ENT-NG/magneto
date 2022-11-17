@@ -1,5 +1,6 @@
 package fr.cgi.magneto.controller;
 
+import fr.cgi.magneto.Magneto;
 import fr.cgi.magneto.core.constants.Actions;
 import fr.cgi.magneto.core.constants.Field;
 import fr.cgi.magneto.core.constants.Rights;
@@ -24,6 +25,8 @@ import io.vertx.core.http.HttpServerRequest;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 import org.entcore.common.controller.ControllerHelper;
+import org.entcore.common.events.EventStore;
+import org.entcore.common.events.EventStoreFactory;
 import org.entcore.common.http.filter.ResourceFilter;
 import org.entcore.common.http.filter.Trace;
 import org.entcore.common.user.UserUtils;
@@ -32,7 +35,11 @@ import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static fr.cgi.magneto.core.enums.Events.CREATE_BOARD;
+
 public class BoardController extends ControllerHelper {
+
+    private final EventStore eventStore;
 
     private final BoardService boardService;
     private final CardService cardService;
@@ -43,6 +50,7 @@ public class BoardController extends ControllerHelper {
         this.boardService = serviceFactory.boardService();
         this.cardService = serviceFactory.cardService();
         this.folderService = serviceFactory.folderService();
+        this.eventStore = EventStoreFactory.getFactory().getEventStore(Magneto.class.getSimpleName());
     }
 
     @Get("/boards")
@@ -106,7 +114,10 @@ public class BoardController extends ControllerHelper {
                 UserUtils.getUserInfos(eb, request, user ->
                         boardService.create(user, board)
                                 .onFailure(err -> renderError(request))
-                                .onSuccess(result -> renderJson(request, result))));
+                                .onSuccess(result -> {
+                                    eventStore.createAndStoreEvent(CREATE_BOARD.name(), request);
+                                    renderJson(request, result);
+                                })));
     }
 
     @Put("/board/:id")
