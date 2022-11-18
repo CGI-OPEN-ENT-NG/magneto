@@ -70,6 +70,8 @@ interface IViewModel {
     resetBoards(): void;
     restoreBoardsOrFolders(): Promise<void>;
     moveBoards(): Promise<void>;
+    duplicateBoard(): Promise<void>;
+
     closeSideNavFolders(): void;
     openSideNavFolders(): void;
 
@@ -248,7 +250,7 @@ class Controller implements ng.IController, IViewModel {
 
             this.folderNavTreeSubject.next(new FolderTreeNavItem(
                 {id: this.openedFolder.id,
-                title : this.openedFolder.title, parentId : this.openedFolder.parentId}));
+                    title : this.openedFolder.title, parentId : this.openedFolder.parentId}));
         } else {
             this.$location.path(`/board/view/${this.selectedBoardIds[0]}`);
         }
@@ -367,6 +369,15 @@ class Controller implements ng.IController, IViewModel {
         this.displayMoveBoardLightbox = true;
     }
 
+    /**
+     * Duplicate selected board.
+     */
+    duplicateBoard = async (): Promise<void> => {
+        await this.boardsService.duplicateBoard(this.selectedBoardIds[0]);
+        this.resetBoards();
+        await this.getBoards();
+    }
+
     areSelectedBoardsMine = (): boolean => {
         return this.selectedBoards.every((board: Board) => board.isMyBoard());
     }
@@ -398,14 +409,14 @@ class Controller implements ng.IController, IViewModel {
 
         this.folderNavTrees.push(new FolderTreeNavItem(
             {id: FOLDER_TYPE.MY_BOARDS, title: lang.translate('magneto.my.boards'),
-                    parentId: null}, null, "magneto-check-decagram")
+                parentId: null}, null, "magneto-check-decagram")
             .buildFolders(this.folders));
         this.folderNavTrees.push(new FolderTreeNavItem(
-                {id: FOLDER_TYPE.PUBLIC_BOARDS, title: lang.translate('magneto.lycee.connecte.boards'),
-                    parentId: null}, null, "magneto-earth"));
+            {id: FOLDER_TYPE.PUBLIC_BOARDS, title: lang.translate('magneto.lycee.connecte.boards'),
+                parentId: null}, null, "magneto-earth"));
         this.folderNavTrees.push(new FolderTreeNavItem(
             {id: FOLDER_TYPE.DELETED_BOARDS, title: lang.translate('magneto.trash'),
-                    parentId: null}, null, "magneto-delete-forever")
+                parentId: null}, null, "magneto-delete-forever")
             .buildFolders(this.deletedFolders));
 
         // Folder tree for board move lightbox

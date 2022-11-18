@@ -1,11 +1,7 @@
 package fr.cgi.magneto.service;
 
-import fr.cgi.magneto.core.constants.CollectionsConstant;
-import fr.cgi.magneto.service.impl.DefaultBoardService;
-import fr.cgi.magneto.service.impl.DefaultCardService;
-import fr.cgi.magneto.service.impl.DefaultFolderService;
-import fr.cgi.magneto.service.impl.DefaultMagnetoService;
 import fr.cgi.magneto.config.MagnetoConfig;
+import fr.cgi.magneto.core.constants.CollectionsConstant;
 import fr.cgi.magneto.service.impl.*;
 import fr.wseduc.mongodb.MongoDb;
 import io.vertx.core.Vertx;

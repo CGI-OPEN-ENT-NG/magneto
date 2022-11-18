@@ -82,6 +82,23 @@ describe('BoardsService', () => {
         });
     });
 
+    it('returns data when duplicateBoard is correctly called', done => {
+        const mock = new MockAdapter(axios);
+        const data = {
+            response: true
+        }
+
+        let boardId: string = "boardId";
+
+        mock.onPut(`/magneto/board/duplicate/${boardId}`)
+            .reply(200, data);
+
+        boardsService.duplicateBoard(boardId).then(res => {
+            expect(res.data).toEqual(data);
+            done();
+        });
+    });
+
     it('returns data when deleteBoards is correctly called', done => {
         const mock = new MockAdapter(axios);
         const data = {

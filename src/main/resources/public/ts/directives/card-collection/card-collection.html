@@ -31,11 +31,20 @@
                 <div class="card-collection-lightbox-board">
                     <span class="card-collection-lightbox-board-title">[[collection.cards[0].boardTitle]]</span>
                     <span class="card-collection-lightbox-board-cards"
+                          ng-click="vm.submitDuplicateBoard(collection.boardId)"
+                          ng-show="vm.displayBoard">
+                        <i class="magneto-duplicate"></i>
+                        <i18n>magneto.cards.collection.board.duplicate</i18n></span>
+                    <span class="card-collection-lightbox-board-cards"
                           ng-click="vm.getCardsByBoardId(collection.boardId)"
-                          ng-show="!!vm.filter.searchText && !collection.isLinkedCardsDisplay"><i18n>magneto.cards.collection.board.cards.show</i18n></span>
+                          ng-show="!!vm.filter.searchText && !collection.isLinkedCardsDisplay">
+                          <i class="magneto-show"></i>
+                        <i18n>magneto.cards.collection.board.cards.show</i18n></span>
                     <span class="card-collection-lightbox-board-cards"
                           ng-click="vm.hideCardsByBoardId(collection.boardId)"
-                          ng-show="!!vm.filter.searchText && collection.isLinkedCardsDisplay"><i18n>magneto.cards.collection.board.cards.hide</i18n></span>
+                          ng-show="!!vm.filter.searchText && collection.isLinkedCardsDisplay">
+                        <i class="magneto-hide"></i>
+                        <i18n>magneto.cards.collection.board.cards.hide</i18n></span>
                 </div>
                 <card-list
                         cards="collection.cards"

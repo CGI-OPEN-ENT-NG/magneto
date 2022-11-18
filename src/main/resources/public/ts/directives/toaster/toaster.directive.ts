@@ -9,6 +9,7 @@ interface IViewModel extends ng.IController, IToasterProps {
     openShare?(): void;
     openPublicShare?(): void;
     openRestore?(): void;
+    openDuplicate?(): void;
     openMove?(): void;
     openRename?(): void;
 }
@@ -25,6 +26,8 @@ interface IToasterProps {
     onShare?;
     hasRestore: boolean;
     onRestore?;
+    hasDuplicate: boolean;
+    onDuplicate?;
     hasMove: boolean;
     onMove?;
     hasRename: boolean;
@@ -46,6 +49,7 @@ class Controller implements IViewModel {
     hasDelete: boolean;
     hasShare: boolean;
     hasRestore: boolean;
+    hasDuplicate: boolean;
     hasMove: boolean;
     hasRename: boolean;
     hasPublicShare: boolean;
@@ -84,6 +88,8 @@ function directive($parse: IParseService) {
             onPublicShare: '&',
             hasRestore: '=',
             onRestore: '&',
+            hasDuplicate: '=',
+            onDuplicate: '&',
             hasMove: '=',
             onMove: '&',
             hasRename: '=',
@@ -108,6 +114,10 @@ function directive($parse: IParseService) {
 
             vm.openDelete = (): void => {
                 $parse($scope.vm.onDelete())({});
+            }
+
+            vm.openDuplicate = (): void => {
+                $parse($scope.vm.onDuplicate())({});
             }
 
             vm.openShare = (): void => {

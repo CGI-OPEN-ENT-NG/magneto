@@ -101,4 +101,9 @@ public class Field {
     public static final String PUSHNOTIF = "pushNotif";
 
     public static final String CARD = "card";
+
+    public static final String CARDS = "cards";
+
+    public static final String BOARD = "board";
+
 }

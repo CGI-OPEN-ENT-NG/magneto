@@ -4,7 +4,7 @@ import {RootsConst} from "../../core/constants/roots.const";
 import {Board, Card, CardCollection, Cards, ICardsBoardParamsRequest, ICardsParamsRequest} from "../../models";
 import {safeApply} from "../../utils/safe-apply.utils";
 import {AxiosError, AxiosResponse} from "axios";
-import {cardsService} from "../../services";
+import {boardsService, cardsService} from "../../services";
 import {CardsFilter} from "../../models/cards-filter.model";
 import {Object} from "core-js";
 import {InfiniteScrollService} from "../../shared/services";
@@ -23,7 +23,9 @@ interface IViewModel extends ng.IController, ICardCollectionProps {
 
     hideCardsByBoardId(boardId: string): void;
 
-    submitDuplicate?(card?: Card): Promise<void>;
+    submitDuplicateCard?(card?: Card): Promise<void>;
+
+    submitDuplicateBoard?(boardId: string): Promise<void>;
 
     onSearchCard(searchText: string): Promise<void>;
 
@@ -276,7 +278,7 @@ function directive($parse: IParseService) {
                         element: ng.IAugmentedJQuery,
                         attrs: ng.IAttributes,
                         vm: IViewModel) {
-            vm.submitDuplicate = async (card?: Card): Promise<void> => {
+            vm.submitDuplicateCard = async (card?: Card): Promise<void> => {
                 try {
                     const params: ICardsBoardParamsRequest = {
                         boardId: vm.board.id,
@@ -291,11 +293,22 @@ function directive($parse: IParseService) {
                                 vm.closeForm();
                             }
                         })
-                        .catch((err: AxiosError) => {
-                            notify.error(err.message)
-                        });
                 } catch (e) {
                     toasts.warning('magneto.duplicate.cards.error');
+                    console.error(e);
+                }
+            }
+
+            vm.submitDuplicateBoard = async (boardId: string): Promise<void> => {
+                try {
+                    await boardsService.duplicateBoard(boardId)
+                        .then(async (response: AxiosResponse) => {
+                            if (response.status === 200 || response.status === 201) {
+                                toasts.confirm('magneto.duplicate.board.confirm');
+                            }
+                        })
+                } catch (e) {
+                    toasts.warning('magneto.duplicate.board.error');
                     console.error(e);
                 }
             }

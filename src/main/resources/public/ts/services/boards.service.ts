@@ -17,6 +17,8 @@ export interface IBoardsService {
 
     deleteBoards(boardIds: Array<string>): Promise<AxiosResponse>;
 
+    duplicateBoard(boardId: string): Promise<AxiosResponse>;
+
     moveBoardsToFolder(boardIds: Array<string>, folderId: string): Promise<AxiosResponse>;
 }
 
@@ -63,6 +65,10 @@ export const boardsService: IBoardsService = {
 
     deleteBoards: async (boardIds: Array<string>): Promise<AxiosResponse> => {
         return http.delete(`/magneto/boards`, {data: {boardIds: boardIds}});
+    },
+
+    duplicateBoard: async (boardId: string): Promise<AxiosResponse> => {
+        return http.put(`/magneto/board/duplicate/${boardId}`);
     },
 
     moveBoardsToFolder: async (boardIds: Array<string>, folderId: string): Promise<AxiosResponse> => {

@@ -6,6 +6,7 @@ import fr.cgi.magneto.core.constants.Rights;
 import fr.cgi.magneto.helper.DateHelper;
 import fr.cgi.magneto.model.boards.Board;
 import fr.cgi.magneto.model.boards.BoardPayload;
+import fr.cgi.magneto.model.cards.Card;
 import fr.cgi.magneto.security.DeleteBoardRight;
 import fr.cgi.magneto.security.ManageBoardRight;
 import fr.cgi.magneto.security.MoveBoardRight;
@@ -28,8 +29,7 @@ import org.entcore.common.http.filter.ResourceFilter;
 import org.entcore.common.http.filter.Trace;
 import org.entcore.common.user.UserUtils;
 
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class BoardController extends ControllerHelper {
@@ -107,6 +107,49 @@ public class BoardController extends ControllerHelper {
                         boardService.create(user, board)
                                 .onFailure(err -> renderError(request))
                                 .onSuccess(result -> renderJson(request, result))));
+    }
+
+    @Put("/board/duplicate/:id")
+    @ApiDoc("Duplicate a board")
+    @SecuredAction(Rights.MANAGE_BOARD)
+    @Trace(Actions.BOARD_DUPLICATE)
+    @SuppressWarnings("unchecked")
+    public void duplicate(HttpServerRequest request) {
+        UserUtils.getUserInfos(eb, request, user -> {
+            String boardId = request.getParam(Field.ID);
+            Map<String, Future<?>> futures = new HashMap<>();
+
+            boardService.getBoards(Collections.singletonList(boardId))
+                    .compose(boardResult -> {
+                        if (!boardResult.isEmpty()) {
+                            JsonObject duplicateBoard = boardResult.get(0).toJson();
+                            duplicateBoard.remove(Field._ID);
+                            duplicateBoard.put(Field.SHARED, new JsonArray());
+                            duplicateBoard.put(Field.PUBLIC, false);
+
+                            Future<List<Card>> getCardsFuture = cardService.getCards(boardResult.get(0).cards().stream().map(Card::getId).collect(Collectors.toList()));
+                            Future<JsonObject> createBoardFuture = boardService.create(user, duplicateBoard);
+                            futures.put(Field.CARDS, getCardsFuture);
+                            futures.put(Field.BOARD, createBoardFuture);
+                            return CompositeFuture.all(getCardsFuture, createBoardFuture);
+                        } else {
+                            return Future.failedFuture(String.format("[Magneto%s::duplicate] " +
+                                    "No board found with id %s", this.getClass().getSimpleName(), boardId));
+                        }
+                    })
+                    .compose(result -> {
+                        List<Card> duplicateCards = (List<Card>) futures.get(Field.CARDS).result();
+                        // If no cards in board, no duplicate
+                        if(duplicateCards.isEmpty()) {
+                            return Future.succeededFuture((JsonObject) futures.get(Field.BOARD).result());
+                        } else {
+                            String duplicateBoard =  ((JsonObject) futures.get(Field.BOARD).result()).getString(Field.ID);
+                            return cardService.duplicateCards(duplicateBoard, duplicateCards, user);
+                        }
+                    })
+                    .onFailure(err -> renderError(request))
+                    .onSuccess(result -> renderJson(request, result));
+        });
     }
 
     @Put("/board/:id")

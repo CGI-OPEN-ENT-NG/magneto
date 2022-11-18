@@ -140,6 +140,11 @@ i {
     content: '\F0209'
   }
 
+  &.magneto-show::before {
+    font-family: 'magneto-mdi';
+    content: '\F0208'
+  }
+
   &.magneto-delete::before {
     font-family: 'magneto-mdi';
     content: '\F01B4'

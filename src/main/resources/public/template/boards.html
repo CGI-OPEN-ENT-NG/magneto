@@ -188,6 +188,9 @@
                         && vm.selectedFolderIds.length == 0 && vm.selectedBoards[0].isMyBoard() && vm.selectedBoards[0].public"
             on-public-share="vm.openPublicShareForm"
             on-share="vm.openShareForm"
+            has-duplicate="vm.selectedBoardIds.length == 1 && vm.selectedFolderIds.length == 0
+            && (vm.selectedBoards[0].isMyBoard() || vm.selectedBoards[0].public)"
+            on-duplicate="vm.duplicateBoard"
             has-restore="vm.filter.isTrash"
             on-restore="vm.restoreBoardsOrFolders"
             has-move="vm.filter.isMyBoards && vm.selectedFolderIds.length == 0 && vm.selectedBoardIds.length > 0"
