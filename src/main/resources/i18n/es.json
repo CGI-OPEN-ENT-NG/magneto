@@ -128,5 +128,13 @@
   "magneto.multi-combo.deselectAll": "Deselect all",
   "magneto.multi-combo.options": "Options",
   "magneto.multi-combo.searchPlaceholder": "Search",
-  "magneto.multi-combo.selectAll": "Select all"
+  "magneto.multi-combo.selectAll": "Select all",
+  "magneto.link.notfound": "No result found...",
+  "magneto.search.inprogress": "Searching ...",
+  "magneto.link.address": "Address of the site",
+  "magneto.link.placeholder": "http://website-address.com",
+  "magneto.link.search": "Search in your digital workspace",
+  "magneto.link.external": "Website address",
+  "magneto.link.tooltip": "Tooltip",
+  "magneto.link.warning": "Search for documents in your applications to create a link. Don't forget to share them to make them accessible to your readers."
 }

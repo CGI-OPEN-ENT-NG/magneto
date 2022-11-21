@@ -73,7 +73,6 @@
   "magneto.card.options.delete": "Supprimer",
   "magneto.card.options.move": "Déplacer",
   "magneto.create.link": "Créer un lien",
-  "magneto.site.address": "Adresse du site",
   "magneto.add.content.from.menu": "Ajoutez du contenu grâce au menu de gauche",
   "magneto.move.cards": "Déplacer l'aimant selectionné",
   "magneto.duplicate.move.cards": "Dupliquer l'aimant selectionné",
@@ -128,5 +127,13 @@
   "magneto.multi-combo.deselectAll": "Tout déselectionner",
   "magneto.multi-combo.options": "Options",
   "magneto.multi-combo.searchPlaceholder": "Chercher",
-  "magneto.multi-combo.selectAll": "Tout sélectionner"
+  "magneto.multi-combo.selectAll": "Tout sélectionner",
+  "magneto.link.notfound": "Aucun résultat trouvé...",
+  "magneto.search.inprogress": "Recherche en cours...",
+  "magneto.link.address": "Adresse du site",
+  "magneto.link.placeholder": "http://adresse-du-site.com",
+  "magneto.link.search": "Rechercher dans l'ENT",
+  "magneto.link.external": "Adresse d'un site internet",
+  "magneto.link.tooltip": "Bulle d'information",
+  "magneto.link.warning": "Recherchez des documents dans vos applications pour créer un lien. N'oubliez pas de les partager pour les rendre accessibles à vos lecteurs."
 }

@@ -40,17 +40,6 @@ export interface ICardsBoardParamsRequest {
     boardId: string;
 }
 
-export interface ICardsObjectBoardParamsRequest {
-    boardId: string;
-    cards: Array<Card>;
-}
-
-export interface ICardBoardParamsRequest {
-    card: Card,
-    boardId: string;
-}
-
-
 export interface ICardPayload {
     id?: string;
     title: string;

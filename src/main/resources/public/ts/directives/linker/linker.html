@@ -1,35 +1,84 @@
-<lightbox class="linker-lightbox"
-          show="vm.display"
-          on-close="vm.closeForm()">
-    <section class="head linker-lightbox-head">
-        <h3 ng-if="!vm.isUpdate">
-            <i18n>magneto.create.link</i18n>
-        </h3>
-    </section>
-    <section class="body linker-lightbox-body">
-        <div class="vertical-spacing linker-lightbox-body-url">
-            <i18n>magneto.site.address</i18n>&nbsp;:
-            <input type="text" data-ng-model="vm.form.url" class="twelve cell">
-        </div>
-        <div class="vertical-spacing linker-lightbox-body-title">
-            <i18n>magneto.card.title</i18n>&nbsp;:
-            <input type="text" data-ng-model="vm.form.title" class="twelve cell">
-        </div>
-    </section>
-    <!-- Form submit/cancel buttons -->
-    <section>
-        <div class="row horizontal-spacing">
-            <div class="twelve cell">
-                <button class="right-magnet"
-                        data-ng-click="vm.submitLink()"
-                        data-ng-disabled="!vm.isFormValid()">
-                    <i18n>magneto.create.link</i18n>
-                </button>
-                <button class="right-magnet cancel"
-                        data-ng-click="vm.closeForm()">
-                    <i18n>magneto.cancel</i18n>
-                </button>
+<lightbox show="vm.display" on-close="vm.closeForm()">
+    <h2><i18n>magneto.create.link</i18n></h2>
+    <div class="tabs linker">
+        <header ng-click="vm.externalLink = false" ng-class="{ selected: !vm.externalLink }">
+            <i18n>magneto.link.search</i18n>
+        </header>
+        <header ng-click="vm.externalLink = true" ng-class="{ selected: vm.externalLink }">
+            <i18n>magneto.link.external</i18n>
+        </header>
+
+        <section ng-if="vm.externalLink">
+            <div class="row">
+                <label class="four cell zero-mobile">
+                    <i18n>magneto.link.address</i18n>
+                </label>
+                <input class="four cell twelve-mobile" type="text" i18n-placeholder="magneto.link.placeholder"
+                       ng-model="vm.params.link"/>
             </div>
+            <div class="row">
+                <label class="four cell zero-mobile">
+                    <i18n>magneto.link.tooltip</i18n>
+                </label>
+                <input class="four cell twelve-mobile" type="text" i18n-placeholder="magneto.link.tooltip"
+                       ng-model="vm.params.title"/>
+            </div>
+        </section>
+        <section ng-if="!vm.externalLink" class="row">
+            <div class="row">
+                <div class="twelve cell vertical-spacing">
+                    <div class="row">
+                        <select ng-model="vm.search.application"
+                                ng-options="app.displayName for app in vm.apps" class="five cell"
+                                ng-change="vm.loadApplicationResources()"></select>
+                        <input type="text" i18n-placeholder="magneto.search.placeholder"
+                               ng-model="vm.search.text" class="six cell right-magnet"
+                               ng-change="vm.searchApplication()"/>
+                    </div>
+                </div>
+            </div>
+            <article class="found-resources" ng-class="{ info: vm.search.text === '' }">
+                <label ng-if="vm.searching">
+                    <i class="spinner left-spacing"></i>
+                    <i18n>magneto.search.inprogress</i18n>
+                </label>
+                <div ng-if="!vm.searching">
+                    <div ng-if="vm.search.text === ''" class="reduce-block-six">
+                        <div class="row">
+                            <i18n>magneto.link.warning</i18n>
+                        </div>
+                    </div>
+                    <div ng-if="vm.resources.length === 0 && vm.search.text !== ''">
+                        <i18n>magneto.link.notfound</i18n>
+                    </div>
+                </div>
+                <ul class="illustrated-list" ng-if="vm.search.text">
+                    <li ng-repeat="resource in vm.resources" ng-click="vm.applyResource(resource)"
+                        ng-class="{ selected: resource.path === vm.params.link }">
+                        <img skin-src="[[resource.icon]]" class="illustration"/>
+                        <a class="eight cell-ellipsis name">[[resource.title]]</a>
+                        <em class="two cell-ellipsis owner">[[resource.ownerName]]</em>
+                    </li>
+                </ul>
+    </article>
+    <div class="twelve cell vertical-spacing">
+        <div class="row">
+            <label class="three cell zero-mobile">
+                <i18n>magneto.link.tooltip</i18n>
+            </label>
+            <input class="nine cell twelve-mobile" type="text" ng-model="vm.params.title"
+                   i18n-placeholder="magneto.link.tooltip"/>
         </div>
+    </div>
+
     </section>
+    </div>
+
+    <div class="row">
+        <div class="twelve cell reduce-block-four">
+            <input type="button" i18n-value="magneto.create" ng-click="vm.submitLink()"
+                   ng-disabled="!vm.params.link" class="right-magnet"/>
+            <input type="button" class="cancel right-magnet" i18n-value="magneto.cancel" ng-click="vm.closeForm()"/>
+        </div>
+    </div>
 </lightbox>

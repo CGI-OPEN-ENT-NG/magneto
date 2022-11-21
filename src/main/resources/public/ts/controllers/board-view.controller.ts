@@ -9,7 +9,7 @@ import {
     CardForm,
     Cards,
     ICardsParamsRequest,
-    ICardsBoardParamsRequest
+    ICardsBoardParamsRequest, ILinkerParams
 } from "../models";
 import {safeApply} from "../utils/safe-apply.utils";
 import {AxiosError, AxiosResponse} from "axios";
@@ -355,8 +355,8 @@ class Controller implements IViewModel {
      * Callback on link form submit
      * @param form
      */
-    onLinkSubmit = (form: {url: "", title: ""}) : void => {
-        this.cardForm.resourceUrl = this.$sce.trustAsResourceUrl(form.url).toString();
+    onLinkSubmit = (form: ILinkerParams) : void => {
+        this.cardForm.resourceUrl = this.$sce.trustAsResourceUrl(form.link).toString();
         this.cardForm.title = form.title;
         this.$timeout(() => {
             this.displayCardLightbox = true;
