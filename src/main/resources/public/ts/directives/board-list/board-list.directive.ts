@@ -1,16 +1,23 @@
 import {ng} from "entcore";
 import {ILocationService, IParseService, IScope, IWindowService} from "angular";
 import {RootsConst} from "../../core/constants/roots.const";
-import {Board, BoardForm} from "../../models";
-import {Folder} from "../../models";
+import {Board, Folder} from "../../models";
+import {Draggable} from "../../models/draggable.model";
+
 
 interface IViewModel extends ng.IController, IBoardListProps {
     selectBoard(boardId: string): void;
+
     selectFolder(folderId: string): void;
+
     openFolder?(folderId: string): void;
+
     openBoard?(boardId: string): void;
+
     isBoardSelected(boardId: string): boolean;
+
     isFolderSelected(folderId: string);
+
 }
 
 interface IBoardListProps {
@@ -19,6 +26,7 @@ interface IBoardListProps {
     selectedBoardIds: Array<string>;
     selectedBoardsForSharing: Array<Board>;
     selectedFolderIds: Array<string>;
+    drag: Draggable;
     onOpen?;
 }
 
@@ -33,10 +41,13 @@ class Controller implements IViewModel {
     selectedBoardIds: Array<string>;
     selectedBoardsForSharing: Array<Board>;
     selectedFolderIds: Array<string>;
+    drag: Draggable;
+
 
     constructor(private $scope: IBoardListScope,
                 private $location: ILocationService,
                 private $window: IWindowService) {
+
     }
 
     $onInit = (): void => {
@@ -73,6 +84,7 @@ class Controller implements IViewModel {
         return this.selectedFolderIds.find((id: string) => id === folderId) !== undefined;
     }
 
+
     $onDestroy() {
     }
 
@@ -88,7 +100,8 @@ function directive($parse: IParseService) {
             selectedBoardIds: '=',
             selectedBoardsForSharing: '=',
             selectedFolderIds: '=',
-            onOpen: '&'
+            onOpen: '&',
+            drag: '='
         },
         controllerAs: 'vm',
         bindToController: true,

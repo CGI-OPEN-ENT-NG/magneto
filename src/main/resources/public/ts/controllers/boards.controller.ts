@@ -1,9 +1,15 @@
-import {ng, notify, idiom as lang} from "entcore";
+import {angular, idiom as lang, model, ng, notify} from "entcore";
 import {IScope} from "angular";
-import {IBoardsService, IFoldersService} from "../services";
+import {boardsService, BoardsService, IBoardsService, IFoldersService} from "../services";
 import {
+    Board,
+    BoardForm,
+    Boards,
+    Folder,
+    FolderTreeNavItem,
     IBoardsParamsRequest,
-    Boards, Board, BoardForm, Folder, FolderTreeNavItem, IFolderTreeNavItem, IFolderForm
+    IFolderForm,
+    IFolderTreeNavItem
 } from "../models";
 import {safeApply} from "../utils/safe-apply.utils";
 import {AxiosError} from "axios";
@@ -11,6 +17,7 @@ import {InfiniteScrollService} from "../shared/services";
 import {Subject} from "rxjs";
 import {FOLDER_TYPE} from "../core/enums/folder-type.enum";
 import {BoardsFilter} from "../models/boards-filter.model";
+import {Draggable} from "../models/draggable.model";
 
 interface IViewModel {
     openedFolder: Folder;
@@ -47,6 +54,8 @@ interface IViewModel {
     };
 
     infiniteScrollService: InfiniteScrollService;
+    draggable: Draggable;
+    draggedItem: any;
 
     getBoards(): Promise<void>;
     getFolders(): void;
@@ -74,6 +83,8 @@ interface IViewModel {
 
     closeSideNavFolders(): void;
     openSideNavFolders(): void;
+
+    initDraggable(): void;
 
     areSelectedBoardsMine(): boolean;
 }
@@ -112,6 +123,8 @@ class Controller implements ng.IController, IViewModel {
 
     filter : BoardsFilter;
     infiniteScrollService: InfiniteScrollService;
+    draggable: Draggable;
+    draggedItem: any;
 
     constructor(private $scope: IBoardsScope,
                 private $location: ng.ILocationService,
@@ -146,6 +159,7 @@ class Controller implements ng.IController, IViewModel {
         this.selectedUpdateFolderForm = {id: null, title: ''};
         this.deletedFolders = await this.getDeletedFolders();
         this.getFolders();
+        this.initDraggable();
         await this.getBoards();
     }
 
@@ -157,6 +171,70 @@ class Controller implements ng.IController, IViewModel {
         this.boards = [];
         this.getCurrentFolderChildren();
         await this.getBoards();
+    }
+
+    initDraggable = (): void => {
+        const that = this;
+
+        this.draggable = {
+            dragConditionHandler(event: DragEvent, content?: any): boolean {
+                return that.filter.isMyBoards;
+            },
+            dragStartHandler(event: DragEvent, content?: any): void {
+                try {
+                    event.dataTransfer.setData('application/json', JSON.stringify(content));
+                    that.draggedItem = content;
+                } catch (e) {
+                    event.dataTransfer.setData('text', JSON.stringify(content));
+                }
+            },
+            dragEndHandler(event: DragEvent, content?: any): void {
+            },
+            dropConditionHandler(event: DragEvent, content?: any): boolean {
+                let folderTarget: Folder = angular.element(event.srcElement).scope().vm.folder || angular.element(event.srcElement).scope().vm.folderTree;
+                let isTargetAlreadyMyParent: boolean = folderTarget && folderTarget.id === that.draggedItem.folderId;
+
+                // Check if target is self
+                let isTargetMyself = that.draggedItem && folderTarget && folderTarget.id === that.draggedItem.id;
+
+                // Check if dragged item is not archived
+                let isArchivedItem = that.draggedItem.deleted;
+
+                // Check if target folder is not public
+                let isPublicTarget = folderTarget && folderTarget.id === FOLDER_TYPE.PUBLIC_BOARDS;
+
+                return !isTargetAlreadyMyParent && !isTargetMyself && !isArchivedItem && !isPublicTarget;
+            },
+            async dragDropHandler(event: DragEvent, content?: any): Promise<void> {
+                let originalBoard: Board = new Board().build(JSON.parse(event.dataTransfer.getData("application/json")));
+                let targetItem: Folder = angular.element(event.srcElement).scope().vm.folder || angular.element(event.srcElement).scope().vm.folderTree;
+
+                let idOriginalItem: string = originalBoard.id;
+                let idTargetItem: string = targetItem.id;
+
+                if (that.selectedBoardIds.length > 0) {
+                    if (targetItem.id == FOLDER_TYPE.DELETED_BOARDS) {
+                        that.openDeleteForm();
+                    } else {
+                        await that.boardsService.moveBoardsToFolder(that.selectedBoardIds, idTargetItem);
+                        await that.onFormSubmit();
+                    }
+                    // Move several boards
+                } else {
+                    // Move one board
+                    let draggedItemIds: string[] = that.boards.filter(board => board.id === idOriginalItem).map(board => board.id);
+                    if (targetItem.id == FOLDER_TYPE.DELETED_BOARDS) {
+                        that.selectedBoardIds = draggedItemIds;
+                        that.openDeleteForm();
+                    } else {
+                        await that.boardsService.moveBoardsToFolder(draggedItemIds, idTargetItem);
+                        await that.onFormSubmit();
+                    }
+                }
+                safeApply(that.$scope);
+            }
+        };
+
     }
 
     /**
@@ -388,7 +466,7 @@ class Controller implements ng.IController, IViewModel {
      * - refresh folders / deleted folders
      */
     onFormSubmit = async (createdBoardId?: {id: string}): Promise<void> => {
-        if (createdBoardId.id) {
+        if (createdBoardId && createdBoardId.id) {
             this.$location.path(`/board/view/${createdBoardId.id}`);
             safeApply(this.$scope);
         } else {

@@ -16,7 +16,8 @@ describe('BoardModel', () => {
            ownerId: 'ownerId',
            ownerName: 'ownerName',
            tags: ['tag1', 'tag2'],
-           public: false
+           public: false,
+           deleted: false
        }
 
         const board = new Board().build(boardResponse);
@@ -52,7 +53,8 @@ describe('BoardModel', () => {
                    ownerId: 'ownerId',
                    ownerName: 'ownerName',
                    tags: ['tag1', 'tag2'],
-                   public: false
+                   public: false,
+                   deleted: false
                }
            ],
            page: 1,

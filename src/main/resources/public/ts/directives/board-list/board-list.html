@@ -2,6 +2,8 @@
     <div class="board-list-folders flex-row f-wrap">
         <board-list-folder ng-repeat="folder in vm.folders"
                            ng-click="vm.selectFolder(folder._id)"
+                           dragdrop="vm.drag.dragDropHandler($originalEvent)"
+                           dropcondition="vm.drag.dropConditionHandler($originalEvent)"
                            ng-dblclick="vm.openFolder(folder._id)"
                            folder="folder"
                            is-selected="vm.isFolderSelected(folder._id)">
@@ -10,6 +12,8 @@
     </div>
     <div class="board-list-boards flex-row f-wrap justify-center">
         <board-list-item ng-repeat="board in vm.boards"
+                         dragstart="vm.drag.dragStartHandler($originalEvent, board)"
+                         dragcondition="vm.drag.dragConditionHandler($originalEvent, board)"
                          ng-click="vm.selectBoard(board._id)"
                          ng-dblclick="vm.openBoard(board._id)"
                          board="board"

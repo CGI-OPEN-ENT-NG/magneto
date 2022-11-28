@@ -13,6 +13,7 @@ export interface IBoardItemResponse {
     creationDate: string;
     folderId: string;
     shared: any[];
+    deleted: boolean;
     public: boolean;
     ownerId: string;
     ownerName: string;
@@ -209,6 +210,8 @@ export class Board implements Shareable {
     private _creationDate: string;
     private _folderId: string;
     private _public: boolean;
+    private _deleted: boolean;
+
 
     // Share resource properties
     public shared: any[];
@@ -235,6 +238,7 @@ export class Board implements Shareable {
         this._public = data.public;
         this.owner = {userId: data.ownerId, displayName: data.ownerName};
         this.shared = data.shared;
+        this._deleted = data.deleted;
         return this;
     }
 
@@ -276,6 +280,10 @@ export class Board implements Shareable {
 
     get public(): boolean {
         return this._public;
+    }
+
+    get deleted(): boolean {
+        return this._deleted;
     }
 
     set folderId(value: string) {

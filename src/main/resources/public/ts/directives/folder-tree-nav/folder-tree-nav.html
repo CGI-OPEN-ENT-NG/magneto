@@ -4,7 +4,10 @@
             <folder-tree-nav-item
                     folder-tree="tree"
                     selected-folder="vm.selectedFolder"
-                    on-select-folder="vm.selectFolder">
+                    on-select-folder="vm.selectFolder"
+                    dragdrop="vm.drag.dragDropHandler($originalEvent); $event.stopPropagation();"
+                    dropcondition="vm.drag.dropConditionHandler($originalEvent)"
+                    drag="vm.drag">
             </folder-tree-nav-item>
         </li>
 

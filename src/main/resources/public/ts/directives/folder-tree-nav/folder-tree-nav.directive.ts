@@ -3,6 +3,7 @@ import {ILocationService, IParseService, IScope, IWindowService} from "angular";
 import {RootsConst} from "../../core/constants/roots.const";
 import {FolderTreeNavItem} from "../../models";
 import {Subject} from "rxjs";
+import {Draggable} from "../../models/draggable.model";
 
 interface IViewModel extends ng.IController, IFolderTreeNavProps {
     /**
@@ -32,6 +33,11 @@ interface IFolderTreeNavProps {
      * Callback when a folder is selected
      */
     onSelectFolder?;
+
+    /**
+     * Object containing the draggable function
+     */
+    drag?: Draggable;
 }
 
 interface IFolderTreeNavScope extends IScope, IFolderTreeNavProps {
@@ -42,6 +48,8 @@ class Controller implements IViewModel {
     folderTrees: Array<FolderTreeNavItem>;
     selectedFolder: FolderTreeNavItem;
     folderTreeEventer: Subject<FolderTreeNavItem>;
+    drag?: Draggable;
+
 
     constructor(private $scope: IFolderTreeNavScope,
                 private $location: ILocationService,
@@ -74,7 +82,8 @@ function directive($parse: IParseService) {
         scope: {
             folderTrees: '=',
             onSelectFolder: '&',
-            folderTreeEventer: '='
+            folderTreeEventer: '=',
+            drag: '=?'
         },
         controllerAs: 'vm',
         bindToController: true,

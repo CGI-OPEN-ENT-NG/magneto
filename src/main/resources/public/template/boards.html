@@ -35,7 +35,8 @@
             <folder-tree-nav
                     folder-trees="vm.folderNavTrees"
                     folder-tree-eventer="vm.folderNavTreeSubject"
-                    on-select-folder="vm.switchFolder">
+                    on-select-folder="vm.switchFolder"
+                    drag="vm.draggable">
             </folder-tree-nav>
             <div class="boards-container-body-folder-button"
                  ng-click="vm.displayFolderLightbox = true"
@@ -81,7 +82,8 @@
                     selected-board-ids="vm.selectedBoardIds"
                     selected-boards-for-sharing="vm.selectedBoards"
                     selected-folder-ids="vm.selectedFolderIds"
-                    on-open="vm.openBoardOrFolder">
+                    on-open="vm.openBoardOrFolder"
+                    drag="vm.draggable">
             </board-list>
             <div ng-show="vm.isLoading" class="centered-text">
                 <loader min-height="'250px'"></loader>
@@ -104,7 +106,8 @@
         <folder-tree-nav
                 folder-trees="vm.folderNavTrees"
                 folder-tree-eventer="vm.folderNavTreeSubject"
-                on-select-folder="vm.switchFolder">
+                on-select-folder="vm.switchFolder"
+                drag="vm.draggable">
         </folder-tree-nav>
         <div class="side-nav-mobile-folder-button"
              ng-click="vm.displayFolderLightbox = true"
