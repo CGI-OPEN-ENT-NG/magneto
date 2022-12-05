@@ -124,11 +124,10 @@ public class CardController extends ControllerHelper {
                     Future<JsonObject> createCardFuture = cardService.create(cardPayload, newId);
                     Future<List<Board>> getBoardFuture = boardService.getBoards(Collections.singletonList(cardPayload.getBoardId()));
                     CompositeFuture.all(createCardFuture, getBoardFuture)
-                            .compose(result -> cardService.getLastCard(cardPayload))
                             .compose(result -> {
-                                if (!getBoardFuture.result().isEmpty()) {
+                                if (!getBoardFuture.result().isEmpty() && result.succeeded()) {
                                     BoardPayload boardPayload = new BoardPayload(getBoardFuture.result().get(0).toJson());
-                                    boardPayload.addCards(Collections.singletonList(result.getString(Field._ID)));
+                                    boardPayload.addCards(Collections.singletonList(newId));
                                     return cardService.updateBoard(boardPayload);
                                 } else {
                                     return Future.failedFuture(String.format("[Magneto%s::createCard] " +
