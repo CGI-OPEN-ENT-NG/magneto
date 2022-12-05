@@ -8,7 +8,7 @@ import fr.cgi.magneto.model.boards.Board;
 import fr.cgi.magneto.model.boards.BoardPayload;
 import fr.cgi.magneto.model.cards.Card;
 import fr.cgi.magneto.model.cards.CardPayload;
-import fr.cgi.magneto.security.DuplicateCardRight;
+import fr.cgi.magneto.security.DuplicateRight;
 import fr.cgi.magneto.security.ViewRight;
 import fr.cgi.magneto.security.WriteBoardRight;
 import fr.cgi.magneto.service.BoardService;
@@ -177,7 +177,7 @@ public class CardController extends ControllerHelper {
     @SuppressWarnings("unchecked")
     @Post("/card/duplicate")
     @ApiDoc("Duplicate a card")
-    @ResourceFilter(DuplicateCardRight.class)
+    @ResourceFilter(DuplicateRight.class)
     @SecuredAction(value = "", type = ActionType.RESOURCE)
     @Trace(Actions.CARD_CREATION)
     public void duplicate(HttpServerRequest request) {

@@ -17,6 +17,7 @@ import {InfiniteScrollService} from "../shared/services";
 import {Subject} from "rxjs";
 import {FOLDER_TYPE} from "../core/enums/folder-type.enum";
 import {BoardsFilter} from "../models/boards-filter.model";
+import {hasRight} from "../utils/rights.utils";
 import {Draggable} from "../models/draggable.model";
 
 interface IViewModel {
@@ -87,6 +88,9 @@ interface IViewModel {
     initDraggable(): void;
 
     areSelectedBoardsMine(): boolean;
+
+    hasRight: typeof hasRight;
+
 }
 
 interface IBoardsScope extends IScope {
@@ -123,6 +127,7 @@ class Controller implements ng.IController, IViewModel {
 
     filter : BoardsFilter;
     infiniteScrollService: InfiniteScrollService;
+    hasRight: typeof hasRight = hasRight;
     draggable: Draggable;
     draggedItem: any;
 

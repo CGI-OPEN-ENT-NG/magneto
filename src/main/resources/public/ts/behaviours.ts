@@ -1,23 +1,23 @@
 import {Behaviours, model} from 'entcore';
-import { magnetoBehaviours} from "./magnetoBehaviours";
+import {rights} from "./magnetoBehaviours";
 
 export const MAGNETO_APP = "magneto";
 
 Behaviours.register(MAGNETO_APP, {
-    rights: magnetoBehaviours,
+    rights,
     resource: function (resource: any) {
         let rightsContainer = resource;
         if (resource && !resource.myRights) {
             resource.myRights = {};
         }
-        for (const behaviour in  magnetoBehaviours.resources) {
-            if (model.me.hasRight(rightsContainer, magnetoBehaviours.resources[behaviour]) ||
+        for (const behaviour in  rights.resources) {
+            if (model.me.hasRight(rightsContainer, rights.resources[behaviour]) ||
                 model.me.userId === resource.owner.userId || model.me.userId === rightsContainer.owner.userId) {
                 if (resource.myRights[behaviour] !== undefined) {
                     resource.myRights[behaviour] = resource.myRights[behaviour] &&
-                        magnetoBehaviours.resources[behaviour];
+                        rights.resources[behaviour];
                 } else {
-                    resource.myRights[behaviour] = magnetoBehaviours.resources[behaviour];
+                    resource.myRights[behaviour] = rights.resources[behaviour];
                 }
             }
         }

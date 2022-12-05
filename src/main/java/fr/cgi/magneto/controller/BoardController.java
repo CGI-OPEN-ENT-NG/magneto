@@ -8,10 +8,7 @@ import fr.cgi.magneto.helper.DateHelper;
 import fr.cgi.magneto.model.boards.Board;
 import fr.cgi.magneto.model.boards.BoardPayload;
 import fr.cgi.magneto.model.cards.Card;
-import fr.cgi.magneto.security.DeleteBoardRight;
-import fr.cgi.magneto.security.ManageBoardRight;
-import fr.cgi.magneto.security.MoveBoardRight;
-import fr.cgi.magneto.security.ViewRight;
+import fr.cgi.magneto.security.*;
 import fr.cgi.magneto.service.BoardService;
 import fr.cgi.magneto.service.CardService;
 import fr.cgi.magneto.service.FolderService;
@@ -122,7 +119,8 @@ public class BoardController extends ControllerHelper {
 
     @Put("/board/duplicate/:id")
     @ApiDoc("Duplicate a board")
-    @SecuredAction(Rights.MANAGE_BOARD)
+    @ResourceFilter(DuplicateRight.class)
+    @SecuredAction(value = "", type = ActionType.RESOURCE)
     @Trace(Actions.BOARD_DUPLICATE)
     @SuppressWarnings("unchecked")
     public void duplicate(HttpServerRequest request) {

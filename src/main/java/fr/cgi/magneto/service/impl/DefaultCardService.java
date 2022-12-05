@@ -337,7 +337,7 @@ public class DefaultCardService implements CardService {
         JsonObject query = this.getAllCardsByBoardQuery(user, board, false, page, false);
         mongoDb.command(query.toString(), MongoDbResult.validResultHandler(either -> {
             if (either.isLeft()) {
-                log.error("[Magneto@%s::fetchAllCardsByBoard] Failed to get cards", this.getClass().getSimpleName(),
+                log.error(String.format("[Magneto@%s::fetchAllCardsByBoard] Failed to get cards", this.getClass().getSimpleName()),
                         either.left().getValue());
                 promise.fail(either.left().getValue());
             } else {

@@ -3,42 +3,43 @@ import {IScope, IWindowService} from "angular";
 
 declare let window: any;
 
-interface IViewModel extends ng.IController{
+interface IViewModel extends ng.IController {
 }
 
-interface IMainscope extends IScope {
-	vm: IViewModel;
+interface IMainScope extends IScope {
+    vm: IViewModel;
 }
 
 class Controller implements IViewModel {
 
-	private eventBus: any;
+    private eventBus: any;
 
-	constructor(private $scope: IMainscope,
-				private $route: any,
-				private $window: IWindowService) {
-		this.$scope.vm = this;
-	}
+    constructor(private $scope: IMainScope,
+                private $route: any,
+                private $window: IWindowService) {
+        this.$scope.vm = this;
+    }
 
-	$onInit() {
+    $onInit() {
 
-		this.$route({
-			boards: () => {
-				template.open('main', `boards`);
-			},
-			board: () => {
-				template.open('main', `board`);
-			},
-			boardRead: () => {
-				template.open('main', `board-read`);
-			}
-		});
-	}
+        this.$route({
+            boards: () => {
+                template.open('main', `boards`);
+            },
+            board: () => {
+                template.open('main', `board`);
+            },
+            boardRead: () => {
+                template.open('main', `board-read`);
+            }
+        });
 
-	$onDestroy() {
-	}
+    }
+
+    $onDestroy() {
+    }
 
 }
 
 export const mainController = ng.controller('MainController',
-	['$scope', 'route', '$window', Controller]);
+    ['$scope', 'route', '$window', Controller]);
