@@ -6,6 +6,8 @@ import fr.cgi.magneto.service.impl.*;
 import fr.wseduc.mongodb.MongoDb;
 import io.vertx.core.Vertx;
 import io.vertx.core.eventbus.EventBus;
+import io.vertx.core.net.*;
+import io.vertx.ext.web.client.*;
 import org.entcore.common.neo4j.Neo4j;
 import org.entcore.common.sql.Sql;
 import org.entcore.common.storage.Storage;
@@ -16,6 +18,8 @@ public class ServiceFactory {
     private final Neo4j neo4j;
     private final Sql sql;
     private final MongoDb mongoDb;
+
+    private final WebClient webClient;
     private final MagnetoConfig magnetoConfig;
 
     private final FolderService folderService;
@@ -28,7 +32,7 @@ public class ServiceFactory {
         this.neo4j = neo4j;
         this.sql = sql;
         this.mongoDb = mongoDb;
-
+        this.webClient = initWebClient();
         this.folderService = new DefaultFolderService(CollectionsConstant.FOLDER_COLLECTION, mongoDb, this);
         this.boardService = new DefaultBoardService(CollectionsConstant.BOARD_COLLECTION, mongoDb, this);
     }
@@ -64,5 +68,28 @@ public class ServiceFactory {
 
     public Vertx vertx() {
         return this.vertx;
+    }
+
+    public Storage storage() {
+        return this.storage;
+    }
+
+    public WebClient webClient() {
+        return this.webClient;
+    }
+
+    private WebClient initWebClient() {
+        WebClientOptions options = new WebClientOptions();
+        options.setTrustAll(true);
+        if (System.getProperty("httpclient.proxyHost") != null) {
+            ProxyOptions proxyOptions = new ProxyOptions();
+            proxyOptions.setHost(System.getProperty("httpclient.proxyHost"));
+            proxyOptions.setPort(Integer.parseInt(System.getProperty("httpclient.proxyPort")));
+            proxyOptions.setUsername(System.getProperty("httpclient.proxyUsername"));
+            proxyOptions.setPassword(System.getProperty("httpclient.proxyPassword"));
+            proxyOptions.setType(ProxyType.HTTP);
+            options.setProxyOptions(proxyOptions);
+        }
+        return WebClient.create(this.vertx, options);
     }
 }

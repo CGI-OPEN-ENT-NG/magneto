@@ -65,6 +65,7 @@ dependencies {
     testCompile "org.entcore:tests:$entCoreVersion"
     testCompile "org.reflections:reflections:$reflectionsVersion"
     testCompile "org.mockito:mockito-core:$mockitoVersion"
+    compile "io.vertx:vertx-web-client:$vertxVersion"
     testCompile "org.powermock:powermock-core:$powerMockVersion"
     testCompile "org.powermock:powermock-api-mockito2:$powerMockVersion"
     testCompile "org.powermock:powermock-module-junit4:$powerMockVersion"

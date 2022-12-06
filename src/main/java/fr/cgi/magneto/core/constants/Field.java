@@ -54,6 +54,8 @@ public class Field {
     public static final String USERID = "userId";
     public static final String GROUPID = "groupId";
 
+    public static final String BOARDURL = "boardUrl";
+
     // PAGE FIELD
     public static final String COUNT = "count";
     public static final String PAGECOUNT = "pageCount";
@@ -105,5 +107,25 @@ public class Field {
     public static final String CARDS = "cards";
 
     public static final String BOARD = "board";
+
+    // AUTH
+    public static final String CODE = "code";
+    public static final String EXTENSION_URL = "extension_url";
+    public static final String BASIC_TOKEN = "basic_token";
+    public static final String GRANT_TYPE = "grant_type";
+    public static final String AUTHORIZATION_CODE = "authorization_code";
+    public static final String REDIRECT_URI = "redirect_uri";
+    public static final String ACCESS_TOKEN = "access_token";
+    public static final String REFRESH_TOKEN = "refresh_token";
+
+    // REQUESTS HEADER
+    public static final String AUTHORIZATION = "Authorization";
+    public static final String ACCEPT = "Accept";
+
+    public static final String APPLICATION_JSON = "application/json";
+    public static final String APPLICATION_FORM = "application/x-www-form-urlencoded";
+    public static final String CHARSET_UTF8 = "charset=UTF-8";
+    public static final String BASIC = "Basic";
+    public static final String LOCATION = "Location";
 
 }
