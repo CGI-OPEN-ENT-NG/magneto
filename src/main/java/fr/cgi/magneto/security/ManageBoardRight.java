@@ -25,11 +25,11 @@ public class ManageBoardRight implements ResourcesProvider {
                                 .add(new JsonObject()
                                         .put(String.format("%s.%s", Field.SHARED, Field.USERID),
                                                 new JsonObject().put(Mongo.IN, new JsonArray().add(user.getUserId())))
-                                        .put(String.format("%s.%s", Field.SHARED, "fr-cgi-magneto-controller-ShareBoardController|initManagerRight"), true))
+                                        .put(String.format("%s.%s", Field.SHARED, "fr-cgi-magneto-controller-ShareBoardController|initPublishRight"), true))
                                 .add(new JsonObject()
                                         .put(String.format("%s.%s", Field.SHARED, Field.GROUPID),
                                                 new JsonObject().put(Mongo.IN, user.getGroupsIds()))
-                                        .put(String.format("%s.%s", Field.SHARED, "fr-cgi-magneto-controller-ShareBoardController|initManagerRight"), true))
+                                        .put(String.format("%s.%s", Field.SHARED, "fr-cgi-magneto-controller-ShareBoardController|initPublishRight"), true))
                 );
 
        MongoAppFilter.executeCountQuery(request, CollectionsConstant.BOARD_COLLECTION, query, 1, res -> {
