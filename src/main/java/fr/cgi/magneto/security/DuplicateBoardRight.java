@@ -6,7 +6,6 @@ import fr.cgi.magneto.core.constants.Mongo;
 import fr.cgi.magneto.core.constants.Rights;
 import fr.cgi.magneto.helper.WorkflowHelper;
 import fr.wseduc.webutils.http.Binding;
-import fr.wseduc.webutils.request.RequestUtils;
 import io.vertx.core.Handler;
 import io.vertx.core.http.HttpServerRequest;
 import io.vertx.core.json.JsonArray;
@@ -15,19 +14,16 @@ import org.entcore.common.http.filter.MongoAppFilter;
 import org.entcore.common.http.filter.ResourcesProvider;
 import org.entcore.common.user.UserInfos;
 
-public class DuplicateRight implements ResourcesProvider {
+public class DuplicateBoardRight implements ResourcesProvider {
     @Override
     public void authorize(HttpServerRequest request, Binding binding, UserInfos user,
                           Handler<Boolean> handler) {
 
-        RequestUtils.bodyToJson(request, body -> {
-            String boardId = body.getString(Field.BOARDID, request.getParam(Field.BOARDID));
-            JsonObject query = getDuplicateRightQuery(user, boardId);
+        String boardId = request.getParam(Field.BOARDID);
+        JsonObject query = getDuplicateRightQuery(user, boardId);
 
-            MongoAppFilter.executeCountQuery(request, CollectionsConstant.BOARD_COLLECTION, query, 1, res -> {
-                handler.handle(Boolean.TRUE.equals(res) && WorkflowHelper.hasRight(user, Rights.MANAGE_BOARD));
-            });
-
+        MongoAppFilter.executeCountQuery(request, CollectionsConstant.BOARD_COLLECTION, query, 1, res -> {
+            handler.handle(Boolean.TRUE.equals(res) && WorkflowHelper.hasRight(user, Rights.MANAGE_BOARD));
         });
     }
 

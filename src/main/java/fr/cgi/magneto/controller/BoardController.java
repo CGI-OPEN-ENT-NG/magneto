@@ -117,15 +117,15 @@ public class BoardController extends ControllerHelper {
                                 })));
     }
 
-    @Put("/board/duplicate/:id")
+    @Put("/board/duplicate/:boardId")
     @ApiDoc("Duplicate a board")
-    @ResourceFilter(DuplicateRight.class)
+    @ResourceFilter(DuplicateBoardRight.class)
     @SecuredAction(value = "", type = ActionType.RESOURCE)
     @Trace(Actions.BOARD_DUPLICATE)
     @SuppressWarnings("unchecked")
     public void duplicate(HttpServerRequest request) {
         UserUtils.getUserInfos(eb, request, user -> {
-            String boardId = request.getParam(Field.ID);
+            String boardId = request.getParam(Field.BOARDID);
             Map<String, Future<?>> futures = new HashMap<>();
 
             boardService.getBoards(Collections.singletonList(boardId))
