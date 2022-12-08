@@ -17,7 +17,9 @@ public class ModelHelper {
 
     @SuppressWarnings("unchecked")
     public static <T extends Model<T>> List<T> toList(JsonArray results, Class<T> modelClass) {
-        return ((List<JsonObject>) results.getList()).stream()
+        return results.stream()
+                .filter(JsonObject.class::isInstance)
+                .map(JsonObject.class::cast)
                 .map(iModel -> {
                     try {
                         return modelClass.getConstructor(JsonObject.class).newInstance(iModel);
