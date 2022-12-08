@@ -304,11 +304,11 @@ function directive($parse: IParseService) {
                     await boardsService.duplicateBoard(boardId)
                         .then(async (response: AxiosResponse) => {
                             if (response.status === 200 || response.status === 201) {
-                                toasts.confirm('magneto.duplicate.board.confirm');
+                                toasts.confirm('magneto.duplicate.elements.confirm');
                             }
                         })
                 } catch (e) {
-                    toasts.warning('magneto.duplicate.board.error');
+                    toasts.warning('magneto.duplicate.elements.error');
                     console.error(e);
                 }
             }

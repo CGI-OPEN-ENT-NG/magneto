@@ -12,6 +12,8 @@
   "magneto.delete.elements.confirm": "The selected boards/folders have successfully been deleted.",
   "magneto.predelete.elements.error": "Error while moving boards/folders to trash",
   "magneto.predelete.elements.confirm": "The selected boards/folders have been moved to trash.",
+  "magneto.duplicate.elements.error": "Error while duplicating boards to trash",
+  "magneto.duplicate.elements.confirm": "The selected boards have successfully been duplicated.",
   "magneto.create.folder": "Create folder",
   "magneto.trash": "Trash",
   "magneto.lycee.connecte.boards": "Platform boards",

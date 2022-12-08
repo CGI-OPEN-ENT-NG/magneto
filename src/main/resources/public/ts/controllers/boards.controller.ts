@@ -1,6 +1,6 @@
-import {angular, idiom as lang, model, ng, notify} from "entcore";
+import {angular, idiom as lang, ng, notify, toasts} from "entcore";
 import {IScope} from "angular";
-import {boardsService, BoardsService, IBoardsService, IFoldersService} from "../services";
+import {BoardsService, IBoardsService, IFoldersService} from "../services";
 import {
     Board,
     BoardForm,
@@ -12,7 +12,7 @@ import {
     IFolderTreeNavItem
 } from "../models";
 import {safeApply} from "../utils/safe-apply.utils";
-import {AxiosError} from "axios";
+import {AxiosError, AxiosResponse} from "axios";
 import {InfiniteScrollService} from "../shared/services";
 import {Subject} from "rxjs";
 import {FOLDER_TYPE} from "../core/enums/folder-type.enum";
@@ -47,7 +47,7 @@ interface IViewModel {
     folderMoveNavTrees: Array<FolderTreeNavItem>;
     folderNavTreeSubject: Subject<FolderTreeNavItem>;
 
-    filter : {
+    filter: {
         page: number,
         isTrash: boolean,
         isPublic: boolean,
@@ -59,30 +59,53 @@ interface IViewModel {
     draggedItem: any;
 
     getBoards(): Promise<void>;
+
     getFolders(): void;
+
     getDeletedFolders(): Promise<Array<Folder>>;
+
     getCurrentFolderChildren(): void;
+
     openCreateForm(): void;
+
     openDeleteForm(): void;
+
     openShareForm(): void;
+
     openPublicShareForm(): void;
+
     openPropertiesForm(): void;
+
     openBoardOrFolder(): Promise<void>;
+
     openRenameFolderForm(): void;
-    onFormSubmit(createdBoardId?: {id: string}): Promise<void>;
+
+    onFormSubmit(createdBoardId?: { id: string }): Promise<void>;
+
     initTrees(): void;
+
     updateTrees(): void;
+
     setFolderParentIds(): void;
+
     switchFolder(folder: FolderTreeNavItem): Promise<void>;
+
     submitFolderForm(): Promise<void>;
+
     onSearchBoard(searchText: string): Promise<void>;
+
     onScroll(): void;
+
     resetBoards(): void;
+
     restoreBoardsOrFolders(): Promise<void>;
+
     moveBoards(): Promise<void>;
+
     duplicateBoard(): Promise<void>;
 
     closeSideNavFolders(): void;
+
     openSideNavFolders(): void;
 
     initDraggable(): void;
@@ -125,7 +148,7 @@ class Controller implements ng.IController, IViewModel {
 
     folderNavTreeSubject: Subject<FolderTreeNavItem>;
 
-    filter : BoardsFilter;
+    filter: BoardsFilter;
     infiniteScrollService: InfiniteScrollService;
     hasRight: typeof hasRight = hasRight;
     draggable: Draggable;
@@ -248,8 +271,10 @@ class Controller implements ng.IController, IViewModel {
      */
     switchFolder = async (folder: FolderTreeNavItem): Promise<void> => {
         this.resetBoards();
-        this.openedFolder = new Folder().build({_id: folder.id, title: folder.name,
-            parentId: folder.parentId, ownerId: ''});
+        this.openedFolder = new Folder().build({
+            _id: folder.id, title: folder.name,
+            parentId: folder.parentId, ownerId: ''
+        });
 
         // Update filter category
         this.filter.isMyBoards = folder.id === FOLDER_TYPE.MY_BOARDS
@@ -332,8 +357,10 @@ class Controller implements ng.IController, IViewModel {
             await this.getBoards();
 
             this.folderNavTreeSubject.next(new FolderTreeNavItem(
-                {id: this.openedFolder.id,
-                    title : this.openedFolder.title, parentId : this.openedFolder.parentId}));
+                {
+                    id: this.openedFolder.id,
+                    title: this.openedFolder.title, parentId: this.openedFolder.parentId
+                }));
         } else {
             this.$location.path(`/board/view/${this.selectedBoardIds[0]}`);
         }
@@ -456,7 +483,15 @@ class Controller implements ng.IController, IViewModel {
      * Duplicate selected board.
      */
     duplicateBoard = async (): Promise<void> => {
-        await this.boardsService.duplicateBoard(this.selectedBoardIds[0]);
+        await this.boardsService.duplicateBoard(this.selectedBoardIds[0])
+            .then((response: AxiosResponse) => {
+                    if (response.status === 200 || response.status === 201) {
+                        toasts.confirm('magneto.duplicate.elements.confirm');
+                    } else {
+                        toasts.warning('magneto.duplicate.elements.error')
+                    }
+                }
+            );
         this.resetBoards();
         await this.getBoards();
     }
@@ -470,7 +505,7 @@ class Controller implements ng.IController, IViewModel {
      * - refresh boards
      * - refresh folders / deleted folders
      */
-    onFormSubmit = async (createdBoardId?: {id: string}): Promise<void> => {
+    onFormSubmit = async (createdBoardId?: { id: string }): Promise<void> => {
         if (createdBoardId && createdBoardId.id) {
             this.$location.path(`/board/view/${createdBoardId.id}`);
             safeApply(this.$scope);
@@ -491,21 +526,29 @@ class Controller implements ng.IController, IViewModel {
         this.folderMoveNavTrees = [];
 
         this.folderNavTrees.push(new FolderTreeNavItem(
-            {id: FOLDER_TYPE.MY_BOARDS, title: lang.translate('magneto.my.boards'),
-                parentId: null}, null, "magneto-check-decagram")
+            {
+                id: FOLDER_TYPE.MY_BOARDS, title: lang.translate('magneto.my.boards'),
+                parentId: null
+            }, null, "magneto-check-decagram")
             .buildFolders(this.folders));
         this.folderNavTrees.push(new FolderTreeNavItem(
-            {id: FOLDER_TYPE.PUBLIC_BOARDS, title: lang.translate('magneto.lycee.connecte.boards'),
-                parentId: null}, null, "magneto-earth"));
+            {
+                id: FOLDER_TYPE.PUBLIC_BOARDS, title: lang.translate('magneto.lycee.connecte.boards'),
+                parentId: null
+            }, null, "magneto-earth"));
         this.folderNavTrees.push(new FolderTreeNavItem(
-            {id: FOLDER_TYPE.DELETED_BOARDS, title: lang.translate('magneto.trash'),
-                parentId: null}, null, "magneto-delete-forever")
+            {
+                id: FOLDER_TYPE.DELETED_BOARDS, title: lang.translate('magneto.trash'),
+                parentId: null
+            }, null, "magneto-delete-forever")
             .buildFolders(this.deletedFolders));
 
         // Folder tree for board move lightbox
         this.folderMoveNavTrees.push(new FolderTreeNavItem(
-            {id: FOLDER_TYPE.MY_BOARDS, title: lang.translate('magneto.my.boards'),
-                parentId: null}, true, "magneto-check-decagram")
+            {
+                id: FOLDER_TYPE.MY_BOARDS, title: lang.translate('magneto.my.boards'),
+                parentId: null
+            }, true, "magneto-check-decagram")
             .buildFolders(this.folders));
 
         this.folderNavTreeSubject.next(this.folderNavTrees[0]);
@@ -524,8 +567,10 @@ class Controller implements ng.IController, IViewModel {
         // Folder tree for board move lightbox
         this.folderMoveNavTrees = [];
         this.folderMoveNavTrees.push(new FolderTreeNavItem(
-            {id: FOLDER_TYPE.MY_BOARDS, title: lang.translate('magneto.my.boards'),
-                parentId: null}, true, "magneto-check-decagram")
+            {
+                id: FOLDER_TYPE.MY_BOARDS, title: lang.translate('magneto.my.boards'),
+                parentId: null
+            }, true, "magneto-check-decagram")
             .buildFolders(this.folders));
     }
 
@@ -578,14 +623,14 @@ class Controller implements ng.IController, IViewModel {
     /**
      * Open folders side nav (for mobile view)
      */
-    openSideNavFolders = () : void => {
+    openSideNavFolders = (): void => {
         document.getElementById("sideNavMobile").style.width = "200px";
     }
 
     /**
      * Close folders side nav (for mobile view)
      */
-    closeSideNavFolders = () : void => {
+    closeSideNavFolders = (): void => {
         document.getElementById("sideNavMobile").style.width = "0";
     };
 

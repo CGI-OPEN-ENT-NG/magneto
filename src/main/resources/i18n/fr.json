@@ -12,6 +12,8 @@
   "magneto.delete.elements.confirm": "Les tableaux/dossiers selectionnés ont été supprimés avec succès.",
   "magneto.predelete.elements.error": "Une erreur est survenue lors de la mise à la corbeille des tableaux/dossiers selectionnés.",
   "magneto.predelete.elements.confirm": "Les tableaux/dossiers selectionnés ont été déplacés dans la corbeille.",
+  "magneto.duplicate.elements.error": "Une erreur est survenue lors de la duplication des tableaux selectionnés.",
+  "magneto.duplicate.elements.confirm": "Les tableaux selectionnés ont été dupliqués avec succès.",
   "magneto.create.folder": "Créer un dossier",
   "magneto.trash": "Corbeille",
   "magneto.lycee.connecte.boards": "Tableaux de la plateforme",

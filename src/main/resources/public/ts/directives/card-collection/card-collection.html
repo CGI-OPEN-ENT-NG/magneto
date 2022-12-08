@@ -51,7 +51,7 @@
                         selected-card-ids="vm.selectedCardIds"
                         has-caption="false"
                         has-duplicate="vm.board.myRights.contrib !== undefined"
-                        on-duplicate="vm.submitDuplicate"
+                        on-duplicate="vm.submitDuplicateCard"
                         has-preview="true"
                         on-preview="vm.openPreview">
                 </card-list>
@@ -61,7 +61,7 @@
                        selected-card-ids="vm.selectedCardIds"
                        has-caption="false"
                        has-duplicate="true"
-                       on-duplicate="vm.submitDuplicate"
+                       on-duplicate="vm.submitDuplicateCard"
                        has-preview="true"
                        on-preview="vm.openPreview">
             </card-list>
@@ -91,7 +91,7 @@
 
     <button class="right-magnet create-button"
             data-ng-disabled="!vm.isFormValid()"
-            ng-click="vm.submitDuplicate()">
+            ng-click="vm.submitDuplicateCard()">
         <i18n>magneto.duplicate</i18n>
     </button>
 </lightbox>
