@@ -52,7 +52,13 @@ public interface BoardService {
      */
     Future<JsonObject> getAllBoards(UserInfos user, Integer page, String searchText, String folderId,
                                     boolean isPublic, boolean isShared, boolean isDeleted, String sortBy);
-
+    /**
+     * Get all boards with publish right
+     *
+     * @param user    {@link UserInfos} User info
+     * @return Future {@link Future <List<Board>} containing list of editable boards
+     */
+    Future<List<Board>> getAllBoardsEditable(UserInfos user);
 
     /**
      * Pre delete boards
@@ -72,4 +78,5 @@ public interface BoardService {
      * @return Future {@link Future <JsonObject>} containing list of deleted boards
      */
     Future<JsonObject> delete(String userId, List<String> boardIds);
+
 }

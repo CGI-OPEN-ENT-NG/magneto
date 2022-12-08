@@ -238,6 +238,29 @@ public class DefaultBoardService implements BoardService {
         return promise.future();
     }
 
+    @Override
+    public Future<List<Board>> getAllBoardsEditable(UserInfos user) {
+
+        Promise<List<Board>> promise = Promise.promise();
+
+        JsonObject query = this.getAllBoardsEditableQuery(user);
+
+        mongoDb.command(query.toString(), MongoDbResult.validResultHandler(either -> {
+            if (either.isLeft()) {
+                log.error("[Magneto@%s::getAllBoardsEditable] Failed to get boards", this.getClass().getSimpleName(),
+                        either.left().getValue());
+                promise.fail(either.left().getValue());
+            } else {
+                JsonArray result = either.right().getValue()
+                        .getJsonObject(Field.CURSOR, new JsonObject())
+                        .getJsonArray(Field.FIRSTBATCH, new JsonArray());
+                promise.complete(ModelHelper.toList(result, Board.class));
+            }
+        }));
+
+        return promise.future();
+    }
+
     private JsonObject getAllBoardsQuery(UserInfos user, Integer page,
                                          String searchText, String folderId,
                                          boolean isPublic, boolean isShared, boolean isDeleted,
@@ -328,6 +351,29 @@ public class DefaultBoardService implements BoardService {
             query = query.count();
         }
 
+        return query.getAggregate();
+    }
+
+    private JsonObject getAllBoardsEditableQuery(UserInfos user) {
+
+        MongoQuery query = new MongoQuery(this.collection)
+                .match(new JsonObject()
+                        .put(Field.DELETED, false));
+
+        query.matchOr(new JsonArray()
+                .add(new JsonObject().put(Field.OWNERID, user.getUserId()))
+                .add(new JsonObject()
+                        .put(String.format("%s.%s", Field.SHARED, Field.USERID),
+                                new JsonObject().put(Mongo.IN, new JsonArray().add(user.getUserId())))
+                        .put(String.format("%s.%s", Field.SHARED, "fr-cgi-magneto-controller-ShareBoardController|initPublishRight"), true))
+                .add(new JsonObject()
+                        .put(String.format("%s.%s", Field.SHARED, Field.GROUPID),
+                                new JsonObject().put(Mongo.IN, user.getGroupsIds()))
+                        .put(String.format("%s.%s", Field.SHARED, "fr-cgi-magneto-controller-ShareBoardController|initPublishRight"), true))
+        );
+        query.project(new JsonObject()
+                .put(Field._ID, 1)
+                .put(Field.TITLE, 1));
         return query.getAggregate();
     }
 

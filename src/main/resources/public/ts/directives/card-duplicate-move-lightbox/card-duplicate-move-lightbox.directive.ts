@@ -83,14 +83,7 @@ class Controller implements IViewModel {
      * Get all boards (owner + shared).
      */
     getBoards = async (): Promise<void> => {
-        const params: IBoardsParamsRequest = {
-            isPublic: false,
-            isShared: true,
-            isDeleted: false,
-            sortBy: 'title'
-        };
-
-        boardsService.getAllBoards(params)
+        boardsService.getAllBoardsEditable()
             .then((res: Boards) => {
                 if (res.all && res.all.length > 0) {
                     this.boards.push(...res.all);

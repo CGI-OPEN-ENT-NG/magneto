@@ -5,6 +5,8 @@ import {BoardForm, Boards, IBoardsParamsRequest} from "../models";
 export interface IBoardsService {
     getAllBoards(params: IBoardsParamsRequest): Promise<Boards>;
 
+    getAllBoardsEditable(): Promise<Boards>;
+
     getBoardsByIds(boardIds: Array<string>): Promise<Boards>;
 
     createBoard(params: BoardForm): Promise<AxiosResponse>;
@@ -44,6 +46,11 @@ export const boardsService: IBoardsService = {
 
     getBoardsByIds: async (boardIds: Array<string>): Promise<Boards> => {
         return http.post(`/magneto/boards`, {boardIds: boardIds})
+            .then((res: AxiosResponse) => new Boards(res.data));
+    },
+
+    getAllBoardsEditable: async (): Promise<Boards> => {
+        return http.get(`/magneto/boards/editable`)
             .then((res: AxiosResponse) => new Boards(res.data));
     },
 

@@ -2,7 +2,7 @@ import {idiom as lang, ng, notify, toasts} from "entcore";
 import {IParseService, IScope} from "angular";
 import {RootsConst} from "../../core/constants/roots.const";
 import {boardsService, cardsService} from "../../services";
-import {Board, Boards, Card, CardForm, IBoardsParamsRequest} from "../../models";
+import {Board, Boards, Card, CardForm} from "../../models";
 import {safeApply} from "../../utils/safe-apply.utils";
 import {AxiosError} from "axios";
 import {COMBO_LABELS} from "../../core/enums/comboLabel";
@@ -83,14 +83,7 @@ class Controller implements IViewModel {
      * Get all boards (owner + shared).
      */
     getBoards = async (): Promise<void> => {
-        const params: IBoardsParamsRequest = {
-            isPublic: false,
-            isShared: true,
-            isDeleted: false,
-            sortBy: 'title'
-        };
-
-        boardsService.getAllBoards(params)
+        boardsService.getAllBoardsEditable()
             .then((res: Boards) => {
                 if (res.all && res.all.length > 0) {
                     this.boards.push(...res.all);

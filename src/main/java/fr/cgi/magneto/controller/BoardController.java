@@ -75,6 +75,30 @@ public class BoardController extends ControllerHelper {
         });
     }
 
+    @Get("/boards/editable")
+    @ApiDoc("Get all boards editable")
+    @ResourceFilter(ViewRight.class)
+    @SecuredAction(value = "", type = ActionType.RESOURCE)
+    public void getAllBoardsEditable(HttpServerRequest request) {
+        UserUtils.getUserInfos(eb, request, user -> {
+            boardService.getAllBoardsEditable(user)
+                    .onSuccess(result -> {
+                        JsonArray boardsResult = new JsonArray(result
+                                .stream()
+                                .map(Board::toJson)
+                                .collect(Collectors.toList()));
+                        renderJson(request, new JsonObject()
+                                .put(Field.ALL, boardsResult));
+                    })
+                    .onFailure(fail -> {
+                        String message = String.format("[Magneto@%s::getAllBoardsEditable] Failed to get all boards editable : %s",
+                                this.getClass().getSimpleName(), fail.getMessage());
+                        log.error(message);
+                        renderError(request);
+                    });
+        });
+    }
+
 
     @Post("/boards")
     @ApiDoc("Get boards by ids")
@@ -149,10 +173,10 @@ public class BoardController extends ControllerHelper {
                     .compose(result -> {
                         List<Card> duplicateCards = (List<Card>) futures.get(Field.CARDS).result();
                         // If no cards in board, no duplicate
-                        if(duplicateCards.isEmpty()) {
+                        if (duplicateCards.isEmpty()) {
                             return Future.succeededFuture((JsonObject) futures.get(Field.BOARD).result());
                         } else {
-                            String duplicateBoard =  ((JsonObject) futures.get(Field.BOARD).result()).getString(Field.ID);
+                            String duplicateBoard = ((JsonObject) futures.get(Field.BOARD).result()).getString(Field.ID);
                             return cardService.duplicateCards(duplicateBoard, duplicateCards, user);
                         }
                     })
