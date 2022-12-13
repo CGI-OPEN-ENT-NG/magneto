@@ -1,7 +1,7 @@
 <div id="card-list" class="card-list flex-row f-wrap">
     <card-list-item ng-repeat="card in vm.cards"
                     ng-click="vm.selectCard(card._id)"
-                    ng-dblclick="vm.hasEdit && vm.openEdit(card)"
+                    ng-dblclick="vm.hasEdit ? vm.openEdit(card) : vm.hasPreview ? vm.openPreview(card) : null"
                     is-selected="vm.isCardSelected(card._id)"
                     is-draggable="vm.isDraggable"
                     card="card"
