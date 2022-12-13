@@ -5,25 +5,21 @@
             <button ng-if="vm.hasOpen" ng-click="vm.open()">
                 <i18n>magneto.open</i18n>
             </button>
-            <!-- Rename button -->
-            <button ng-if="vm.hasRename" ng-click="vm.openRename()">
-                <i18n>magneto.rename</i18n>
-            </button>
-            <!-- Move button -->
-            <button ng-if="vm.hasMove" ng-click="vm.openMove()">
-                <i18n>magneto.move</i18n>
-            </button>
             <!-- Properties button -->
             <button ng-if="vm.hasProperties" ng-click="vm.openProperties()">
                 <i18n>magneto.properties</i18n>
             </button>
-            <!-- Restore button -->
-            <button ng-if="vm.hasRestore" ng-click="vm.openRestore()">
-                <i18n>magneto.restore</i18n>
+            <!-- Rename button -->
+            <button ng-if="vm.hasRename" ng-click="vm.openRename()">
+                <i18n>magneto.rename</i18n>
             </button>
-            <!-- Delete button -->
-            <button ng-if="vm.hasDelete" ng-click="vm.openDelete()">
-                <i18n>magneto.delete</i18n>
+            <!-- Duplicate button -->
+            <button ng-if="vm.hasDuplicate" ng-click="vm.openDuplicate()">
+                <i18n>magneto.duplicate</i18n>
+            </button>
+            <!-- Move button -->
+            <button ng-if="vm.hasMove" ng-click="vm.openMove()">
+                <i18n>magneto.move</i18n>
             </button>
             <!-- Share button -->
             <button ng-if="vm.hasShare" ng-click="vm.openShare()">
@@ -36,8 +32,13 @@
             <button ng-if="vm.hasPublicUnshare" ng-click="vm.openPublicShare()">
                 <i18n>magneto.public.unshare</i18n>
             </button>
-            <button ng-if="vm.hasDuplicate" ng-click="vm.openDuplicate()">
-                <i18n>magneto.duplicate</i18n>
+            <!-- Restore button -->
+            <button ng-if="vm.hasRestore" ng-click="vm.openRestore()">
+                <i18n>magneto.restore</i18n>
+            </button>
+            <!-- Delete button -->
+            <button ng-if="vm.hasDelete" ng-click="vm.openDelete()">
+                <i18n>magneto.delete</i18n>
             </button>
         </div>
     </div>
