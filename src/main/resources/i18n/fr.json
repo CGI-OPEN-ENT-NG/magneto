@@ -72,6 +72,8 @@
   "magneto.card.options.duplicate": "Dupliquer",
   "magneto.card.options.preview": "Aperçu",
   "magneto.card.options.hide": "Cacher",
+  "magneto.card.options.lock": "Verrouiller",
+  "magneto.card.options.unlock": "Déverrouiller",
   "magneto.card.options.delete": "Supprimer",
   "magneto.card.options.move": "Déplacer",
   "magneto.create.link": "Créer un lien",

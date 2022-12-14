@@ -1,21 +1,11 @@
-import {ng, notify, toasts} from "entcore";
+import {ng, notify} from "entcore";
 import {IScope, IWindowService} from "angular";
-import {cardsService, IBoardsService, ICardsService} from "../services";
-import {
-    Board,
-    Boards,
-    BoardForm,
-    Card,
-    CardForm,
-    Cards,
-    ICardsParamsRequest,
-    ICardsBoardParamsRequest, ILinkerParams
-} from "../models";
+import {IBoardsService, ICardsService} from "../services";
+import {Board, BoardForm, Boards, Card, CardForm, Cards, ICardsParamsRequest, ILinkerParams} from "../models";
 import {safeApply} from "../utils/safe-apply.utils";
-import {AxiosError, AxiosResponse} from "axios";
+import {AxiosError} from "axios";
 import {InfiniteScrollService} from "../shared/services";
 import {EventBusService} from "../shared/event-bus-service/event-bus-sockjs.service";
-import * as SockJS from "sockjs-client";
 import {RESOURCE_TYPE} from "../core/enums/resource-type.enum";
 
 interface IViewModel extends ng.IController {
@@ -57,6 +47,7 @@ interface IViewModel extends ng.IController {
 
     openAddResourceLightbox(resourceType: RESOURCE_TYPE): void;
     openEditResourceLightbox(card: Card): void;
+    openLockResource(card: Card): void;
     openReading(): void;
     onFormSubmit(): Promise<void>;
     onBoardFormSubmit(): Promise<void>;
@@ -227,6 +218,16 @@ class Controller implements IViewModel {
     openDeleteResourceLightbox = (card: Card): void => {
         this.selectedCard = card;
         this.displayDeleteCardLightbox = true;
+    }
+
+    /**
+     * Open card lock.
+     */
+    openLockResource = async (card: Card): Promise<void> => {
+        this.cardForm = new CardForm().build(card);
+        this.cardForm.locked = !this.cardForm.locked;
+        await this.cardsService.updateCard(this.cardForm);
+        await this.onFormSubmit();
     }
 
     /**

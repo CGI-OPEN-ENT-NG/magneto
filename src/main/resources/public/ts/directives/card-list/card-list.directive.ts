@@ -1,4 +1,4 @@
-import {ng} from "entcore";
+import {model, ng} from "entcore";
 import {ILocationService, IParseService, IScope, IWindowService} from "angular";
 import {RootsConst} from "../../core/constants/roots.const";
 import {BoardForm, Card} from "../../models";
@@ -18,6 +18,7 @@ interface IViewModel extends ng.IController, ICardListProps {
 
     openTransfer?(card: Card): void;
 
+    openLock?(card: Card): void;
 
 }
 
@@ -30,7 +31,7 @@ interface ICardListProps {
 
     hasCaption: boolean;
 
-    hasEdit: boolean;
+    hasEdit: any;
     onEdit?;
     hasDuplicate: boolean;
     onDuplicate?;
@@ -42,6 +43,8 @@ interface ICardListProps {
     onPreview?;
     hasTransfer: boolean;
     onTransfer?;
+    hasLock: any;
+    onLock?;
     onMove?;
 }
 
@@ -58,12 +61,13 @@ class Controller implements IViewModel {
 
     hasCaption: boolean;
 
-    hasEdit: boolean;
+    hasEdit: any;
     hasDuplicate: boolean;
     hasHide: boolean;
     hasDelete: boolean;
     hasPreview: boolean;
     hasTransfer: boolean;
+    hasLock: any;
 
 
     constructor(private $scope: ICardListScope,
@@ -97,6 +101,16 @@ class Controller implements IViewModel {
         }
     }
 
+    canLock = (card: Card): boolean => {
+        return (card.ownerId == model.me.userId && this.hasLock.publish !== undefined) || this.hasLock.manager !== undefined;
+    }
+
+    canEdit = (card: Card): boolean => {
+        return (card.ownerId == model.me.userId && this.hasEdit.publish !== undefined && card.locked)
+            || (this.hasEdit.manager !== undefined && card.locked)
+            || (this.hasEdit.publish && !card.locked);
+    }
+
 }
 
 function directive($parse: IParseService) {
@@ -121,6 +135,8 @@ function directive($parse: IParseService) {
             onPreview: '&',
             hasTransfer: '=',
             onTransfer: '&',
+            hasLock: '=',
+            onLock: '&',
             onMove: '&'
         },
         controllerAs: 'vm',
@@ -176,6 +192,10 @@ function directive($parse: IParseService) {
 
             vm.openTransfer = (card: Card): void => {
                 $parse($scope.vm.onTransfer())(card);
+            }
+
+            vm.openLock = (card: Card): void => {
+                $parse($scope.vm.onLock())(card);
             }
         }
     }

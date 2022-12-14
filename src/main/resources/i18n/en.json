@@ -73,6 +73,8 @@
   "magneto.card.options.preview": "Preview",
   "magneto.card.options.move": "Move",
   "magneto.card.options.hide": "Hide",
+  "magneto.card.options.lock": "Lock",
+  "magneto.card.options.unlock": "Unlock",
   "magneto.card.options.delete": "Delete",
   "magneto.create.link": "Create link",
   "magneto.site.address": "Site address",

@@ -10,14 +10,16 @@
                     on-duplicate="vm.openDuplicate"
                     has-hide="vm.hasHide"
                     on-hide="vm.openHide"
-                    has-edit="vm.hasEdit"
+                    has-edit="vm.canEdit(card)"
                     on-edit="vm.openEdit"
                     has-delete="vm.hasDelete"
                     on-delete="vm.openDelete"
                     has-preview="vm.hasPreview"
                     on-preview="vm.openPreview"
                     has-transfer="vm.hasTransfer"
-                    on-transfer="vm.openTransfer">
+                    on-transfer="vm.openTransfer"
+                    has-lock="vm.canLock(card)"
+                    on-lock="vm.openLock">
         <h2>[[card.boardTitle]]</h2>
     </card-list-item>
 </div>

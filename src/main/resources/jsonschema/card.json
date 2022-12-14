@@ -18,6 +18,9 @@
     "caption": {
       "type": "string"
     },
+    "locked": {
+      "type": "boolean"
+    },
     "description": {
       "type": "string"
     },

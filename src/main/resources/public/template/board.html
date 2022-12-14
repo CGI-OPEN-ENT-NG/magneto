@@ -66,7 +66,7 @@
                     cards="vm.cards"
                     on-move="vm.getBoard"
                     board-display="false"
-                    has-edit="vm.board.myRights.publish !== undefined"
+                    has-edit="vm.board.myRights"
                     on-edit="vm.openEditResourceLightbox"
                     has-duplicate="vm.board.myRights.contrib !== undefined"
                     on-duplicate="vm.openTransferDuplicateResourceLightbox"
@@ -74,6 +74,8 @@
                     on-delete="vm.openDeleteResourceLightbox"
                     has-preview="vm.board.myRights.read !== undefined || vm.board.public"
                     on-preview="vm.openPreviewResourceLightbox"
+                    has-lock="vm.board.myRights"
+                    on-lock="vm.openLockResource"
                     has-transfer="vm.board.myRights.publish != undefined"
                     on-transfer="vm.openTransferResourceLightbox">
             </card-list>

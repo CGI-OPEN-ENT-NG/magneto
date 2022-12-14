@@ -70,8 +70,7 @@ public class DefaultCardService implements CardService {
     public Future<JsonObject> update(UserInfos user, CardPayload card) {
         Promise<JsonObject> promise = Promise.promise();
         JsonObject query = new JsonObject()
-                .put(Field._ID, card.getId())
-                .put(Field.OWNERID, user.getUserId());
+                .put(Field._ID, card.getId());
         JsonObject update = new JsonObject().put(Mongo.SET, card.toJson());
         mongoDb.update(this.collection, query, update, MongoDbResult.validActionResultHandler(results -> {
             if (results.isLeft()) {
@@ -496,6 +495,7 @@ public class DefaultCardService implements CardService {
                     .put(Field.TITLE, 1)
                     .put(Field.CAPTION, 1)
                     .put(Field.DESCRIPTION, 1)
+                    .put(Field.ISLOCKED, 1)
                     .put(Field.OWNERID, 1)
                     .put(Field.OWNERNAME, 1)
                     .put(Field.RESOURCETYPE, 1)

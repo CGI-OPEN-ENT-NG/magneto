@@ -72,6 +72,10 @@ public class Field {
     public static final String LASTMODIFIERID = "lastModifierId";
     public static final String LASTMODIFIERNAME = "lastModifierName";
     public static final String CAPTION = "caption";
+    public static final String ISLOCKED = "isLocked";
+    public static final String LOCKED = "locked";
+
+
 
     // FUTURE FIELD
     public static final String RESULT = "result";

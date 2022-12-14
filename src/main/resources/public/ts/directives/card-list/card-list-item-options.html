@@ -37,6 +37,20 @@
                         <i18n>magneto.card.options.hide</i18n>
                     </span>
                 </a>
+                <!-- Lock button -->
+                <a class="item" ng-if="vm.hasLock && !vm.card.locked" ng-click="vm.openLock()">
+                    <i class="magneto-lock" aria-hidden="true"></i>
+                    <span>
+                        <i18n>magneto.card.options.lock</i18n>
+                    </span>
+                </a>
+                <!-- Unlock button -->
+                <a class="item" ng-if="vm.hasLock && vm.card.locked" ng-click="vm.openLock()">
+                    <i class="magneto-unlock" aria-hidden="true"></i>
+                    <span>
+                        <i18n>magneto.card.options.unlock</i18n>
+                    </span>
+                </a>
                 <!-- Delete button -->
                 <a class="item" ng-if="vm.hasDelete" ng-click="vm.openDelete()">
                     <i class="magneto-delete" aria-hidden="true"></i>

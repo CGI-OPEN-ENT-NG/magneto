@@ -10,6 +10,7 @@ interface IViewModel extends ng.IController, ICardListItemOptionsProps {
     openDelete?(): void;
     openPreview?(): void;
     openTransfer?(): void;
+    openLock?(): void;
 }
 
 interface ICardListItemOptionsProps {
@@ -27,6 +28,8 @@ interface ICardListItemOptionsProps {
     onPreview?;
     hasTransfer: boolean;
     onTransfer?;
+    hasLock: boolean;
+    onLock?;
 }
 
 interface ICardListItemOptionsScope extends IScope, ICardListItemOptionsProps {
@@ -43,6 +46,7 @@ class Controller implements IViewModel {
     hasDelete: boolean;
     hasPreview: boolean;
     hasTransfer: boolean;
+    hasLock: boolean;
 
     constructor(private $scope: ICardListItemOptionsScope,
                 private $location: ILocationService,
@@ -71,6 +75,8 @@ function directive($parse: IParseService) {
             onDuplicate: '&',
             hasHide: '=',
             onHide: '&',
+            hasLock: '=',
+            onLock: '&',
             hasDelete: '=',
             onDelete: '&',
             hasPreview: '=',
@@ -128,6 +134,13 @@ function directive($parse: IParseService) {
                     event.stopPropagation();
                 });
                 $parse($scope.vm.onTransfer())(vm.card);
+            }
+
+            vm.openLock = (): void => {
+                element.click(function (event) {
+                    event.stopPropagation();
+                });
+                $parse($scope.vm.onLock())(vm.card);
             }
         }
     }

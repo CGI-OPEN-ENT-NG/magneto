@@ -22,6 +22,7 @@ public class CardPayload implements Model<CardPayload> {
     private String creationDate;
     private String modificationDate;
     private String caption;
+    private boolean isLocked;
     private String parentId;
     private String boardId;
 
@@ -36,6 +37,7 @@ public class CardPayload implements Model<CardPayload> {
         this.lastModifierId = card.getString(Field.LASTMODIFIERID);
         this.lastModifierName = card.getString(Field.LASTMODIFIERNAME);
         this.caption = card.getString(Field.CAPTION);
+        this.isLocked = card.getBoolean(Field.LOCKED, false);
         this.description = card.getString(Field.DESCRIPTION);
         this.parentId = card.getString(Field.PARENTID);
         this.boardId = card.getString(Field.BOARDID);
@@ -181,6 +183,15 @@ public class CardPayload implements Model<CardPayload> {
         return this;
     }
 
+    public boolean isLocked() {
+        return isLocked;
+    }
+
+    public CardPayload setLocked(boolean locked) {
+        this.isLocked = locked;
+        return this;
+    }
+
     @Override
     public JsonObject toJson() {
 
@@ -191,6 +202,7 @@ public class CardPayload implements Model<CardPayload> {
                 .put(Field.RESOURCEURL, this.getResourceUrl())
                 .put(Field.DESCRIPTION, this.getDescription())
                 .put(Field.CAPTION, this.getCaption())
+                .put(Field.ISLOCKED, this.isLocked())
                 .put(Field.BOARDID, this.getBoardId())
                 .put(Field.MODIFICATIONDATE, this.getModificationDate())
                 .put(Field.LASTMODIFIERID, this.getLastModifierId())

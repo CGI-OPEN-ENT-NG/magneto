@@ -25,6 +25,7 @@ public class Card implements Model<Card> {
     private String parentId;
     private String boardId;
     private String boardTitle;
+    private boolean isLocked;
     private Metadata metadata;
 
 
@@ -43,6 +44,7 @@ public class Card implements Model<Card> {
         this.boardTitle = card.getString(Field.BOARDTITLE, null);
         this.creationDate = card.getString(Field.CREATIONDATE);
         this.modificationDate = card.getString(Field.MODIFICATIONDATE);
+        this.isLocked = card.getBoolean(Field.ISLOCKED, false);
         this.metadata = null;
 
         if (this.getId() == null) {
@@ -205,6 +207,15 @@ public class Card implements Model<Card> {
         return this;
     }
 
+    public boolean isLocked() {
+        return isLocked;
+    }
+
+    public Card setLocked(boolean locked) {
+        this.isLocked = locked;
+        return this;
+    }
+
     @Override
     public JsonObject toJson() {
 
@@ -216,6 +227,7 @@ public class Card implements Model<Card> {
                 .put(Field.RESOURCEURL, this.getResourceUrl())
                 .put(Field.DESCRIPTION, this.getDescription())
                 .put(Field.CAPTION, this.getCaption())
+                .put(Field.ISLOCKED, this.isLocked())
                 .put(Field.MODIFICATIONDATE, this.getModificationDate())
                 .put(Field.LASTMODIFIERID, this.getLastModifierId())
                 .put(Field.LASTMODIFIERNAME, this.getLastModifierName())

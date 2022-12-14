@@ -21,6 +21,9 @@
     "caption": {
       "type": ["string", "null"]
     },
+    "locked": {
+      "type": ["boolean", "null"]
+    },
     "description": {
       "type": ["string", "null"]
     },
