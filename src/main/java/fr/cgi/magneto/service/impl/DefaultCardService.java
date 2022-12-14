@@ -70,8 +70,7 @@ public class DefaultCardService implements CardService {
     public Future<JsonObject> update(UserInfos user, CardPayload card) {
         Promise<JsonObject> promise = Promise.promise();
         JsonObject query = new JsonObject()
-                .put(Field._ID, card.getId())
-                .put(Field.OWNERID, user.getUserId());
+                .put(Field._ID, card.getId());
         JsonObject update = new JsonObject().put(Mongo.SET, card.toJson());
         mongoDb.update(this.collection, query, update, MongoDbResult.validActionResultHandler(results -> {
             if (results.isLeft()) {
@@ -89,8 +88,7 @@ public class DefaultCardService implements CardService {
     public Future<JsonObject> deleteCards(String userId, List<String> cardIds) {
         Promise<JsonObject> promise = Promise.promise();
         JsonObject query = new JsonObject()
-                .put(Field._ID, new JsonObject().put(Mongo.IN, new JsonArray(cardIds)))
-                .put(Field.OWNERID, userId);
+                .put(Field._ID, new JsonObject().put(Mongo.IN, new JsonArray(cardIds)));
         mongoDb.delete(this.collection, query, MongoDbResult.validActionResultHandler(results -> {
             if (results.isLeft()) {
                 String message = String.format("[Magneto@%s::deleteCards] Failed to delete cards",
@@ -114,26 +112,6 @@ public class DefaultCardService implements CardService {
                 String message = String.format("[Magneto@%s::deleteCardsByBoards] Failed to delete cards by board ids",
                         this.getClass().getSimpleName());
                 log.error(String.format("%s : %s", message, results.left().getValue()));
-                promise.fail(message);
-                return;
-            }
-            promise.complete(results.right().getValue());
-        }));
-        return promise.future();
-    }
-
-
-    @Override
-    public Future<JsonObject> getLastCard(CardPayload card) {
-        Promise<JsonObject> promise = Promise.promise();
-        QueryBuilder matcher = QueryBuilder.start(Field.OWNERID).is(card.getOwnerId())
-                .and(Field.CREATIONDATE).is(card.getCreationDate())
-                .and(Field.TITLE).is(card.getTitle());
-
-        mongoDb.findOne(this.collection, MongoQueryBuilder.build(matcher), MongoDbResult.validResultHandler(results -> {
-            if (results.isLeft()) {
-                String message = String.format("[Magneto@%s::getLastCard] Failed to get last card", this.getClass().getSimpleName());
-                log.error(String.format("%s. %s", message, results.left().getValue()));
                 promise.fail(message);
                 return;
             }
