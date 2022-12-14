@@ -41,14 +41,6 @@ public interface CardService {
     Future<JsonObject> deleteCards(String userId, List<String> cardIds);
 
     /**
-     * Get last card
-     *
-     * @param card Card information
-     * @return Future {@link Future <JsonObject>} containing last card created by the user
-     */
-    Future<JsonObject> getLastCard(CardPayload card);
-
-    /**
      * Get all cards
      *
      * @param user       User Object containing user id and displayed name
