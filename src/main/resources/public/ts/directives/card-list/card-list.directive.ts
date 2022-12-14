@@ -137,6 +137,10 @@ function directive($parse: IParseService) {
                 create(cardList, {
                     animation: 150,
                     delay: 150,
+                    forceAutoScrollFallback: true,
+                    scroll: true, // or HTMLElement
+                    scrollSensitivity: 100, // px, how near the mouse must be to an edge to start scrolling.
+                    scrollSpeed: 30, // px*/
                     delayOnTouchOnly: true,
                     onUpdate: async (evt) => {
                         if (vm.isDraggable && vm.cards && vm.cards.length > 0) {
