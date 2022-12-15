@@ -140,7 +140,10 @@ public class CardController extends ControllerHelper {
                             .onFailure(err -> renderError(request))
                             .onSuccess(res -> {
                                 eventStore.createAndStoreEvent(CREATE_MAGNET.name(), request);
-                                renderJson(request, res);
+                                renderJson(request, new JsonObject()
+                                        .put(Field._ID, newId)
+                                        .put(Field.BOARDID, cardPayload.getBoardId())
+                                        .put(Field.BOARDURL, "/magneto#/board/view/" + cardPayload.getBoardId()));
                             });
                 }));
     }
